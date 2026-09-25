@@ -6,12 +6,14 @@ vertex array glVertexPointer -- nessuno shader, nessuna VAO/VBO, nessun FBO),
 come richiesto dal corso ("What you will NOT learn: Graphics APIs beyond
 OpenGL 1.*", cg_introduction.pdf). Al posto delle shadow map (che
 richiederebbero un framebuffer object, non disponibile in OpenGL 1.1),
-il requisito "ombre o riflessi" e' soddisfatto con un riflesso planare
-classico via stencil buffer, ritagliato sulla sagoma della mesh "Ground".
+il requisito "ombre o riflessi" e' soddisfatto con una proiezione planare
+via stencil buffer, ritagliata sulla sagoma del pavimento (individuato
+per geometria -- vertici complanari piu' bassi della scena -- non per
+nome della mesh).
 
 CONTROLLI DELLA DEMO
-Nessuna informazione sui tasti appare a schermo (solo FPS nel titolo della
-finestra), quindi eccola qui:
+Un pannello con i controlli appare a schermo durante l'esecuzione;
+eccoli anche qui per riferimento:
 
   W A S D      muovi la camera libera (avanti/indietro/sinistra/destra)
   Q / E        muovi la camera libera in basso/alto
@@ -37,9 +39,11 @@ COMPILAZIONE
   engine/engine.cbp e client/client.cbp in Code::Blocks.
 
 DEMO
-demo/run.sh lancia ./client con LD_LIBRARY_PATH=. (serve libengine.so
-nella stessa cartella). La cartella non contiene binari: vanno copiati
-li' dopo aver compilato per Linux, seguendo la sezione COMPILAZIONE
+demo/ contiene un eseguibile Linux x86_64 gia' compilato (client +
+libengine.so + assets), verificato in un container Ubuntu 24.04 pulito
+(render Mesa software, scena caricata correttamente: 4 mesh, 14837
+triangoli). Lancia demo/run.sh da terminale. Per Windows non c'e' un
+eseguibile precompilato: compilare seguendo la sezione COMPILAZIONE
 sopra.
 
 DOCUMENTAZIONE
