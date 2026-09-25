@@ -42,9 +42,16 @@ DEMO
 demo/ contiene un eseguibile Linux x86_64 gia' compilato (client +
 libengine.so + assets), verificato in un container Ubuntu 24.04 pulito
 (render Mesa software, scena caricata correttamente: 4 mesh, 14837
-triangoli). Lancia demo/run.sh da terminale. Per Windows non c'e' un
-eseguibile precompilato: compilare seguendo la sezione COMPILAZIONE
-sopra.
+triangoli). Lancia demo/run.sh da terminale.
+
+windows/ contiene un eseguibile Windows x64 gia' compilato (client.exe +
+engine.dll + assets), stessa scena verificata con lo stesso esito.
+Compilato pero' con un toolchain diverso da quello ufficiale del
+progetto: MinGW-w64 (cross-compiler, non MSVC) dentro Docker, perche'
+su questa macchina non c'e' Visual Studio; verificato eseguendolo con
+Wine invece che su Windows reale. Il .sln resta il modo di riferimento
+per compilare con MSVC/vcpkg su una macchina Windows vera, seguendo la
+sezione COMPILAZIONE sopra.
 
 DOCUMENTAZIONE
 Generata con Doxygen in doc/html/ (apri doc/html/index.html).
