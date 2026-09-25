@@ -1,0 +1,13 @@
+# Build artifacts
+**/obj/
+**/bin/
+build_mac/
+
+# Generated documentation (regenerate with: doxygen engine/Doxyfile)
+doc/html/
+
+# Asset variants kept locally, not needed in the repo
+*_BACKUP.glb
+
+# OS cruft
+.DS_Store
