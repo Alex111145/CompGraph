@@ -14,11 +14,19 @@ namespace
    const char *MODEL_FILE = "assets/bedroom_furniture_set/bedroom_furniture_set_-_game_ready.glb";
    const float MOVE_SPEED = 1.5f;
    const float MOUSE_SENSITIVITY = 0.1f;
-   const float ORBIT_SPEED = 0.8f;
-   const float ORBIT_RADIUS = 1.8f;
-   const float ORBIT_HEIGHT = 1.0f;
    const glm::vec3 SCENE_CENTER(0.0f, 0.0f, 0.0f);
    const glm::vec3 UP(0.0f, 1.0f, 0.0f);
+   const glm::vec4 SHADOW_LIGHT(2.0f, 2.0f, 1.0f, 0.0f);
+   const std::vector<std::pair<std::string, std::string>> LEGEND = {
+      { "WASD", "MOVE" },
+      { "Q/E", "DOWN UP" },
+      { "MOUSE", "LOOK" },
+      { "C", "CAMERA" },
+      { "1", "TORCH" },
+      { "2", "LAMP" },
+      { "P", "PRINT" },
+      { "ESC", "EXIT" }
+   };
 
    /**
     * Prints the world position of every node of the scene graph, using glm::to_string.
@@ -36,6 +44,24 @@ namespace
 
       for (const Eng::Node *child : node->getChildren())
          printNode(child, depth + 1);
+   }
+
+   /**
+    * Finds the lamp shade: the first mesh whose material emits light.
+    * @param root root of the scene graph
+    * @return glowing mesh, or nullptr if the scene has none
+    */
+   Eng::Mesh *findGlowingMesh(Eng::Node *root)
+   {
+      std::vector<Eng::Node *> list;
+      root->collect(list);
+      for (Eng::Node *node : list)
+      {
+         Eng::Mesh *mesh = dynamic_cast<Eng::Mesh *>(node);
+         if (mesh != nullptr && mesh->getMaterial() && glm::length(mesh->getMaterial()->getEmission()) > 0.0f)
+            return mesh;
+      }
+      return nullptr;
    }
 
    /**
@@ -74,11 +100,15 @@ int main(int argc, char *argv[])
    }
    root->addChild(model);
 
-   Eng::Light *sun = new Eng::Light("sun", glm::vec4(-0.4f, 1.0f, 0.3f, 0.0f), glm::vec3(0.9f, 0.9f, 0.85f));
-   Eng::Light *bulb = new Eng::Light("bulb", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.6f, 0.3f));
-   bulb->setAttenuation(1.0f, 0.3f, 0.3f);
-   root->addChild(sun);
-   root->addChild(bulb);
+   Eng::Mesh *lampShade = findGlowingMesh(root);
+   const glm::vec3 lampGlow = lampShade != nullptr ? lampShade->getMaterial()->getEmission() : glm::vec3(0.0f);
+   Eng::Light *torch = new Eng::Light("torch", glm::vec4(0.0f, 0.0f, 1.0f, 0.0f), glm::vec3(0.85f, 0.92f, 1.0f) * 1.2f);
+   Eng::Light *lamp = new Eng::Light("lamp", glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec3(1.0f, 0.55f, 0.2f) * 40.0f);
+   lamp->setAttenuation(1.0f, 4.2f, 12.4f);
+   if (lampShade != nullptr)
+      lamp->setMatrix(glm::translate(glm::mat4(1.0f), lampShade->getWorldCenter()));
+   root->addChild(torch);
+   root->addChild(lamp);
 
    Eng::Camera *cameras[3] = {
       new Eng::Camera("free camera", 60.0f, 0.05f, 100.0f),
@@ -93,12 +123,10 @@ int main(int argc, char *argv[])
    glm::vec3 freePosition(0.0f, 1.5f, 4.5f);
    float yaw = 0.0f;
    float pitch = -15.0f;
-   float orbitAngle = 0.0f;
    int activeCamera = 0;
 
    std::cout << std::endl << "Scene graph (world positions):" << std::endl;
    printNode(root, 1);
-   std::cout << std::endl << "Controls: WASD move, Q/E down/up, mouse look, C camera, 1 sun, 2 bulb, P print camera, ESC exit" << std::endl;
 
    while (eng.isRunning())
    {
@@ -108,9 +136,13 @@ int main(int argc, char *argv[])
       if (eng.wasKeyPressed('C'))
          activeCamera = (activeCamera + 1) % 3;
       if (eng.wasKeyPressed('1'))
-         sun->setEnabled(!sun->isEnabled());
+         torch->setEnabled(!torch->isEnabled());
       if (eng.wasKeyPressed('2'))
-         bulb->setEnabled(!bulb->isEnabled());
+      {
+         lamp->setEnabled(!lamp->isEnabled());
+         if (lampShade != nullptr)
+            lampShade->getMaterial()->setEmission(lamp->isEnabled() ? lampGlow : glm::vec3(0.0f));
+      }
 
       if (activeCamera == 0)
       {
@@ -138,11 +170,10 @@ int main(int argc, char *argv[])
          std::cout << cameras[activeCamera]->getName() << " position: "
                    << glm::to_string(glm::vec3(cameras[activeCamera]->getWorldMatrix()[3])) << std::endl;
 
-      orbitAngle += ORBIT_SPEED * eng.getDeltaTime();
-      bulb->setMatrix(glm::translate(glm::mat4(1.0f),
-         SCENE_CENTER + glm::vec3(ORBIT_RADIUS * cos(orbitAngle), ORBIT_HEIGHT, ORBIT_RADIUS * sin(orbitAngle))));
+      torch->setMatrix(cameras[activeCamera]->getWorldMatrix());
 
-      eng.render(cameras[activeCamera], root, sun);
+      eng.render(cameras[activeCamera], root, SHADOW_LIGHT);
+      eng.renderLegend(LEGEND);
       eng.update();
    }
 

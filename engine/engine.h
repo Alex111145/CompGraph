@@ -8,6 +8,7 @@
 
    #include <memory>
    #include <string>
+   #include <utility>
    #include <vector>
 
    #define GLM_ENABLE_EXPERIMENTAL
@@ -69,7 +70,8 @@ public:
    bool wasKeyPressed(int key);
    glm::vec2 getMouseDelta();
 
-   void render(Camera *camera, Node *root, Light *shadowLight);
+   void render(Camera *camera, Node *root, const glm::vec4 &shadowLight);
+   void renderLegend(const std::vector<std::pair<std::string, std::string>> &entries);
 
 private:
 

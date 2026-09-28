@@ -20,10 +20,12 @@ public:
 
    void build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &uvs);
    void setMaterial(std::shared_ptr<Material> material);
+   std::shared_ptr<Material> getMaterial() const;
    unsigned int getTriangleCount() const;
 
    bool isFlat() const;
    float getWorldMinY() const;
+   glm::vec3 getWorldCenter() const;
 
    void render(const glm::mat4 &modelView) override;
    void renderGeometry() const;

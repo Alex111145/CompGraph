@@ -75,6 +75,15 @@ void ENG_API Eng::Mesh::setMaterial(std::shared_ptr<Material> material)
 }
 
 /**
+ * Gets the material.
+ * @return material (can be empty)
+ */
+std::shared_ptr<Eng::Material> ENG_API Eng::Mesh::getMaterial() const
+{
+   return material;
+}
+
+/**
  * Gets the number of triangles.
  * @return triangle count
  */
@@ -99,6 +108,15 @@ bool ENG_API Eng::Mesh::isFlat() const
 float ENG_API Eng::Mesh::getWorldMinY() const
 {
    return worldMin.y;
+}
+
+/**
+ * Gets the center of the world-space bounding box.
+ * @return center point
+ */
+glm::vec3 ENG_API Eng::Mesh::getWorldCenter() const
+{
+   return (worldMin + worldMax) * 0.5f;
 }
 
 /**
