@@ -25,6 +25,7 @@ public:
    void setDiffuse(const glm::vec3 &color);
    void setSpecular(const glm::vec3 &color);
    void setEmission(const glm::vec3 &color);
+   glm::vec3 getEmission() const;
    void setShininess(float shininess);
    void setTexture(std::shared_ptr<Texture> texture);
 

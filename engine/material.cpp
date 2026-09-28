@@ -61,6 +61,15 @@ void ENG_API Eng::Material::setEmission(const glm::vec3 &color)
 }
 
 /**
+ * Gets the emitted color.
+ * @return RGB color (zero vector if the surface does not glow)
+ */
+glm::vec3 ENG_API Eng::Material::getEmission() const
+{
+   return glm::vec3(emission);
+}
+
+/**
  * Sets the specular exponent, clamped to the OpenGL range [0, 128].
  * @param shininess specular exponent
  */
