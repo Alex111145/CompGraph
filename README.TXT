@@ -13,8 +13,8 @@ CONVENZIONI (cg_mathForCg1.pdf, OpenGL SuperBible)
 - Luci: direzioni normalizzate, normali normalizzate (GL_NORMALIZE).
 - Mesh compilate in display list (glNewList / glBegin(GL_TRIANGLES)).
 - Ombra planare con la matrice MakeShadowMatrix della SuperBible
-  (cap. 9): M = (piano . luce) I - luce piano^T, con una luce direzionale
-  fissa, ritagliata sul pavimento con lo stencil buffer.
+  (cap. 9): M = (piano . luce) I - luce piano^T, proiettata dalla lampada
+  (luce puntiforme) e ritagliata sul pavimento con lo stencil buffer.
 - Stampa di vettori/matrici con GLM_ENABLE_EXPERIMENTAL +
   glm/gtx/string_cast.hpp (glm::to_string).
 
@@ -24,7 +24,7 @@ CONTROLLI (mostrati anche nel pannello in alto a destra)
   mouse        guarda in giro (camera libera)
   C            cambia camera (libera, frontale, dall'alto)
   1            accende/spegne la torcia (luce direzionale che segue la camera)
-  2            accende/spegne la lampada (luce puntiforme ferma nel paralume)
+  2            accende/spegne la lampada (luce puntiforme ferma nel paralume, fa l'ombra)
   P            stampa la posizione della camera attiva
   ESC          esci
 

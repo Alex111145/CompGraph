@@ -16,7 +16,6 @@ namespace
    const float MOUSE_SENSITIVITY = 0.1f;
    const glm::vec3 SCENE_CENTER(0.0f, 0.0f, 0.0f);
    const glm::vec3 UP(0.0f, 1.0f, 0.0f);
-   const glm::vec4 SHADOW_LIGHT(2.0f, 2.0f, 1.0f, 0.0f);
    const std::vector<std::pair<std::string, std::string>> LEGEND = {
       { "WASD", "MOVE" },
       { "Q/E", "DOWN UP" },
@@ -172,7 +171,7 @@ int main(int argc, char *argv[])
 
       torch->setMatrix(cameras[activeCamera]->getWorldMatrix());
 
-      eng.render(cameras[activeCamera], root, SHADOW_LIGHT);
+      eng.render(cameras[activeCamera], root, lamp);
       eng.renderLegend(LEGEND);
       eng.update();
    }
