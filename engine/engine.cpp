@@ -19,7 +19,6 @@ namespace
    const int WINDOW_WIDTH = 1024;
    const int WINDOW_HEIGHT = 768;
    const float SHADOW_LIFT = 0.002f;
-   const float SHADOW_OPACITY = 0.45f;
 
    const int GLYPH_COLUMNS = 5;
    const int GLYPH_ROWS = 7;
@@ -353,8 +352,9 @@ glm::vec2 ENG_API Eng::Base::getMouseDelta()
 
 /**
  * Renders a scene graph from a camera: lights first, then meshes, then the planar shadow.
- * The shadow is drawn on the flat meshes (floor) with the shadow matrix of the OpenGL SuperBible
- * (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, clipped with the stencil buffer.
+ * The objects are flattened on the flat meshes (floor) with the shadow matrix of the OpenGL SuperBible
+ * (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, drawn only into the stencil buffer.
+ * The floor is then drawn again, without the shadow light, where the stencil marks the shadow.
  * @param camera active camera
  * @param root root of the scene graph
  * Only meshes lower than a point light cast a shadow: a point above the light cannot be projected on the floor.
@@ -408,11 +408,8 @@ void ENG_API Eng::Base::render(Camera *camera, Node *root, Light *shadowLight)
       const glm::vec4 plane(0.0f, 1.0f, 0.0f, -(floors[0]->getWorldMinY() + SHADOW_LIFT));
       const glm::mat4 shadow = glm::dot(plane, light) * glm::mat4(1.0f) - glm::outerProduct(light, plane);
 
-      glDisable(GL_LIGHTING);
-      glDisable(GL_TEXTURE_2D);
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      glColor4f(0.0f, 0.0f, 0.0f, SHADOW_OPACITY);
+      glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+      glDepthMask(GL_FALSE);
       glStencilFunc(GL_EQUAL, 1, 0xFF);
       glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 
@@ -424,8 +421,18 @@ void ENG_API Eng::Base::render(Camera *camera, Node *root, Light *shadowLight)
          mesh->renderGeometry();
       }
 
-      glDisable(GL_BLEND);
-      glEnable(GL_LIGHTING);
+      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+      glDepthMask(GL_TRUE);
+
+      shadowLight->setEnabled(false);
+      shadowLight->render(view * shadowLight->getWorldMatrix());
+      glStencilFunc(GL_EQUAL, 2, 0xFF);
+      glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+      glDepthFunc(GL_LEQUAL);
+      for (Mesh *floor : floors)
+         floor->render(view * floor->getWorldMatrix());
+      glDepthFunc(GL_LESS);
+      shadowLight->setEnabled(true);
    }
    glDisable(GL_STENCIL_TEST);
 }
