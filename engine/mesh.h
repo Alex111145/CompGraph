@@ -1,40 +1,40 @@
 /**
  * @file		mesh.h
- * @brief	Triangle mesh drawn with OpenGL 1.1 vertex arrays
+ * @brief	Triangle mesh compiled into an OpenGL display list
  *
  * @author	Alessio Gervasini
  */
 #pragma once
 
-   #include <memory>
-
 namespace Eng {
 
-struct Vertex
-{
-   float position[3];
-   float normal[3];
-   float uv[2];
-};
-
-class ENG_API Mesh final
+/**
+ * @brief Scene-graph node holding triangles (positions, normals, texture coordinates) and a material.
+ */
+class ENG_API Mesh final : public Node
 {
 public:
 
-   Mesh();
-   Mesh(Mesh const &) = delete;
+   Mesh(const std::string &name);
    ~Mesh();
 
-   void operator=(Mesh const &) = delete;
-
-   void setGeometry(const Vertex *vertices, unsigned int vertexCount, const unsigned int *indices, unsigned int indexCount);
-   void render() const;
+   void build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &uvs);
+   void setMaterial(std::shared_ptr<Material> material);
    unsigned int getTriangleCount() const;
+
+   bool isFlat() const;
+   float getWorldMinY() const;
+
+   void render(const glm::mat4 &modelView) override;
+   void renderGeometry() const;
 
 private:
 
-   struct Reserved;
-   std::unique_ptr<Reserved> reserved;
+   unsigned int displayList;            ///< OpenGL display list with the triangles
+   unsigned int triangleCount;          ///< Number of triangles
+   glm::vec3 worldMin;                  ///< World-space bounding box minimum
+   glm::vec3 worldMax;                  ///< World-space bounding box maximum
+   std::shared_ptr<Material> material;  ///< Surface material
 };
 
 };

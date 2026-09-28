@@ -1,41 +1,45 @@
 /**
  * @file		node.h
- * @brief	Scene-graph node: local transform + parent/children hierarchy
+ * @brief	Scene-graph node: local matrix + parent/children hierarchy
  *
  * @author	Alessio Gervasini
  */
 #pragma once
 
-   #include <memory>
-   #include <string>
-
 namespace Eng {
 
-class ENG_API Node final
+/**
+ * @brief Generic element of the scene graph. Every node has a local matrix relative to its parent.
+ */
+class ENG_API Node
 {
 public:
 
-   Node();
+   Node(const std::string &name);
    Node(Node const &) = delete;
-   ~Node();
+   virtual ~Node();
 
    void operator=(Node const &) = delete;
 
-   void setPosition(float x, float y, float z);
-   void setRotation(float pitchDegrees, float yawDegrees, float rollDegrees);
-   void setScale(float x, float y, float z);
-
-   void setName(const std::string &name);
    const std::string &getName() const;
 
-   Node *addChild();
+   void setMatrix(const glm::mat4 &matrix);
+   const glm::mat4 &getMatrix() const;
+   glm::mat4 getWorldMatrix() const;
 
-   const float *getWorldMatrix() const;
+   void addChild(Node *child);
+   Node *getParent() const;
+   const std::vector<Node *> &getChildren() const;
+   void collect(std::vector<Node *> &list);
 
-private:
+   virtual void render(const glm::mat4 &modelView);
 
-   struct Reserved;
-   std::unique_ptr<Reserved> reserved;
+protected:
+
+   std::string name;       ///< Node name (as found in the file)
+   glm::mat4 matrix;       ///< Local matrix, relative to the parent
+   Node *parent;           ///< Parent node (nullptr for the root)
+   std::vector<Node *> children;   ///< Owned children
 };
 
 };

@@ -1,44 +1,41 @@
 /**
  * @file		light.h
- * @brief	Light source (directional or point), color + intensity + placement
+ * @brief	Light source (directional or point) for the OpenGL fixed pipeline (glLight)
  *
  * @author	Alessio Gervasini
  */
 #pragma once
 
-   #include <memory>
-
 namespace Eng {
 
-enum class LightType
-{
-   Directional,
-   Point
-};
-
-class ENG_API Light final
+/**
+ * @brief Scene-graph node that is a light. The homogeneous position decides the type:
+ * w = 0 directional (xyz = direction towards the light), w = 1 point light.
+ */
+class ENG_API Light final : public Node
 {
 public:
 
-   Light();
-   Light(Light const &) = delete;
+   Light(const std::string &name, const glm::vec4 &position, const glm::vec3 &color);
    ~Light();
 
-   void operator=(Light const &) = delete;
-
-   void setType(LightType type);
-   void setColor(float r, float g, float b);
-   void setIntensity(float intensity);
-   void setPosition(float x, float y, float z);
-   void setDirection(float x, float y, float z);
    void setAttenuation(float constant, float linear, float quadratic);
+   void setEnabled(bool enabled);
+   bool isEnabled() const;
 
-   void apply(int index) const;
+   glm::vec4 getWorldPosition() const;
+
+   void render(const glm::mat4 &modelView) override;
 
 private:
 
-   struct Reserved;
-   std::unique_ptr<Reserved> reserved;
+   int lightId;            ///< GL_LIGHT0 + n
+   glm::vec4 position;     ///< Homogeneous position in local coordinates
+   glm::vec4 color;        ///< Diffuse and specular color
+   glm::vec3 attenuation;  ///< Constant, linear, quadratic attenuation
+   bool enabled;           ///< On/off
+
+   static int lightCount;  ///< Number of lights created so far
 };
 
 };

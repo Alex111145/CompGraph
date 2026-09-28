@@ -49,19 +49,20 @@
 		</Linker>
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.h" />
-		<Unit filename="camera.cpp" />
-		<Unit filename="camera.h" />
-		<Unit filename="light.cpp" />
-		<Unit filename="light.h" />
-		<Unit filename="mesh.cpp" />
-		<Unit filename="mesh.h" />
 		<Unit filename="node.cpp" />
 		<Unit filename="node.h" />
-		<Unit filename="loader.cpp" />
-		<Unit filename="loader.h" />
 		<Unit filename="texture.cpp" />
 		<Unit filename="texture.h" />
-		<Unit filename="thirdparty/stb_image.h" />
+		<Unit filename="material.cpp" />
+		<Unit filename="material.h" />
+		<Unit filename="mesh.cpp" />
+		<Unit filename="mesh.h" />
+		<Unit filename="light.cpp" />
+		<Unit filename="light.h" />
+		<Unit filename="camera.cpp" />
+		<Unit filename="camera.h" />
+		<Unit filename="loader.cpp" />
+		<Unit filename="loader.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

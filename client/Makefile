@@ -3,12 +3,12 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = -I../engine $(shell pkg-config --cflags glfw3)
+INC = -I../engine -I../dependencies
 CFLAGS = -Wall -std=c++20 -fexceptions
 RCFLAGS =
 RESINC =
 LIBDIR =
-LIB = -lengine -lGL
+LIB = -lengine
 LDFLAGS = 
 
 INC_DEBUG = $(INC)

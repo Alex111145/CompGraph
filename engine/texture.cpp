@@ -1,90 +1,62 @@
 /**
  * @file		texture.cpp
- * @brief	2D texture (loaded from an image file via stb_image)
+ * @brief	2D texture decoded with stb_image and uploaded with glTexImage2D
  *
  * @author	Alessio Gervasini
  */
 
    #include "engine.h"
 
-   #include <iostream>
-
    #include <GLFW/glfw3.h>
 
    #define STB_IMAGE_IMPLEMENTATION
-   #include "thirdparty/stb_image.h"
+   #include <stb/stb_image.h>
 
-struct Eng::Texture::Reserved
+/**
+ * Constructor. Reserves an OpenGL texture name.
+ */
+ENG_API Eng::Texture::Texture() : id{ 0 }
 {
-   GLuint id;
-
-   Reserved() : id{ 0 }
-   {}
-
-   void upload(int width, int height, int channels, const unsigned char *pixels)
-   {
-      GLenum format = GL_RGB;
-      if (channels == 1)
-         format = GL_LUMINANCE;
-      else if (channels == 4)
-         format = GL_RGBA;
-
-      glBindTexture(GL_TEXTURE_2D, id);
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(format), width, height, 0, format, GL_UNSIGNED_BYTE, pixels);
-
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   }
-
-   bool uploadDecoded(unsigned char *decodedPixels, int width, int height, int channels, const std::string &source)
-   {
-      if (decodedPixels == nullptr)
-      {
-         std::cout << "ERROR: unable to decode texture " << source << ": " << stbi_failure_reason() << std::endl;
-         return false;
-      }
-
-      upload(width, height, channels, decodedPixels);
-      stbi_image_free(decodedPixels);
-      return true;
-   }
-};
-
-ENG_API Eng::Texture::Texture() : reserved(std::make_unique<Eng::Texture::Reserved>())
-{
-   glGenTextures(1, &reserved->id);
+   glGenTextures(1, &id);
 }
 
+/**
+ * Destructor. Releases the OpenGL texture name.
+ */
 ENG_API Eng::Texture::~Texture()
 {
-   glDeleteTextures(1, &reserved->id);
+   glDeleteTextures(1, &id);
 }
 
-bool ENG_API Eng::Texture::loadFromFile(const std::string &filename)
+/**
+ * Decodes an image file (PNG/JPG) kept in memory and uploads it as RGBA.
+ * @param fileData encoded image bytes
+ * @param fileSize number of bytes
+ * @return TF
+ */
+bool ENG_API Eng::Texture::load(const unsigned char *fileData, int fileSize)
 {
    int width, height, channels;
    stbi_set_flip_vertically_on_load(true);
-   unsigned char *decodedPixels = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-   return reserved->uploadDecoded(decodedPixels, width, height, channels, "'" + filename + "'");
+   unsigned char *pixels = stbi_load_from_memory(fileData, fileSize, &width, &height, &channels, 4);
+   if (pixels == nullptr)
+      return false;
+
+   glBindTexture(GL_TEXTURE_2D, id);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+   stbi_image_free(pixels);
+   return true;
 }
 
-bool ENG_API Eng::Texture::loadFromEncodedMemory(const unsigned char *encodedBytes, int byteCount)
-{
-   int width, height, channels;
-   stbi_set_flip_vertically_on_load(true);
-   unsigned char *decodedPixels = stbi_load_from_memory(encodedBytes, byteCount, &width, &height, &channels, 0);
-   return reserved->uploadDecoded(decodedPixels, width, height, channels, "(embedded)");
-}
-
-void ENG_API Eng::Texture::loadFromPixels(int width, int height, int channels, const unsigned char *pixels)
-{
-   reserved->upload(width, height, channels, pixels);
-}
-
+/**
+ * Makes this texture the current one.
+ */
 void ENG_API Eng::Texture::bind() const
 {
-   glBindTexture(GL_TEXTURE_2D, reserved->id);
+   glBindTexture(GL_TEXTURE_2D, id);
 }

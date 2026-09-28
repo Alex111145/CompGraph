@@ -1,50 +1,46 @@
 COMPUTER GRAPHICS (M-I5203) -- README
 
-Motore + viewer scritti usando ESCLUSIVAMENTE OpenGL 1.1/1.0 a pipeline fissa
-(glBegin/glVertex, matrix stack glMatrixMode/glLoadMatrixf, luci glLight,
-vertex array glVertexPointer -- nessuno shader, nessuna VAO/VBO, nessun FBO),
-come richiesto dal corso ("What you will NOT learn: Graphics APIs beyond
-OpenGL 1.*", cg_introduction.pdf). Al posto delle shadow map (che
-richiederebbero un framebuffer object, non disponibile in OpenGL 1.1),
-il requisito "ombre o riflessi" e' soddisfatto con una proiezione planare
-via stencil buffer, ritagliata sulla sagoma del pavimento (individuato
-per geometria -- vertici complanari piu' bassi della scena -- non per
-nome della mesh).
+Motore grafico (engine.dll / libengine.so) + viewer (client) scritti usando
+solo OpenGL 1.1/1.0 a pipeline fissa, come richiesto dal corso
+("Graphics APIs beyond OpenGL 1.*" esclusi, cg_introduction.pdf).
 
-CONTROLLI DELLA DEMO
-Un pannello con i controlli appare a schermo durante l'esecuzione;
-eccoli anche qui per riferimento:
+CONVENZIONI (cg_mathForCg1.pdf, OpenGL SuperBible)
+- Sistema di coordinate destrorso (right-hand rule), Y verso l'alto.
+- Matematica con GLM: vettori colonna, post-moltiplicazione (M * v).
+- Matrici inizializzate con l'identita' glm::mat4(1.0f), vettori con 0.
+- Scene graph: matrice mondo = matrice mondo del padre x matrice locale.
+- Camera: matrice di vista = inversa della matrice mondo della camera.
+- Luci: direzioni normalizzate, normali normalizzate (GL_NORMALIZE).
+- Mesh compilate in display list (glNewList / glBegin(GL_TRIANGLES)).
+- Ombra planare con la matrice MakeShadowMatrix della SuperBible
+  (cap. 9): M = (piano . luce) I - luce piano^T, ritagliata sul pavimento
+  con lo stencil buffer.
+- Stampa di vettori/matrici con GLM_ENABLE_EXPERIMENTAL +
+  glm/gtx/string_cast.hpp (glm::to_string).
 
-  W A S D      muovi la camera libera (avanti/indietro/sinistra/destra)
-  Q / E        muovi la camera libera in basso/alto
+CONTROLLI
+  W A S D      muovi la camera libera
+  Q / E        giu' / su
   mouse        guarda in giro (camera libera)
-  C            passa dalla camera libera a quella fissa e viceversa
-  1            accende/spegne la torcia (luce direzionale che segue la camera)
-  2            accende/spegne la lampada (luce puntiforme ferma sulla lampada)
-  X            esci dall'applicazione
+  C            cambia camera (libera, frontale, dall'alto)
+  1            accende/spegne il sole (luce direzionale statica, fa l'ombra)
+  2            accende/spegne la lampadina (luce puntiforme che gira)
+  P            stampa la posizione della camera attiva
+  ESC          esci
 
-Ci sono due camere: una libera (WASDQE + mouse) e una fissa in una
-posizione prestabilita della scena. Il tasto C alterna tra le due.
+All'avvio la console stampa lo scene graph con la posizione mondo di ogni
+nodo e il numero di triangoli (14837 in totale).
 
 COMPILAZIONE
-- Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022 (v143 toolset, x64).
-  Le dipendenze esterne sono GLFW3 e Assimp, gestite da vcpkg in manifest
-  mode: la prima build le scarica e compila da sola (serve connessione internet
-  la prima volta). GLM e' invece vendorizzata direttamente nel progetto
-  in dependencies/glm/ (istruzione del corso, cg_series_1.pdf pag. 2:
-  "place any required dependencies in a directory called dependencies").
-- Linux: servono le dev-lib libglfw3-dev e libassimp-dev installate via
-  package manager. Poi "make" dalla cartella del progetto, oppure apri
-  engine/engine.cbp e client/client.cbp in Code::Blocks.
+- Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022/2026 (x64).
+  GLFW3 e Assimp sono gestiti da vcpkg (manifest mode, vcpkg.json).
+  GLM e stb_image sono in dependencies/.
+- Linux: installa libglfw3-dev e libassimp-dev, poi "make" dalla cartella
+  del progetto, oppure apri cg_Gervasini_Alessio.workspace in Code::Blocks.
 
 DEMO
-windows/ contiene l'eseguibile Windows x64 gia' compilato (client.exe +
-engine.dll + assets): lancia client.exe dalla cartella windows/.
-
-demo/ contiene l'eseguibile Linux x86_64 gia' compilato (client +
-libengine.so + assets): lancia demo/run.sh da terminale.
-
-All'avvio la console mostra la scena caricata: 4 mesh, 14837 triangoli.
+windows/ : lancia client.exe.
+demo/    : lancia demo/run.sh (Linux x86_64).
 
 DOCUMENTAZIONE
-Generabile con Doxygen: "doxygen engine/Doxyfile" produce doc/html/.
+"doxygen Doxyfile" dalla cartella engine produce doc/html/.
