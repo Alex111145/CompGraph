@@ -6,17 +6,14 @@
  */
 #pragma once
 
- 
-
    #include <memory>
    #include <string>
 
 #ifdef _DEBUG
-   #define LIB_NAME      "My Graphics Engine v0.2 GL1.1 (debug)"
+   #define LIB_NAME      "Graphics Engine OpenGL 1.1 (debug)"
 #else
-   #define LIB_NAME      "My Graphics Engine v0.2 GL1.1"
+   #define LIB_NAME      "Graphics Engine OpenGL 1.1"
 #endif
-   #define LIB_VERSION   20
 
 #ifdef _WINDOWS
    #ifdef GRAPHICS_ENGINE_EXPORTS
@@ -25,7 +22,9 @@
       #define ENG_API __declspec(dllimport)
    #endif
 
-   #pragma warning(disable : 4251)
+   #ifdef _MSC_VER
+      #pragma warning(disable : 4251)
+   #endif
 #else
    #define ENG_API
 #endif
@@ -39,9 +38,6 @@
 
 namespace Eng {
 
-/**
- * @brief Base engine main class. This class is a singleton.
- */
 class ENG_API Base final
 {
 public:
@@ -75,4 +71,3 @@ private:
 };
 
 };
-

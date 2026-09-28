@@ -17,11 +17,10 @@ eccoli anche qui per riferimento:
 
   W A S D      muovi la camera libera (avanti/indietro/sinistra/destra)
   Q / E        muovi la camera libera in basso/alto
-  frecce su/giu muovi la camera libera in alto/basso (come Q/E)
   mouse        guarda in giro (camera libera)
   C            passa dalla camera libera a quella fissa e viceversa
-  1            accende/spegne la luce statica (direzionale)
-  2            accende/spegne la luce dinamica (puntiforme, sulla lampada)
+  1            accende/spegne la torcia (luce direzionale che segue la camera)
+  2            accende/spegne la lampada (luce puntiforme ferma sulla lampada)
   X            esci dall'applicazione
 
 Ci sono due camere: una libera (WASDQE + mouse) e una fissa in una
@@ -29,29 +28,23 @@ posizione prestabilita della scena. Il tasto C alterna tra le due.
 
 COMPILAZIONE
 - Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022 (v143 toolset, x64).
-  L'unica dipendenza esterna e' GLFW3, gestita da vcpkg in manifest mode:
-  la prima build la scarica e compila da sola (serve connessione internet
+  Le dipendenze esterne sono GLFW3 e Assimp, gestite da vcpkg in manifest
+  mode: la prima build le scarica e compila da sola (serve connessione internet
   la prima volta). GLM e' invece vendorizzata direttamente nel progetto
   in dependencies/glm/ (istruzione del corso, cg_series_1.pdf pag. 2:
   "place any required dependencies in a directory called dependencies").
-- Linux: serve la sola dev-lib libglfw3-dev installata via package
-  manager. Poi "make" dalla cartella del progetto, oppure apri
+- Linux: servono le dev-lib libglfw3-dev e libassimp-dev installate via
+  package manager. Poi "make" dalla cartella del progetto, oppure apri
   engine/engine.cbp e client/client.cbp in Code::Blocks.
 
 DEMO
-demo/ contiene un eseguibile Linux x86_64 gia' compilato (client +
-libengine.so + assets), verificato in un container Ubuntu 24.04 pulito
-(render Mesa software, scena caricata correttamente: 4 mesh, 14837
-triangoli). Lancia demo/run.sh da terminale.
+windows/ contiene l'eseguibile Windows x64 gia' compilato (client.exe +
+engine.dll + assets): lancia client.exe dalla cartella windows/.
 
-windows/ contiene un eseguibile Windows x64 gia' compilato (client.exe +
-engine.dll + assets), stessa scena verificata con lo stesso esito.
-Compilato pero' con un toolchain diverso da quello ufficiale del
-progetto: MinGW-w64 (cross-compiler, non MSVC) dentro Docker, perche'
-su questa macchina non c'e' Visual Studio; verificato eseguendolo con
-Wine invece che su Windows reale. Il .sln resta il modo di riferimento
-per compilare con MSVC/vcpkg su una macchina Windows vera, seguendo la
-sezione COMPILAZIONE sopra.
+demo/ contiene l'eseguibile Linux x86_64 gia' compilato (client +
+libengine.so + assets): lancia demo/run.sh da terminale.
+
+All'avvio la console mostra la scena caricata: 4 mesh, 14837 triangoli.
 
 DOCUMENTAZIONE
-Generata con Doxygen in doc/html/ (apri doc/html/index.html).
+Generabile con Doxygen: "doxygen engine/Doxyfile" produce doc/html/.

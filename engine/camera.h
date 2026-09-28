@@ -10,9 +10,6 @@
 
 namespace Eng {
 
-/**
- * @brief First-person style 3D camera: position + yaw/pitch orientation + perspective projection.
- */
 class ENG_API Camera final
 {
 public:
@@ -28,8 +25,6 @@ public:
    void moveRight(float distance);
    void moveUp(float distance);
    void look(float yawDeltaDegrees, float pitchDeltaDegrees);
-
-   /** @return the direction this camera is currently looking (world-space, normalized). */
    void getForward(float &x, float &y, float &z) const;
 
    void setPerspective(float fovDegrees, float aspect, float nearPlane, float farPlane);
