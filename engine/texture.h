@@ -1,16 +1,16 @@
 /**
  * @file		texture.h
- * @brief	2D texture (loaded from an image file via stb_image)
+ * @brief	2D texture decoded with stb_image and uploaded with glTexImage2D
  *
  * @author	Alessio Gervasini
  */
 #pragma once
 
-   #include <memory>
-   #include <string>
-
 namespace Eng {
 
+/**
+ * @brief 2D texture object (OpenGL 1.1 glGenTextures/glBindTexture).
+ */
 class ENG_API Texture final
 {
 public:
@@ -21,16 +21,12 @@ public:
 
    void operator=(Texture const &) = delete;
 
-   bool loadFromFile(const std::string &filename);
-   bool loadFromEncodedMemory(const unsigned char *encodedBytes, int byteCount);
-   void loadFromPixels(int width, int height, int channels, const unsigned char *pixels);
-
+   bool load(const unsigned char *fileData, int fileSize);
    void bind() const;
 
 private:
 
-   struct Reserved;
-   std::unique_ptr<Reserved> reserved;
+   unsigned int id;   ///< OpenGL texture name
 };
 
 };

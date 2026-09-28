@@ -8,11 +8,18 @@
 
    #include <memory>
    #include <string>
+   #include <vector>
+
+   #define GLM_ENABLE_EXPERIMENTAL
+   #include <glm/glm.hpp>
+   #include <glm/gtc/matrix_transform.hpp>
+   #include <glm/gtc/type_ptr.hpp>
+   #include <glm/gtx/string_cast.hpp>
 
 #ifdef _DEBUG
-   #define LIB_NAME      "Graphics Engine OpenGL 1.1 (debug)"
+   #define LIB_NAME      "Graphics Engine OpenGL 1.1 (debug)"   ///< Library credits
 #else
-   #define LIB_NAME      "Graphics Engine OpenGL 1.1"
+   #define LIB_NAME      "Graphics Engine OpenGL 1.1"           ///< Library credits
 #endif
 
 #ifdef _WINDOWS
@@ -22,22 +29,24 @@
       #define ENG_API __declspec(dllimport)
    #endif
 
-   #ifdef _MSC_VER
-      #pragma warning(disable : 4251)
-   #endif
+   #pragma warning(disable : 4251)
 #else
    #define ENG_API
 #endif
 
-   #include "camera.h"
-   #include "light.h"
-   #include "mesh.h"
    #include "node.h"
    #include "texture.h"
+   #include "material.h"
+   #include "mesh.h"
+   #include "light.h"
+   #include "camera.h"
    #include "loader.h"
 
 namespace Eng {
 
+/**
+ * @brief Base engine main class (singleton): owns the window, reads the input and renders a scene graph.
+ */
 class ENG_API Base final
 {
 public:
@@ -53,14 +62,14 @@ public:
    bool free();
 
    bool isRunning() const;
-   void requestClose();
-   void swapBuffers();
-   void getFramebufferSize(int &width, int &height) const;
+   void update();
    float getDeltaTime() const;
-   void setWindowTitle(const std::string &title);
 
-   bool isKeyPressed(int key) const;
-   void getCursorDelta(float &deltaX, float &deltaY);
+   bool isKeyDown(int key) const;
+   bool wasKeyPressed(int key);
+   glm::vec2 getMouseDelta();
+
+   void render(Camera *camera, Node *root, Light *shadowLight);
 
 private:
 

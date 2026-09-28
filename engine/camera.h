@@ -1,42 +1,32 @@
 /**
  * @file		camera.h
- * @brief	3D camera (position, orientation, projection)
+ * @brief	Perspective camera placed in the scene graph
  *
  * @author	Alessio Gervasini
  */
 #pragma once
 
-   #include <memory>
-
 namespace Eng {
 
-class ENG_API Camera final
+/**
+ * @brief Scene-graph node that is a camera. Its world matrix places it in the scene,
+ * the view matrix is the inverse of that world matrix.
+ */
+class ENG_API Camera final : public Node
 {
 public:
 
-   Camera();
-   Camera(Camera const &) = delete;
+   Camera(const std::string &name, float fovDegrees, float nearPlane, float farPlane);
    ~Camera();
 
-   void operator=(Camera const &) = delete;
-
-   void setPosition(float x, float y, float z);
-   void moveForward(float distance);
-   void moveRight(float distance);
-   void moveUp(float distance);
-   void look(float yawDeltaDegrees, float pitchDeltaDegrees);
-   void getForward(float &x, float &y, float &z) const;
-
-   void setPerspective(float fovDegrees, float aspect, float nearPlane, float farPlane);
-   void setAspect(float aspect);
-
-   const float *getViewMatrix() const;
-   const float *getProjectionMatrix() const;
+   glm::mat4 getViewMatrix() const;
+   glm::mat4 getProjectionMatrix(float aspect) const;
 
 private:
 
-   struct Reserved;
-   std::unique_ptr<Reserved> reserved;
+   float fovDegrees;   ///< Vertical field of view
+   float nearPlane;    ///< Near clipping plane
+   float farPlane;     ///< Far clipping plane
 };
 
 };

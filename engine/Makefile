@@ -33,9 +33,9 @@ OBJDIR_RELEASE = obj/Release
 DEP_RELEASE = 
 OUT_RELEASE = bin/Release/libengine.so
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/loader.o $(OBJDIR_DEBUG)/texture.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/texture.o $(OBJDIR_DEBUG)/material.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/loader.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/loader.o $(OBJDIR_RELEASE)/texture.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/texture.o $(OBJDIR_RELEASE)/material.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/loader.o
 
 all: debug release
 
@@ -55,23 +55,26 @@ out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 $(OBJDIR_DEBUG)/engine.o: engine.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c engine.cpp -o $(OBJDIR_DEBUG)/engine.o
 
-$(OBJDIR_DEBUG)/camera.o: camera.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c camera.cpp -o $(OBJDIR_DEBUG)/camera.o
+$(OBJDIR_DEBUG)/node.o: node.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c node.cpp -o $(OBJDIR_DEBUG)/node.o
 
-$(OBJDIR_DEBUG)/light.o: light.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c light.cpp -o $(OBJDIR_DEBUG)/light.o
+$(OBJDIR_DEBUG)/texture.o: texture.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c texture.cpp -o $(OBJDIR_DEBUG)/texture.o
+
+$(OBJDIR_DEBUG)/material.o: material.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c material.cpp -o $(OBJDIR_DEBUG)/material.o
 
 $(OBJDIR_DEBUG)/mesh.o: mesh.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c mesh.cpp -o $(OBJDIR_DEBUG)/mesh.o
 
-$(OBJDIR_DEBUG)/node.o: node.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c node.cpp -o $(OBJDIR_DEBUG)/node.o
+$(OBJDIR_DEBUG)/light.o: light.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c light.cpp -o $(OBJDIR_DEBUG)/light.o
+
+$(OBJDIR_DEBUG)/camera.o: camera.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c camera.cpp -o $(OBJDIR_DEBUG)/camera.o
 
 $(OBJDIR_DEBUG)/loader.o: loader.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c loader.cpp -o $(OBJDIR_DEBUG)/loader.o
-
-$(OBJDIR_DEBUG)/texture.o: texture.cpp
-	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c texture.cpp -o $(OBJDIR_DEBUG)/texture.o
 
 clean_debug:
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
@@ -92,23 +95,26 @@ out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 $(OBJDIR_RELEASE)/engine.o: engine.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c engine.cpp -o $(OBJDIR_RELEASE)/engine.o
 
-$(OBJDIR_RELEASE)/camera.o: camera.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c camera.cpp -o $(OBJDIR_RELEASE)/camera.o
+$(OBJDIR_RELEASE)/node.o: node.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c node.cpp -o $(OBJDIR_RELEASE)/node.o
 
-$(OBJDIR_RELEASE)/light.o: light.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c light.cpp -o $(OBJDIR_RELEASE)/light.o
+$(OBJDIR_RELEASE)/texture.o: texture.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c texture.cpp -o $(OBJDIR_RELEASE)/texture.o
+
+$(OBJDIR_RELEASE)/material.o: material.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c material.cpp -o $(OBJDIR_RELEASE)/material.o
 
 $(OBJDIR_RELEASE)/mesh.o: mesh.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c mesh.cpp -o $(OBJDIR_RELEASE)/mesh.o
 
-$(OBJDIR_RELEASE)/node.o: node.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c node.cpp -o $(OBJDIR_RELEASE)/node.o
+$(OBJDIR_RELEASE)/light.o: light.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c light.cpp -o $(OBJDIR_RELEASE)/light.o
+
+$(OBJDIR_RELEASE)/camera.o: camera.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c camera.cpp -o $(OBJDIR_RELEASE)/camera.o
 
 $(OBJDIR_RELEASE)/loader.o: loader.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c loader.cpp -o $(OBJDIR_RELEASE)/loader.o
-
-$(OBJDIR_RELEASE)/texture.o: texture.cpp
-	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c texture.cpp -o $(OBJDIR_RELEASE)/texture.o
 
 clean_release:
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)

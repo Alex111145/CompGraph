@@ -37,12 +37,11 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++20" />
 			<Add option="-fexceptions" />
-			<Add option="`pkg-config --cflags glfw3`" />
+			<Add option="-I../dependencies" />
 			<Add directory="../engine" />
 		</Compiler>
 		<Linker>
 			<Add library="engine" />
-			<Add option="-lGL" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions />
