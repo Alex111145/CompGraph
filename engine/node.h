@@ -11,11 +11,6 @@
 
 namespace Eng {
 
-/**
- * @brief One node of the scene graph. Owns its children; knows its parent but does not own it.
- * A node carries only a transform (position/rotation/scale) — attaching geometry (Eng::Mesh) or
- * anything else to a node is the caller's job, done alongside the graph rather than inside it.
- */
 class ENG_API Node final
 {
 public:
