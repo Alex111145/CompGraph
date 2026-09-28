@@ -70,7 +70,7 @@ public:
    bool wasKeyPressed(int key);
    glm::vec2 getMouseDelta();
 
-   void render(Camera *camera, Node *root, const glm::vec4 &shadowLight);
+   void render(Camera *camera, Node *root, Light *shadowLight);
    void renderLegend(const std::vector<std::pair<std::string, std::string>> &entries);
 
 private:

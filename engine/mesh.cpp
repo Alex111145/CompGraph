@@ -111,6 +111,15 @@ float ENG_API Eng::Mesh::getWorldMinY() const
 }
 
 /**
+ * Gets the highest world-space height of the mesh.
+ * @return maximum Y
+ */
+float ENG_API Eng::Mesh::getWorldMaxY() const
+{
+   return worldMax.y;
+}
+
+/**
  * Gets the center of the world-space bounding box.
  * @return center point
  */

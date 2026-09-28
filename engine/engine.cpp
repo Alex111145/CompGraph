@@ -357,9 +357,10 @@ glm::vec2 ENG_API Eng::Base::getMouseDelta()
  * (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, clipped with the stencil buffer.
  * @param camera active camera
  * @param root root of the scene graph
- * @param shadowLight homogeneous position of the light that casts the shadow (w = 0 for a direction)
+ * Only meshes lower than a point light cast a shadow: a point above the light cannot be projected on the floor.
+ * @param shadowLight light that casts the shadow (nullptr for no shadow)
  */
-void ENG_API Eng::Base::render(Camera *camera, Node *root, const glm::vec4 &shadowLight)
+void ENG_API Eng::Base::render(Camera *camera, Node *root, Light *shadowLight)
 {
    std::vector<Node *> list;
    std::vector<Mesh *> floors;
@@ -401,10 +402,11 @@ void ENG_API Eng::Base::render(Camera *camera, Node *root, const glm::vec4 &shad
       mesh->render(view * mesh->getWorldMatrix());
    }
 
-   if (!floors.empty())
+   if (shadowLight != nullptr && shadowLight->isEnabled() && !floors.empty())
    {
+      const glm::vec4 light = shadowLight->getWorldPosition();
       const glm::vec4 plane(0.0f, 1.0f, 0.0f, -(floors[0]->getWorldMinY() + SHADOW_LIFT));
-      const glm::mat4 shadow = glm::dot(plane, shadowLight) * glm::mat4(1.0f) - glm::outerProduct(shadowLight, plane);
+      const glm::mat4 shadow = glm::dot(plane, light) * glm::mat4(1.0f) - glm::outerProduct(light, plane);
 
       glDisable(GL_LIGHTING);
       glDisable(GL_TEXTURE_2D);
@@ -416,6 +418,8 @@ void ENG_API Eng::Base::render(Camera *camera, Node *root, const glm::vec4 &shad
 
       for (Mesh *mesh : casters)
       {
+         if (light.w != 0.0f && mesh->getWorldMaxY() >= light.y)
+            continue;
          glLoadMatrixf(glm::value_ptr(view * shadow * mesh->getWorldMatrix()));
          mesh->renderGeometry();
       }
