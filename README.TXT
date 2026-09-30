@@ -34,7 +34,7 @@ nodo e il numero di triangoli (14837 in totale).
 COMPILAZIONE
 - Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022/2026 (x64).
   GLFW3 e Assimp sono gestiti da vcpkg (manifest mode, vcpkg.json).
-  GLM, stb_image e stb_easy_font sono in dependencies/.
+  GLM e stb_image sono in dependencies/.
 - Linux: installa libglfw3-dev e libassimp-dev, poi "make" dalla cartella
   del progetto, oppure apri cg_Gervasini_Alessio.workspace in Code::Blocks.
 

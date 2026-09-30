@@ -8,12 +8,11 @@
    #include "engine.h"
 
    #include <algorithm>
+   #include <cctype>
    #include <iostream>
    #include <source_location>
 
    #include <GLFW/glfw3.h>
-
-   #include <stb/stb_easy_font.h>
 
 namespace
 {
@@ -21,8 +20,59 @@ namespace
    const int WINDOW_HEIGHT = 768;
    const float SHADOW_LIFT = 0.002f;
 
-   const int FONT_HEIGHT = 7;
-   const int FONT_BYTES_PER_CHARACTER = 1024;
+   const int GLYPH_COLUMNS = 5;
+   const int GLYPH_ROWS = 7;
+   const int GLYPH_ADVANCE = GLYPH_COLUMNS + 1;
+
+   /**
+    * @brief One character of the legend font: 7 rows of 5 cells, '#' = filled square.
+    */
+   struct Glyph
+   {
+      char character;               ///< Character drawn
+      const char *rows[GLYPH_ROWS]; ///< Cells, top row first
+   };
+
+   const Glyph FONT[] = {
+      {' ', {".....", ".....", ".....", ".....", ".....", ".....", "....."}},
+      {'A', {".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"}},
+      {'C', {".####", "#....", "#....", "#....", "#....", "#....", ".####"}},
+      {'D', {"####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####."}},
+      {'E', {"#####", "#....", "#....", "####.", "#....", "#....", "#####"}},
+      {'H', {"#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"}},
+      {'I', {"#####", "..#..", "..#..", "..#..", "..#..", "..#..", "#####"}},
+      {'K', {"#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"}},
+      {'L', {"#....", "#....", "#....", "#....", "#....", "#....", "#####"}},
+      {'M', {"#...#", "##.##", "#.#.#", "#...#", "#...#", "#...#", "#...#"}},
+      {'N', {"#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#", "#...#"}},
+      {'O', {".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."}},
+      {'P', {"####.", "#...#", "#...#", "####.", "#....", "#....", "#...."}},
+      {'Q', {".###.", "#...#", "#...#", "#...#", "#.#.#", "#..#.", ".##.#"}},
+      {'R', {"####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#"}},
+      {'S', {".####", "#....", "#....", ".###.", "....#", "....#", "####."}},
+      {'T', {"#####", "..#..", "..#..", "..#..", "..#..", "..#..", "..#.."}},
+      {'U', {"#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."}},
+      {'V', {"#...#", "#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.."}},
+      {'W', {"#...#", "#...#", "#...#", "#.#.#", "#.#.#", "##.##", "#...#"}},
+      {'X', {"#...#", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", "#...#"}},
+      {'1', {"..#..", ".##..", "..#..", "..#..", "..#..", "..#..", ".###."}},
+      {'2', {".###.", "#...#", "....#", "...#.", "..#..", ".#...", "#####"}},
+      {'/', {"....#", "....#", "...#.", "..#..", ".#...", "#....", "#...."}},
+   };
+
+   /**
+    * Finds the glyph of a character (case insensitive).
+    * @param character character to draw
+    * @return glyph, or nullptr if the font does not have it
+    */
+   const Glyph *findGlyph(char character)
+   {
+      const char upperCase = static_cast<char>(std::toupper(static_cast<unsigned char>(character)));
+      for (const Glyph &glyph : FONT)
+         if (glyph.character == upperCase)
+            return &glyph;
+      return nullptr;
+   }
 
    /**
     * Computes the width of a text in pixels.
@@ -32,12 +82,11 @@ namespace
     */
    float textWidth(const std::string &text, float pixelSize)
    {
-      return static_cast<float>(stb_easy_font_width(const_cast<char *>(text.c_str()))) * pixelSize;
+      return static_cast<float>(text.size() * GLYPH_ADVANCE) * pixelSize;
    }
 
    /**
-    * Draws a text with stb_easy_font: the library fills a vertex array with the quads of the letters
-    * (16 bytes per vertex: x, y, z, color), drawn with glVertexPointer + glDrawArrays(GL_QUADS).
+    * Draws a text as a set of small squares (one GL_QUADS block).
     * @param text text to draw
     * @param x left side in pixels
     * @param y top side in pixels
@@ -45,18 +94,28 @@ namespace
     */
    void drawText(const std::string &text, float x, float y, float pixelSize)
    {
-      std::vector<char> vertices(text.size() * FONT_BYTES_PER_CHARACTER);
-      const int quads = stb_easy_font_print(0.0f, 0.0f, const_cast<char *>(text.c_str()), nullptr,
-                                            vertices.data(), static_cast<int>(vertices.size()));
+      float penX = x;
 
-      glPushMatrix();
-      glTranslatef(x, y, 0.0f);
-      glScalef(pixelSize, pixelSize, 1.0f);
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glVertexPointer(2, GL_FLOAT, 16, vertices.data());
-      glDrawArrays(GL_QUADS, 0, quads * 4);
-      glDisableClientState(GL_VERTEX_ARRAY);
-      glPopMatrix();
+      glBegin(GL_QUADS);
+      for (char character : text)
+      {
+         const Glyph *glyph = findGlyph(character);
+         for (int row = 0; glyph != nullptr && row < GLYPH_ROWS; row++)
+            for (int column = 0; column < GLYPH_COLUMNS; column++)
+            {
+               if (glyph->rows[row][column] != '#')
+                  continue;
+
+               const float left = penX + column * pixelSize;
+               const float top = y + row * pixelSize;
+               glVertex2f(left, top);
+               glVertex2f(left + pixelSize, top);
+               glVertex2f(left + pixelSize, top + pixelSize);
+               glVertex2f(left, top + pixelSize);
+            }
+         penX += GLYPH_ADVANCE * pixelSize;
+      }
+      glEnd();
    }
 
    /**
@@ -388,8 +447,8 @@ void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, st
 {
    const float pixelSize = 4.0f;
    const float titleSize = pixelSize * 1.5f;
-   const float lineHeight = (FONT_HEIGHT + 2) * pixelSize;
-   const float titleHeight = FONT_HEIGHT * titleSize;
+   const float lineHeight = (GLYPH_ROWS + 2) * pixelSize;
+   const float titleHeight = GLYPH_ROWS * titleSize;
    const float sectionGap = 2.0f * pixelSize;
    const float margin = 12.0f;
    const float padding = 3.0f * pixelSize;
@@ -404,7 +463,7 @@ void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, st
       widestAction = std::max(widestAction, textWidth(entry.second, pixelSize));
    }
 
-   const float keyColumnWidth = widestKey + textWidth(" ", pixelSize);
+   const float keyColumnWidth = widestKey + GLYPH_ADVANCE * pixelSize;
    const float contentWidth = std::max(keyColumnWidth + widestAction, textWidth("CONTROLS", titleSize));
    const float contentHeight = titleHeight + 2.0f * sectionGap + entries.size() * lineHeight;
    const float panelRight = static_cast<float>(width) - margin;
