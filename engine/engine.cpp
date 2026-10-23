@@ -12,13 +12,13 @@
    #include <iostream>
    #include <source_location>
 
-   #include <GLFW/glfw3.h>
+   #include <GL/freeglut.h>
 
 namespace
 {
-   const int WINDOW_WIDTH = 1024;
-   const int WINDOW_HEIGHT = 768;
-   const float SHADOW_LIFT = 0.002f;
+   const unsigned char ESCAPE_KEY = 27;
+   const int KEY_COUNT = 256;
+   char PROGRAM_NAME[] = "engine";
 
    const int GLYPH_COLUMNS = 5;
    const int GLYPH_ROWS = 7;
@@ -138,37 +138,95 @@ namespace
 }
 
 /**
- * @brief Base class reserved structure (PIMPL): hides GLFW from the engine users.
+ * @brief Base class reserved structure (PIMPL): hides FreeGLUT from the engine users.
  */
 struct Eng::Base::Reserved
 {
-   bool initFlag;                ///< Engine initialized
-   GLFWwindow *window;           ///< Output window
-   double lastTime;              ///< Time of the previous frame
-   float deltaTime;              ///< Seconds between the last two frames
-   double fpsTime;               ///< Start of the current FPS measurement
-   int fpsFrames;                ///< Frames drawn since fpsTime
-   glm::dvec2 lastMouse;         ///< Previous cursor position
-   std::vector<int> pressedKeys; ///< Keys pressed since the last check
+   bool initFlag;                      ///< Engine initialized
+   bool running;                       ///< False after ESC or after the window has been closed
+   int windowId;                       ///< FreeGLUT window identifier
+   std::string title;                  ///< Window title (the FPS are appended)
+   glm::vec3 backgroundColor;          ///< Clear color
+   KeyboardCallback keyboardCallback;  ///< Application function called at every key press
+   bool keyDown[KEY_COUNT];            ///< Keys held down, indexed by uppercase character
+   glm::vec2 mouseDelta;               ///< Mouse movement since the last getMouseDelta()
+   int lastTime;                       ///< Time of the previous frame in milliseconds
+   float deltaTime;                    ///< Seconds between the last two frames
+   int fpsTime;                        ///< Start of the current FPS measurement in milliseconds
+   int fpsFrames;                      ///< Frames drawn since fpsTime
 
    /**
     * Constructor of the reserved structure.
     */
    Reserved() :
-      initFlag{ false }, window{ nullptr }, lastTime{ 0.0 }, deltaTime{ 0.0f }, fpsTime{ 0.0 }, fpsFrames{ 0 },
-      lastMouse{ glm::dvec2(0.0) }
+      initFlag{ false }, running{ false }, windowId{ 0 }, backgroundColor{ glm::vec3(0.0f) }, keyboardCallback{ nullptr },
+      keyDown{}, mouseDelta{ glm::vec2(0.0f) }, lastTime{ 0 }, deltaTime{ 0.0f }, fpsTime{ 0 }, fpsFrames{ 0 }
    {}
 
    /**
-    * GLFW keyboard callback: stores the pressed keys, ESC closes the window.
+    * FreeGLUT display callback. Empty: the frame is drawn by the application loop.
     */
-   static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+   static void displayCallback()
+   {}
+
+   /**
+    * FreeGLUT key press callback: ESC stops the engine, the other keys are stored and passed to the application.
+    * @param key character of the key
+    * @param mouseX mouse position X
+    * @param mouseY mouse position Y
+    */
+   static void keyDownCallback(unsigned char key, int mouseX, int mouseY)
    {
-      if (action != GLFW_PRESS)
+      Reserved &reserved = *getInstance().reserved;
+      const unsigned char upperCase = static_cast<unsigned char>(std::toupper(key));
+
+      if (key == ESCAPE_KEY)
+      {
+         reserved.running = false;
          return;
-      if (key == GLFW_KEY_ESCAPE)
-         glfwSetWindowShouldClose(window, GLFW_TRUE);
-      Base::getInstance().reserved->pressedKeys.push_back(key);
+      }
+
+      reserved.keyDown[upperCase] = true;
+      if (reserved.keyboardCallback != nullptr)
+         reserved.keyboardCallback(upperCase);
+   }
+
+   /**
+    * FreeGLUT key release callback.
+    * @param key character of the key
+    * @param mouseX mouse position X
+    * @param mouseY mouse position Y
+    */
+   static void keyUpCallback(unsigned char key, int mouseX, int mouseY)
+   {
+      getInstance().reserved->keyDown[static_cast<unsigned char>(std::toupper(key))] = false;
+   }
+
+   /**
+    * FreeGLUT mouse callback: adds the distance from the window center to the movement, then puts the
+    * (hidden) cursor back in the center, so that the mouse can turn without limits.
+    * @param mouseX mouse position X
+    * @param mouseY mouse position Y
+    */
+   static void mouseMoveCallback(int mouseX, int mouseY)
+   {
+      Reserved &reserved = *getInstance().reserved;
+      const int centerX = glutGet(GLUT_WINDOW_WIDTH) / 2;
+      const int centerY = glutGet(GLUT_WINDOW_HEIGHT) / 2;
+
+      if (mouseX == centerX && mouseY == centerY)
+         return;
+
+      reserved.mouseDelta += glm::vec2(static_cast<float>(mouseX - centerX), static_cast<float>(mouseY - centerY));
+      glutWarpPointer(centerX, centerY);
+   }
+
+   /**
+    * FreeGLUT close callback: the window has been closed with the mouse.
+    */
+   static void windowCloseCallback()
+   {
+      getInstance().reserved->running = false;
    }
 };
 
@@ -203,39 +261,39 @@ Eng::Base ENG_API &Eng::Base::getInstance()
 }
 
 /**
- * Opens the window, creates the OpenGL context and sets the fixed-pipeline state.
+ * Opens the window with FreeGLUT (double buffer, depth and stencil buffer), registers the callbacks
+ * and sets the fixed-pipeline state.
+ * @param title window title
+ * @param width window width in pixels
+ * @param height window height in pixels
  * @return TF
  */
-bool ENG_API Eng::Base::init()
+bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
 {
+   int argc = 1;
+   char *argv[] = { PROGRAM_NAME, nullptr };
+
    if (reserved->initFlag)
    {
       std::cout << "ERROR: engine already initialized" << std::endl;
       return false;
    }
 
-   if (!glfwInit())
-   {
-      std::cout << "ERROR: unable to initialize GLFW" << std::endl;
-      return false;
-   }
+   glutInit(&argc, argv);
+   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+   glutInitWindowSize(width, height);
+   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+   reserved->windowId = glutCreateWindow(title.c_str());
+   reserved->title = title;
 
-   glfwWindowHint(GLFW_STENCIL_BITS, 8);
-   reserved->window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, LIB_NAME, nullptr, nullptr);
-   if (reserved->window == nullptr)
-   {
-      std::cout << "ERROR: unable to create the window" << std::endl;
-      glfwTerminate();
-      return false;
-   }
-
-   glfwMakeContextCurrent(reserved->window);
-   glfwSwapInterval(1);
-   glfwSetKeyCallback(reserved->window, Reserved::keyCallback);
-   glfwSetInputMode(reserved->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-   glfwGetCursorPos(reserved->window, &reserved->lastMouse.x, &reserved->lastMouse.y);
-   reserved->lastTime = glfwGetTime();
-   reserved->fpsTime = reserved->lastTime;
+   glutDisplayFunc(Reserved::displayCallback);
+   glutKeyboardFunc(Reserved::keyDownCallback);
+   glutKeyboardUpFunc(Reserved::keyUpCallback);
+   glutPassiveMotionFunc(Reserved::mouseMoveCallback);
+   glutMotionFunc(Reserved::mouseMoveCallback);
+   glutCloseFunc(Reserved::windowCloseCallback);
+   glutIgnoreKeyRepeat(1);
+   glutSetCursor(GLUT_CURSOR_NONE);
 
    std::cout << "   OpenGL version: " << reinterpret_cast<const char *>(glGetString(GL_VERSION)) << std::endl;
 
@@ -245,7 +303,11 @@ bool ENG_API Eng::Base::init()
    glEnable(GL_LIGHTING);
    glEnable(GL_NORMALIZE);
    glShadeModel(GL_SMOOTH);
-   glClearColor(0.1f, 0.1f, 0.12f, 1.0f);
+
+   glutMainLoopEvent();
+   reserved->lastTime = glutGet(GLUT_ELAPSED_TIME);
+   reserved->fpsTime = reserved->lastTime;
+   reserved->running = true;
 
    std::cout << "[>] " << LIB_NAME << " initialized" << std::endl;
    reserved->initFlag = true;
@@ -253,7 +315,7 @@ bool ENG_API Eng::Base::init()
 }
 
 /**
- * Closes the window and releases GLFW.
+ * Closes the window and releases FreeGLUT.
  * @return TF
  */
 bool ENG_API Eng::Base::free()
@@ -264,177 +326,73 @@ bool ENG_API Eng::Base::free()
       return false;
    }
 
-   glfwDestroyWindow(reserved->window);
-   glfwTerminate();
+   glutDestroyWindow(reserved->windowId);
+   glutExit();
 
    std::cout << "[<] " << LIB_NAME << " deinitialized" << std::endl;
+   reserved->running = false;
    reserved->initFlag = false;
    return true;
 }
 
 /**
- * Tells if the window is still open.
+ * Tells if the application should keep running (no ESC pressed, window still open).
  * @return TF
  */
 bool ENG_API Eng::Base::isRunning() const
 {
-   return !glfwWindowShouldClose(reserved->window);
+   return reserved->running;
 }
 
 /**
- * Shows the frame, reads the input, measures time and writes the FPS in the window title.
+ * Sets the color used by clearWindow().
+ * @param color RGB color
  */
-void ENG_API Eng::Base::update()
+void ENG_API Eng::Base::setBackgroundColor(const glm::vec3 &color)
 {
-   const double now = glfwGetTime();
-
-   glfwSwapBuffers(reserved->window);
-   reserved->pressedKeys.clear();
-   glfwPollEvents();
-
-   reserved->deltaTime = static_cast<float>(now - reserved->lastTime);
-   reserved->lastTime = now;
-
-   reserved->fpsFrames++;
-   if (now - reserved->fpsTime >= 1.0)
-   {
-      const std::string title = std::string(LIB_NAME) + " - " + std::to_string(reserved->fpsFrames) + " FPS";
-      glfwSetWindowTitle(reserved->window, title.c_str());
-      reserved->fpsTime = now;
-      reserved->fpsFrames = 0;
-   }
+   reserved->backgroundColor = color;
 }
 
 /**
- * Gets the time elapsed between the last two frames.
- * @return seconds
+ * Sets the function called at every key press (nullptr for none).
+ * @param callback application function
  */
-float ENG_API Eng::Base::getDeltaTime() const
+void ENG_API Eng::Base::setKeyboardCallback(KeyboardCallback callback)
 {
-   return reserved->deltaTime;
+   reserved->keyboardCallback = callback;
 }
 
 /**
- * Tells if a key is held down.
- * @param key uppercase letter or digit ('W', '1', ...)
- * @return TF
+ * Clears the color, depth and stencil buffers.
  */
-bool ENG_API Eng::Base::isKeyDown(int key) const
+void ENG_API Eng::Base::clearWindow()
 {
-   return glfwGetKey(reserved->window, key) == GLFW_PRESS;
+   glClearColor(reserved->backgroundColor.r, reserved->backgroundColor.g, reserved->backgroundColor.b, 1.0f);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 /**
- * Tells if a key has been pressed in the last frame (one time only).
- * @param key uppercase letter or digit ('C', '1', ...)
- * @return TF
- */
-bool ENG_API Eng::Base::wasKeyPressed(int key)
-{
-   for (int pressed : reserved->pressedKeys)
-      if (pressed == key)
-         return true;
-   return false;
-}
-
-/**
- * Gets how much the mouse moved since the previous call.
- * @return movement in pixels (x right, y down)
- */
-glm::vec2 ENG_API Eng::Base::getMouseDelta()
-{
-   glm::dvec2 mouse(0.0);
-   glfwGetCursorPos(reserved->window, &mouse.x, &mouse.y);
-   const glm::vec2 delta = glm::vec2(mouse - reserved->lastMouse);
-   reserved->lastMouse = mouse;
-   return delta;
-}
-
-/**
- * Renders a scene graph from a camera: lights first, then meshes, then the planar shadow.
- * The objects are flattened on the flat meshes (floor) with the shadow matrix of the OpenGL SuperBible
- * (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, drawn only into the stencil buffer.
- * The floor is then drawn again, without the shadow light, where the stencil marks the shadow.
+ * Renders a render list from a camera, then the planar shadow cast by a light.
  * @param camera active camera
- * @param root root of the scene graph
- * Only meshes lower than a point light cast a shadow: a point above the light cannot be projected on the floor.
+ * @param list lights and meshes to draw
  * @param shadowLight light that casts the shadow (nullptr for no shadow)
  */
-void ENG_API Eng::Base::render(Camera *camera, Node *root, Light *shadowLight)
+void ENG_API Eng::Base::render(Camera *camera, List *list, Light *shadowLight)
 {
-   std::vector<Node *> list;
-   std::vector<Mesh *> floors;
-   std::vector<Mesh *> casters;
-   int width, height;
+   const int width = glutGet(GLUT_WINDOW_WIDTH);
+   const int height = glutGet(GLUT_WINDOW_HEIGHT);
 
-   glfwGetFramebufferSize(reserved->window, &width, &height);
    if (height == 0)
       return;
 
    glViewport(0, 0, width, height);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
    glMatrixMode(GL_PROJECTION);
    glLoadMatrixf(glm::value_ptr(camera->getProjectionMatrix(static_cast<float>(width) / static_cast<float>(height))));
    glMatrixMode(GL_MODELVIEW);
 
    const glm::mat4 view = camera->getViewMatrix();
-   root->collect(list);
-
-   for (Node *node : list)
-      if (dynamic_cast<Light *>(node) != nullptr)
-         node->render(view * node->getWorldMatrix());
-
-   glEnable(GL_STENCIL_TEST);
-   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-   for (Node *node : list)
-   {
-      Mesh *mesh = dynamic_cast<Mesh *>(node);
-      if (mesh == nullptr)
-         continue;
-
-      if (mesh->isFlat())
-         floors.push_back(mesh);
-      else
-         casters.push_back(mesh);
-
-      glStencilFunc(GL_ALWAYS, mesh->isFlat() ? 1 : 0, 0xFF);
-      mesh->render(view * mesh->getWorldMatrix());
-   }
-
-   if (shadowLight != nullptr && shadowLight->isEnabled() && !floors.empty())
-   {
-      const glm::vec4 light = shadowLight->getWorldPosition();
-      const glm::vec4 plane(0.0f, 1.0f, 0.0f, -(floors[0]->getWorldMinY() + SHADOW_LIFT));
-      const glm::mat4 shadow = glm::dot(plane, light) * glm::mat4(1.0f) - glm::outerProduct(light, plane);
-
-      glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-      glDepthMask(GL_FALSE);
-      glStencilFunc(GL_EQUAL, 1, 0xFF);
-      glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
-
-      for (Mesh *mesh : casters)
-      {
-         if (light.w != 0.0f && mesh->getWorldMaxY() >= light.y)
-            continue;
-         glLoadMatrixf(glm::value_ptr(view * shadow * mesh->getWorldMatrix()));
-         mesh->renderGeometry();
-      }
-
-      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-      glDepthMask(GL_TRUE);
-
-      shadowLight->setEnabled(false);
-      shadowLight->render(view * shadowLight->getWorldMatrix());
-      glStencilFunc(GL_EQUAL, 2, 0xFF);
-      glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-      glDepthFunc(GL_LEQUAL);
-      for (Mesh *floor : floors)
-         floor->render(view * floor->getWorldMatrix());
-      glDepthFunc(GL_LESS);
-      shadowLight->setEnabled(true);
-   }
-   glDisable(GL_STENCIL_TEST);
+   list->render(view);
+   list->renderShadow(view, shadowLight);
 }
 
 /**
@@ -452,11 +410,11 @@ void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, st
    const float sectionGap = 2.0f * pixelSize;
    const float margin = 12.0f;
    const float padding = 3.0f * pixelSize;
+   const int width = glutGet(GLUT_WINDOW_WIDTH);
+   const int height = glutGet(GLUT_WINDOW_HEIGHT);
    float widestKey = 0.0f;
    float widestAction = 0.0f;
-   int width, height;
 
-   glfwGetFramebufferSize(reserved->window, &width, &height);
    for (const std::pair<std::string, std::string> &entry : entries)
    {
       widestKey = std::max(widestKey, textWidth(entry.first, pixelSize));
@@ -519,4 +477,59 @@ void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, st
    glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_LIGHTING);
+}
+
+/**
+ * Shows the frame (glutSwapBuffers), measures the time, writes the FPS in the window title
+ * and processes the window events (glutMainLoopEvent), which call the input callbacks.
+ */
+void ENG_API Eng::Base::swapBuffers()
+{
+   const int now = glutGet(GLUT_ELAPSED_TIME);
+
+   glutSwapBuffers();
+
+   reserved->deltaTime = static_cast<float>(now - reserved->lastTime) / 1000.0f;
+   reserved->lastTime = now;
+
+   reserved->fpsFrames++;
+   if (now - reserved->fpsTime >= 1000)
+   {
+      const std::string title = reserved->title + " - " + std::to_string(reserved->fpsFrames) + " FPS";
+      glutSetWindowTitle(title.c_str());
+      reserved->fpsTime = now;
+      reserved->fpsFrames = 0;
+   }
+
+   glutMainLoopEvent();
+}
+
+/**
+ * Gets the time elapsed between the last two frames.
+ * @return seconds
+ */
+float ENG_API Eng::Base::getDeltaTime() const
+{
+   return reserved->deltaTime;
+}
+
+/**
+ * Tells if a key is held down.
+ * @param key uppercase letter or digit ('W', '1', ...)
+ * @return TF
+ */
+bool ENG_API Eng::Base::isKeyDown(unsigned char key) const
+{
+   return reserved->keyDown[key];
+}
+
+/**
+ * Gets how much the mouse moved since the previous call.
+ * @return movement in pixels (x right, y down)
+ */
+glm::vec2 ENG_API Eng::Base::getMouseDelta()
+{
+   const glm::vec2 delta = reserved->mouseDelta;
+   reserved->mouseDelta = glm::vec2(0.0f);
+   return delta;
 }

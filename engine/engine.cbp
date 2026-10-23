@@ -39,16 +39,18 @@
 			<Add option="-fPIC" />
 			<Add option="-m64" />
 			<Add option="-fexceptions" />
-			<Add option="`pkg-config --cflags glfw3 assimp`" />
+			<Add option="`pkg-config --cflags glut assimp`" />
 			<Add option="-I../dependencies" />
 		</Compiler>
 		<Linker>
 			<Add option="-m64" />
-			<Add option="`pkg-config --libs glfw3 assimp`" />
+			<Add option="`pkg-config --libs glut assimp`" />
 			<Add option="-lGL" />
 		</Linker>
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.h" />
+		<Unit filename="object.cpp" />
+		<Unit filename="object.h" />
 		<Unit filename="node.cpp" />
 		<Unit filename="node.h" />
 		<Unit filename="texture.cpp" />
@@ -59,8 +61,14 @@
 		<Unit filename="mesh.h" />
 		<Unit filename="light.cpp" />
 		<Unit filename="light.h" />
+		<Unit filename="directionallight.cpp" />
+		<Unit filename="directionallight.h" />
+		<Unit filename="pointlight.cpp" />
+		<Unit filename="pointlight.h" />
 		<Unit filename="camera.cpp" />
 		<Unit filename="camera.h" />
+		<Unit filename="list.cpp" />
+		<Unit filename="list.h" />
 		<Unit filename="loader.cpp" />
 		<Unit filename="loader.h" />
 		<Extensions />

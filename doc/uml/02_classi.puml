@@ -1,0 +1,185 @@
+@startuml 02_classi
+!include style.iuml
+title Diagramma delle classi del motore (namespace Eng)
+hide empty members
+set separator ::
+
+package Eng <<Rectangle>> {
+
+  class Base <<singleton>> {
+    - reserved : unique_ptr<Reserved>
+    --
+    + {static} getInstance() : Base&
+    + init(title : string, width : int, height : int) : bool
+    + free() : bool
+    + isRunning() : bool
+    + setBackgroundColor(color : vec3)
+    + setKeyboardCallback(callback : KeyboardCallback)
+    + clearWindow()
+    + render(camera : Camera*, list : List*, shadowLight : Light*)
+    + renderLegend(entries : vector<pair<string,string>>)
+    + swapBuffers()
+    + getDeltaTime() : float
+    + isKeyDown(key : uchar) : bool
+    + getMouseDelta() : vec2
+    - Base()
+  }
+
+  class "Base::Reserved" as Reserved <<PIMPL>> {
+    + windowId, title, backgroundColor
+    + keyboardCallback : KeyboardCallback
+    + keyDown[256] : bool
+    + mouseDelta : vec2
+    + deltaTime : float
+    --
+    callback FreeGLUT (statiche):
+    display, keyDown, keyUp,
+    mouseMove, windowClose
+  }
+
+  abstract class Object {
+    # id : uint
+    # name : string
+    # {static} idCounter : uint
+    --
+    + Object(name : string)
+    + getId() : uint
+    + getName() : string
+    + {abstract} render(modelView : mat4)
+  }
+
+  class Node {
+    # matrix : mat4
+    # parent : Node*
+    # children : vector<Node*>
+    --
+    + setMatrix(matrix : mat4)
+    + getMatrix() : mat4
+    + getWorldMatrix() : mat4
+    + addChild(child : Node*)
+    + getParent() : Node*
+    + getChildren() : vector<Node*>
+    + render(modelView : mat4)
+  }
+
+  class Mesh <<final>> {
+    - displayList : uint
+    - triangleCount : uint
+    - worldMin : vec3
+    - worldMax : vec3
+    - material : shared_ptr<Material>
+    --
+    + build(positions, normals, uvs)
+    + setMaterial(material : shared_ptr<Material>)
+    + getMaterial() : shared_ptr<Material>
+    + getTriangleCount() : uint
+    + isFlat() : bool
+    + getWorldMinY() : float
+    + getWorldMaxY() : float
+    + getWorldCenter() : vec3
+    + render(modelView : mat4)
+    + renderGeometry()
+  }
+
+  class Camera <<final>> {
+    - fovDegrees : float
+    - nearPlane : float
+    - farPlane : float
+    --
+    + getViewMatrix() : mat4
+    + getProjectionMatrix(aspect : float) : mat4
+  }
+
+  abstract class Light {
+    # lightId : int
+    # position : vec4
+    # color : vec4
+    # enabled : bool
+    # {static} lightCount : int
+    --
+    # Light(name, position : vec4, color : vec3)
+    + setEnabled(enabled : bool)
+    + isEnabled() : bool
+    + getWorldPosition() : vec4
+    + render(modelView : mat4)
+  }
+
+  class DirectionalLight <<final>> {
+    + DirectionalLight(name, color : vec3)
+    .. position = (0, 0, 1, 0): raggi lungo -Z ..
+  }
+
+  class PointLight <<final>> {
+    - attenuation : vec3
+    --
+    + PointLight(name, color : vec3)
+    + setAttenuation(constant, linear, quadratic)
+    + render(modelView : mat4)
+    .. position = (0, 0, 0, 1): origine del nodo ..
+  }
+
+  class Material <<final>> {
+    - ambient : vec4
+    - diffuse : vec4
+    - specular : vec4
+    - emission : vec4
+    - shininess : float
+    - texture : shared_ptr<Texture>
+    --
+    + setAmbient / setDiffuse / setSpecular(color : vec3)
+    + setEmission(color : vec3)
+    + getEmission() : vec3
+    + setShininess(shininess : float)
+    + setTexture(texture : shared_ptr<Texture>)
+    + render(modelView : mat4)
+  }
+
+  class Texture <<final>> {
+    - textureId : uint
+    --
+    + load(fileData : uchar*, fileSize : int) : bool
+    + render(modelView : mat4)
+  }
+
+  class List <<final>> {
+    - lights : vector<Light*>
+    - meshes : vector<Mesh*>
+    --
+    + pass(node : Node*)
+    + clear()
+    + render(modelView : mat4)
+    + renderShadow(viewMatrix : mat4, light : Light*)
+  }
+
+  class Loader <<final>> <<utility>> {
+    + {static} load(filename : string) : Node*
+  }
+}
+
+Base *-- Reserved
+Object <|-- Node
+Object <|-- Material
+Object <|-- Texture
+Object <|-- List
+Node <|-- Mesh
+Node <|-- Camera
+Node <|-- Light
+Light <|-- DirectionalLight
+Light <|-- PointLight
+
+Node "1" *-- "0..*" Node : children >
+Mesh "0..*" o-- "0..1" Material : material >
+Material "0..*" o-- "0..1" Texture : texture >
+List "1" o-- "0..*" Light : lights >
+List "1" o-- "0..*" Mesh : meshes >
+
+Base ..> Camera : usa
+Base ..> List : usa
+Base ..> Light : shadowLight
+Loader ..> Node : <<create>>
+note right of Loader
+  crea l'albero di Node e Mesh,
+  i Material e le Texture
+  leggendo il file con Assimp
+end note
+@enduml

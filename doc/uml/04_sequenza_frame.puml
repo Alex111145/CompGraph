@@ -1,0 +1,56 @@
+@startuml 04_sequenza_frame
+!include style.iuml
+title Sequenza: rendering di un frame (Base::render)
+autonumber
+hide footbox
+
+participant "eng : Base" as eng
+participant "camera : Camera" as cam
+participant "list : List" as list
+participant "light : Light" as light
+participant "mesh : Mesh" as mesh
+participant "material : Material" as mat
+participant "texture : Texture" as tex
+
+eng -> cam : getProjectionMatrix(width / height)
+eng -> eng : glMatrixMode(GL_PROJECTION), glLoadMatrixf(P)
+eng -> cam : getViewMatrix()
+cam --> eng : V = inverse(world)
+eng -> list : render(V)
+
+group 1. luci (prima di ogni mesh)
+  loop per ogni luce
+    list -> light : getWorldMatrix()
+    list -> light : render(V x world)
+    light -> light : glLoadMatrixf, glLightfv(GL_POSITION...), glEnable
+  end
+end
+
+group 2. mesh (lo stencil marca il pavimento)
+  loop per ogni mesh
+    list -> list : glStencilFunc(ALWAYS, piatta ? 1 : 0)
+    list -> mesh : render(V x world)
+    mesh -> mat : render(modelView)
+    mat -> mat : glMaterialfv(...)
+    opt ha una texture
+      mat -> tex : render(modelView)
+      tex -> tex : glBindTexture
+    end
+    mesh -> mesh : glCallList(displayList)
+  end
+end
+
+eng -> list : renderShadow(V, lamp)
+group 3. ombra planare (SuperBible, MakeShadowMatrix)
+  list -> light : getWorldPosition()
+  list -> list : S = (piano . luce) I - luce piano^T
+  list -> list : colori e depth spenti,\nstencil EQUAL 1 -> INCR
+  loop per ogni mesh non piatta sotto la luce
+    list -> mesh : glLoadMatrixf(V x S x world), renderGeometry()
+  end
+  list -> light : setEnabled(false), render(...)
+  list -> list : stencil EQUAL 2, glDepthFunc(LEQUAL)
+  list -> mesh : render() del pavimento senza la lampada
+  list -> light : setEnabled(true)
+end
+@enduml

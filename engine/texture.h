@@ -11,22 +11,19 @@ namespace Eng {
 /**
  * @brief 2D texture object (OpenGL 1.1 glGenTextures/glBindTexture).
  */
-class ENG_API Texture final
+class ENG_API Texture final : public Object
 {
 public:
 
-   Texture();
-   Texture(Texture const &) = delete;
+   Texture(const std::string &name);
    ~Texture();
 
-   void operator=(Texture const &) = delete;
-
    bool load(const unsigned char *fileData, int fileSize);
-   void bind() const;
+   void render(const glm::mat4 &modelView) override;
 
 private:
 
-   unsigned int id;   ///< OpenGL texture name
+   unsigned int textureId;   ///< OpenGL texture name
 };
 
 };

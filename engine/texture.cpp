@@ -7,17 +7,18 @@
 
    #include "engine.h"
 
-   #include <GLFW/glfw3.h>
+   #include <GL/freeglut.h>
 
    #define STB_IMAGE_IMPLEMENTATION
    #include <stb/stb_image.h>
 
 /**
  * Constructor. Reserves an OpenGL texture name.
+ * @param name texture name (path inside the file)
  */
-ENG_API Eng::Texture::Texture() : id{ 0 }
+ENG_API Eng::Texture::Texture(const std::string &name) : Object(name), textureId{ 0 }
 {
-   glGenTextures(1, &id);
+   glGenTextures(1, &textureId);
 }
 
 /**
@@ -25,7 +26,7 @@ ENG_API Eng::Texture::Texture() : id{ 0 }
  */
 ENG_API Eng::Texture::~Texture()
 {
-   glDeleteTextures(1, &id);
+   glDeleteTextures(1, &textureId);
 }
 
 /**
@@ -42,7 +43,7 @@ bool ENG_API Eng::Texture::load(const unsigned char *fileData, int fileSize)
    if (pixels == nullptr)
       return false;
 
-   glBindTexture(GL_TEXTURE_2D, id);
+   glBindTexture(GL_TEXTURE_2D, textureId);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -55,8 +56,9 @@ bool ENG_API Eng::Texture::load(const unsigned char *fileData, int fileSize)
 
 /**
  * Makes this texture the current one.
+ * @param modelView not used: a texture has no position
  */
-void ENG_API Eng::Texture::bind() const
+void ENG_API Eng::Texture::render(const glm::mat4 &modelView)
 {
-   glBindTexture(GL_TEXTURE_2D, id);
+   glBindTexture(GL_TEXTURE_2D, textureId);
 }

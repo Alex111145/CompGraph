@@ -31,16 +31,30 @@ CONTROLLI (mostrati anche nel pannello in alto a destra)
 All'avvio la console stampa lo scene graph con la posizione mondo di ogni
 nodo e il numero di triangoli (14837 in totale).
 
+STRUTTURA DEL MOTORE (diagrammi UML in doc/uml/)
+- Eng::Base      singleton: finestra e contesto (FreeGLUT, usato solo
+                 dentro il motore), input, clearWindow/render/swapBuffers.
+- Eng::Object    base astratta: id univoco, nome, render().
+- Eng::Node      scene graph (matrice locale, padre, figli).
+  - Eng::Mesh              triangoli in display list + materiale.
+  - Eng::Camera            camera prospettica, vista = inversa del mondo.
+  - Eng::Light (astratta)  glLight; Eng::DirectionalLight, Eng::PointLight.
+- Eng::Material, Eng::Texture   glMaterial / glBindTexture.
+- Eng::List      render list: prima le luci, poi le mesh, poi l'ombra.
+- Eng::Loader    file 3D (Assimp) -> scene graph.
+Il client non chiama mai OpenGL o FreeGLUT: usa solo le classi Eng::.
+
 COMPILAZIONE
 - Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022/2026 (x64).
-  GLFW3 e Assimp sono gestiti da vcpkg (manifest mode, vcpkg.json).
+  FreeGLUT e Assimp sono gestiti da vcpkg (manifest mode, vcpkg.json).
   GLM e stb_image sono in dependencies/.
-- Linux: installa libglfw3-dev e libassimp-dev, poi "make" dalla cartella
+- Linux: installa freeglut3-dev e libassimp-dev, poi "make" dalla cartella
   del progetto, oppure apri cg_Gervasini_Alessio.workspace in Code::Blocks.
 
 DEMO
 windows/ : lancia client.exe.
-demo/    : lancia demo/run.sh (Linux x86_64).
+demo/    : lancia demo/run.sh (Linux x86_64, richiede le librerie
+           FreeGLUT e Assimp del sistema: freeglut3-dev, libassimp-dev).
 
 DOCUMENTAZIONE
 "doxygen Doxyfile" dalla cartella engine produce doc/html/.

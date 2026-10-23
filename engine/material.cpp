@@ -7,12 +7,13 @@
 
    #include "engine.h"
 
-   #include <GLFW/glfw3.h>
+   #include <GL/freeglut.h>
 
 /**
  * Constructor. All the colors start as zero vectors (alpha 1).
+ * @param name material name
  */
-ENG_API Eng::Material::Material() :
+ENG_API Eng::Material::Material(const std::string &name) : Object(name),
    ambient{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) }, diffuse{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) },
    specular{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) }, emission{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) },
    shininess{ 0.0f }
@@ -89,8 +90,9 @@ void ENG_API Eng::Material::setTexture(std::shared_ptr<Texture> texture)
 
 /**
  * Sends the material to OpenGL and binds its texture.
+ * @param modelView not used: a material has no position
  */
-void ENG_API Eng::Material::apply() const
+void ENG_API Eng::Material::render(const glm::mat4 &modelView)
 {
    glMaterialfv(GL_FRONT, GL_AMBIENT, glm::value_ptr(ambient));
    glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(diffuse));
@@ -101,7 +103,7 @@ void ENG_API Eng::Material::apply() const
    if (texture)
    {
       glEnable(GL_TEXTURE_2D);
-      texture->bind();
+      texture->render(modelView);
    }
    else
       glDisable(GL_TEXTURE_2D);

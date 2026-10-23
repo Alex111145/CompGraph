@@ -35,22 +35,32 @@
    #define ENG_API
 #endif
 
+   #include "object.h"
    #include "node.h"
    #include "texture.h"
    #include "material.h"
    #include "mesh.h"
    #include "light.h"
+   #include "directionallight.h"
+   #include "pointlight.h"
    #include "camera.h"
+   #include "list.h"
    #include "loader.h"
 
 namespace Eng {
 
 /**
- * @brief Base engine main class (singleton): owns the window, reads the input and renders a scene graph.
+ * @brief Base engine main class (singleton): owns the window and the OpenGL context, reads the input
+ * and renders a render list. The windowing library is used only inside the engine.
  */
 class ENG_API Base final
 {
 public:
+
+   /**
+    * @brief Function called once every time a key is pressed (letters in uppercase).
+    */
+   using KeyboardCallback = void (*)(unsigned char key);
 
    Base(Base const &) = delete;
    ~Base();
@@ -59,19 +69,21 @@ public:
 
    static Base &getInstance();
 
-   bool init();
+   bool init(const std::string &title, int width, int height);
    bool free();
 
    bool isRunning() const;
-   void update();
-   float getDeltaTime() const;
+   void setBackgroundColor(const glm::vec3 &color);
+   void setKeyboardCallback(KeyboardCallback callback);
 
-   bool isKeyDown(int key) const;
-   bool wasKeyPressed(int key);
-   glm::vec2 getMouseDelta();
-
-   void render(Camera *camera, Node *root, Light *shadowLight);
+   void clearWindow();
+   void render(Camera *camera, List *list, Light *shadowLight);
    void renderLegend(const std::vector<std::pair<std::string, std::string>> &entries);
+   void swapBuffers();
+
+   float getDeltaTime() const;
+   bool isKeyDown(unsigned char key) const;
+   glm::vec2 getMouseDelta();
 
 private:
 
