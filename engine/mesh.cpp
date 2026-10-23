@@ -7,7 +7,7 @@
 
    #include "engine.h"
 
-   #include <GLFW/glfw3.h>
+   #include <GL/freeglut.h>
 
 namespace
 {
@@ -136,7 +136,7 @@ void ENG_API Eng::Mesh::render(const glm::mat4 &modelView)
 {
    glLoadMatrixf(glm::value_ptr(modelView));
    if (material)
-      material->apply();
+      material->render(modelView);
    glCallList(displayList);
 }
 

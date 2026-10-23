@@ -1,47 +1,31 @@
 /**
  * @file		light.cpp
- * @brief	Light source (directional or point) for the OpenGL fixed pipeline (glLight)
+ * @brief	Light source for the OpenGL fixed pipeline (glLight), base of the light types
  *
  * @author	Alessio Gervasini
  */
 
    #include "engine.h"
 
-   #include <GLFW/glfw3.h>
+   #include <GL/freeglut.h>
 
 int Eng::Light::lightCount = 0;
 
 /**
  * Constructor. Each light takes the next free OpenGL light (GL_LIGHT0, GL_LIGHT1, ...).
- * A directional light gets its direction normalized.
  * @param name light name
- * @param position homogeneous position (w = 0 directional, w = 1 point)
+ * @param position homogeneous local position (w = 0 directional, w = 1 point)
  * @param color diffuse and specular color
  */
 ENG_API Eng::Light::Light(const std::string &name, const glm::vec4 &position, const glm::vec3 &color) :
-   Node(name), lightId{ GL_LIGHT0 + lightCount++ }, position{ position }, color{ glm::vec4(color, 1.0f) },
-   attenuation{ glm::vec3(1.0f, 0.0f, 0.0f) }, enabled{ true }
-{
-   if (position.w == 0.0f)
-      this->position = glm::vec4(glm::normalize(glm::vec3(position)), 0.0f);
-}
+   Node(name), lightId{ GL_LIGHT0 + lightCount++ }, position{ position }, color{ glm::vec4(color, 1.0f) }, enabled{ true }
+{}
 
 /**
  * Destructor.
  */
 ENG_API Eng::Light::~Light()
 {}
-
-/**
- * Sets the distance attenuation (point light only).
- * @param constant constant factor
- * @param linear linear factor
- * @param quadratic quadratic factor
- */
-void ENG_API Eng::Light::setAttenuation(float constant, float linear, float quadratic)
-{
-   attenuation = glm::vec3(constant, linear, quadratic);
-}
 
 /**
  * Turns the light on or off.
@@ -89,8 +73,5 @@ void ENG_API Eng::Light::render(const glm::mat4 &modelView)
    glLightfv(lightId, GL_AMBIENT, glm::value_ptr(noAmbient));
    glLightfv(lightId, GL_DIFFUSE, glm::value_ptr(color));
    glLightfv(lightId, GL_SPECULAR, glm::value_ptr(color));
-   glLightf(lightId, GL_CONSTANT_ATTENUATION, attenuation.x);
-   glLightf(lightId, GL_LINEAR_ATTENUATION, attenuation.y);
-   glLightf(lightId, GL_QUADRATIC_ATTENUATION, attenuation.z);
    glEnable(lightId);
 }

@@ -3,12 +3,12 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = $(shell pkg-config --cflags glfw3 assimp) -I../dependencies
+INC = $(shell pkg-config --cflags glut assimp) -I../dependencies
 CFLAGS = -Wall -std=c++20 -fPIC -m64 -fexceptions
 RCFLAGS =
 RESINC =
 LIBDIR =
-LIB = $(shell pkg-config --libs glfw3 assimp) -lGL
+LIB = $(shell pkg-config --libs glut assimp) -lGL
 LDFLAGS = -m64
 
 INC_DEBUG = $(INC)
@@ -33,9 +33,9 @@ OBJDIR_RELEASE = obj/Release
 DEP_RELEASE = 
 OUT_RELEASE = bin/Release/libengine.so
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/texture.o $(OBJDIR_DEBUG)/material.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/loader.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/object.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/texture.o $(OBJDIR_DEBUG)/material.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/directionallight.o $(OBJDIR_DEBUG)/pointlight.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/list.o $(OBJDIR_DEBUG)/loader.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/texture.o $(OBJDIR_RELEASE)/material.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/loader.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/object.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/texture.o $(OBJDIR_RELEASE)/material.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/directionallight.o $(OBJDIR_RELEASE)/pointlight.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/list.o $(OBJDIR_RELEASE)/loader.o
 
 all: debug release
 
@@ -55,6 +55,9 @@ out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 $(OBJDIR_DEBUG)/engine.o: engine.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c engine.cpp -o $(OBJDIR_DEBUG)/engine.o
 
+$(OBJDIR_DEBUG)/object.o: object.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c object.cpp -o $(OBJDIR_DEBUG)/object.o
+
 $(OBJDIR_DEBUG)/node.o: node.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c node.cpp -o $(OBJDIR_DEBUG)/node.o
 
@@ -70,8 +73,17 @@ $(OBJDIR_DEBUG)/mesh.o: mesh.cpp
 $(OBJDIR_DEBUG)/light.o: light.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c light.cpp -o $(OBJDIR_DEBUG)/light.o
 
+$(OBJDIR_DEBUG)/directionallight.o: directionallight.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c directionallight.cpp -o $(OBJDIR_DEBUG)/directionallight.o
+
+$(OBJDIR_DEBUG)/pointlight.o: pointlight.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c pointlight.cpp -o $(OBJDIR_DEBUG)/pointlight.o
+
 $(OBJDIR_DEBUG)/camera.o: camera.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c camera.cpp -o $(OBJDIR_DEBUG)/camera.o
+
+$(OBJDIR_DEBUG)/list.o: list.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c list.cpp -o $(OBJDIR_DEBUG)/list.o
 
 $(OBJDIR_DEBUG)/loader.o: loader.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c loader.cpp -o $(OBJDIR_DEBUG)/loader.o
@@ -95,6 +107,9 @@ out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 $(OBJDIR_RELEASE)/engine.o: engine.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c engine.cpp -o $(OBJDIR_RELEASE)/engine.o
 
+$(OBJDIR_RELEASE)/object.o: object.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c object.cpp -o $(OBJDIR_RELEASE)/object.o
+
 $(OBJDIR_RELEASE)/node.o: node.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c node.cpp -o $(OBJDIR_RELEASE)/node.o
 
@@ -110,8 +125,17 @@ $(OBJDIR_RELEASE)/mesh.o: mesh.cpp
 $(OBJDIR_RELEASE)/light.o: light.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c light.cpp -o $(OBJDIR_RELEASE)/light.o
 
+$(OBJDIR_RELEASE)/directionallight.o: directionallight.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c directionallight.cpp -o $(OBJDIR_RELEASE)/directionallight.o
+
+$(OBJDIR_RELEASE)/pointlight.o: pointlight.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c pointlight.cpp -o $(OBJDIR_RELEASE)/pointlight.o
+
 $(OBJDIR_RELEASE)/camera.o: camera.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c camera.cpp -o $(OBJDIR_RELEASE)/camera.o
+
+$(OBJDIR_RELEASE)/list.o: list.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c list.cpp -o $(OBJDIR_RELEASE)/list.o
 
 $(OBJDIR_RELEASE)/loader.o: loader.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c loader.cpp -o $(OBJDIR_RELEASE)/loader.o

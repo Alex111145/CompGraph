@@ -11,15 +11,12 @@ namespace Eng {
 /**
  * @brief Ambient/diffuse/specular/emission colors, shininess and optional texture.
  */
-class ENG_API Material final
+class ENG_API Material final : public Object
 {
 public:
 
-   Material();
-   Material(Material const &) = delete;
+   Material(const std::string &name);
    ~Material();
-
-   void operator=(Material const &) = delete;
 
    void setAmbient(const glm::vec3 &color);
    void setDiffuse(const glm::vec3 &color);
@@ -29,7 +26,7 @@ public:
    void setShininess(float shininess);
    void setTexture(std::shared_ptr<Texture> texture);
 
-   void apply() const;
+   void render(const glm::mat4 &modelView) override;
 
 private:
 

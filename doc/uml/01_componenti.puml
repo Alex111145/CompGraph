@@ -1,0 +1,51 @@
+@startuml 01_componenti
+!include style.iuml
+title Architettura: viewer, motore grafico e dipendenze
+
+node "client.exe (viewer)" as client {
+  component [main.cpp\nlogica applicazione,\ncamere, tasti] as main
+}
+
+node "engine.dll / libengine.so" as engine {
+  portin "API Eng::" as api
+  component [Eng::Base\n(singleton)] as base
+  component [scene graph\nNode, Mesh, Light,\nCamera] as sg
+  component [Material, Texture] as mat
+  component [List\n(render list)] as list
+  component [Loader] as loader
+}
+
+package "dependencies/ (ridistribuite)" {
+  component [GLM 1.0.3\n(header, parte dell'API)] as glm
+  component [stb_image.h] as stb
+}
+
+package "librerie esterne (vcpkg / pacchetti di sistema)" {
+  component [FreeGLUT] as glut
+  component [Assimp] as assimp
+}
+
+component [OpenGL 1.1\n(pipeline fissa)] as gl
+
+main --> api : usa solo classi Eng::
+api - base
+main ..> glm : vettori e matrici
+base --> list
+list --> sg
+sg --> mat
+base --> glut : finestra, contesto,\ninput, eventi
+base --> gl
+sg --> gl
+mat --> gl
+mat --> stb : decodifica PNG/JPG
+loader --> assimp : .glb -> aiScene
+loader --> sg : crea nodi
+engine ..> glm
+
+note bottom of main
+  Il client non include mai
+  GL/gl.h o GL/freeglut.h:
+  OpenGL e FreeGLUT restano
+  nascosti nel motore (PIMPL).
+end note
+@enduml

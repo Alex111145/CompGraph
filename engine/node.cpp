@@ -11,7 +11,7 @@
  * Constructor. The local matrix starts as the identity matrix.
  * @param name node name
  */
-ENG_API Eng::Node::Node(const std::string &name) : name{ name }, matrix{ glm::mat4(1.0f) }, parent{ nullptr }
+ENG_API Eng::Node::Node(const std::string &name) : Object(name), matrix{ glm::mat4(1.0f) }, parent{ nullptr }
 {}
 
 /**
@@ -21,15 +21,6 @@ ENG_API Eng::Node::~Node()
 {
    for (Node *child : children)
       delete child;
-}
-
-/**
- * Gets the node name.
- * @return node name
- */
-const std::string ENG_API &Eng::Node::getName() const
-{
-   return name;
 }
 
 /**
@@ -87,17 +78,6 @@ Eng::Node ENG_API *Eng::Node::getParent() const
 const std::vector<Eng::Node *> ENG_API &Eng::Node::getChildren() const
 {
    return children;
-}
-
-/**
- * Appends this node and all its descendants to a flat list.
- * @param list list to fill
- */
-void ENG_API Eng::Node::collect(std::vector<Node *> &list)
-{
-   list.push_back(this);
-   for (Node *child : children)
-      child->collect(list);
 }
 
 /**

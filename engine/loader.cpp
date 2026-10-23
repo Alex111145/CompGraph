@@ -46,7 +46,7 @@ namespace
       if (embedded == nullptr || embedded->mHeight != 0)
          return nullptr;
 
-      std::shared_ptr<Eng::Texture> texture = std::make_shared<Eng::Texture>();
+      std::shared_ptr<Eng::Texture> texture = std::make_shared<Eng::Texture>(path.C_Str());
       if (!texture->load(reinterpret_cast<const unsigned char *>(embedded->pcData), static_cast<int>(embedded->mWidth)))
          return nullptr;
       return texture;
@@ -60,7 +60,7 @@ namespace
     */
    std::shared_ptr<Eng::Material> readMaterial(const aiScene *scene, const aiMaterial *source)
    {
-      std::shared_ptr<Eng::Material> material = std::make_shared<Eng::Material>();
+      std::shared_ptr<Eng::Material> material = std::make_shared<Eng::Material>(source->GetName().C_Str());
       const glm::vec3 diffuse = readColor(source, AI_MATKEY_COLOR_DIFFUSE);
       float shininess = 0.0f;
 
