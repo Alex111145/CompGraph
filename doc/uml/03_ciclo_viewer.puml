@@ -1,0 +1,21 @@
+@startuml 03_ciclo_viewer
+!include style.iuml
+title Ciclo di vita del viewer
+hide footbox
+
+participant "main()" as main
+participant "Base" as eng
+participant "Loader" as loader
+participant "List" as list
+
+main -> eng : init("3D model viewer", 1024, 768)
+main -> loader : load(".glb")
+loader --> main : scene graph
+main -> list : pass(root)
+loop finché isRunning()
+  main -> eng : clearWindow()
+  main -> eng : render(camera, list, lamp)
+  main -> eng : swapBuffers()
+end
+main -> eng : free()
+@enduml

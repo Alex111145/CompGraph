@@ -1,6 +1,6 @@
 /**
  * @file		mesh.h
- * @brief	Triangle mesh compiled into an OpenGL display list
+ * @brief	Triangle mesh with its material
  *
  * @author	Alessio Gervasini
  */
@@ -29,11 +29,14 @@ public:
    glm::vec3 getWorldCenter() const;
 
    void render(const glm::mat4 &modelView) override;
-   void renderGeometry() const;
 
 private:
 
-   unsigned int displayList;            ///< OpenGL display list with the triangles
+   friend class List;   ///< The render list draws the bare triangles of the shadow
+
+   void renderGeometry() const;
+
+   unsigned int displayList;            ///< Compiled triangles (internal handle)
    unsigned int triangleCount;          ///< Number of triangles
    glm::vec3 worldMin;                  ///< World-space bounding box minimum
    glm::vec3 worldMax;                  ///< World-space bounding box maximum

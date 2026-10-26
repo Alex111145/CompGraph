@@ -1,0 +1,25 @@
+@startuml 01_architettura
+!include style.iuml
+title Architettura: chi usa cosa
+left to right direction
+
+actor Utente
+file "modello 3D\n(.glb)" as glb
+node "client.exe\n(viewer)" as client
+node "engine.dll\n(motore grafico)" as engine
+component "GLM\n(vettori e matrici,\nparte dell'API)" as GLM
+rectangle "nascoste dentro il motore" {
+  component OpenGL
+  component FreeGLUT
+  component Assimp
+}
+
+Utente --> client : tastiera, mouse
+client --> engine : API Eng::
+client ..> GLM
+glb --> engine : Loader
+engine --> OpenGL
+engine --> FreeGLUT
+engine --> Assimp
+engine ..> GLM
+@enduml

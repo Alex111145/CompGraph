@@ -295,7 +295,9 @@ bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
    glutIgnoreKeyRepeat(1);
    glutSetCursor(GLUT_CURSOR_NONE);
 
+#ifdef _DEBUG
    std::cout << "   OpenGL version: " << reinterpret_cast<const char *>(glGetString(GL_VERSION)) << std::endl;
+#endif
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);

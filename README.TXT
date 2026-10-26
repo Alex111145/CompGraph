@@ -58,3 +58,11 @@ demo/    : lancia demo/run.sh (Linux x86_64, richiede le librerie
 
 DOCUMENTAZIONE
 "doxygen Doxyfile" dalla cartella engine produce doc/html/.
+Progetto UML (diagrammi + scelta del modello 3D): doc/uml/Progetto_UML.pdf.
+
+MODELLO 3D
+"Bedroom Furniture Set - Game Ready" di General of Thailand
+(https://sketchfab.com/Melonpolygons), licenza CC BY 4.0
+(http://creativecommons.org/licenses/by/4.0/).
+Fonte: https://sketchfab.com/3d-models/bedroom-furniture-set-game-ready-c30a07d2f8bc4f0a843f1629c5ef78c4
+Modificato: aggiunta una lampada da scrivania con paralume luminoso.

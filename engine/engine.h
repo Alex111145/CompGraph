@@ -18,9 +18,9 @@
    #include <glm/gtx/string_cast.hpp>
 
 #ifdef _DEBUG
-   #define LIB_NAME      "Graphics Engine OpenGL 1.1 (debug)"   ///< Library credits
+   #define LIB_NAME      "Graphics Engine v0.4 (debug)"   ///< Library credits
 #else
-   #define LIB_NAME      "Graphics Engine OpenGL 1.1"           ///< Library credits
+   #define LIB_NAME      "Graphics Engine v0.4"           ///< Library credits
 #endif
 
 #ifdef _WINDOWS
@@ -50,8 +50,8 @@
 namespace Eng {
 
 /**
- * @brief Base engine main class (singleton): owns the window and the OpenGL context, reads the input
- * and renders a render list. The windowing library is used only inside the engine.
+ * @brief Base engine main class (singleton): owns the window and the rendering context, reads the input
+ * and renders a render list. The libraries used for these tasks stay hidden inside the engine.
  */
 class ENG_API Base final
 {

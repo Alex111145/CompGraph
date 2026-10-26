@@ -1,6 +1,6 @@
 /**
  * @file		texture.h
- * @brief	2D texture decoded with stb_image and uploaded with glTexImage2D
+ * @brief	2D image texture (PNG/JPG)
  *
  * @author	Alessio Gervasini
  */
@@ -9,7 +9,7 @@
 namespace Eng {
 
 /**
- * @brief 2D texture object (OpenGL 1.1 glGenTextures/glBindTexture).
+ * @brief 2D image applied to the surfaces through their texture coordinates.
  */
 class ENG_API Texture final : public Object
 {
@@ -23,7 +23,7 @@ public:
 
 private:
 
-   unsigned int textureId;   ///< OpenGL texture name
+   unsigned int textureId;   ///< Internal texture handle
 };
 
 };

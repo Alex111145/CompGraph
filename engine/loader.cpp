@@ -76,6 +76,7 @@ namespace
 
    /**
     * Converts an Assimp mesh into an engine mesh (one vertex per triangle corner).
+    * Faces that are not triangles (points, lines) are skipped.
     * @param source Assimp mesh
     * @param mesh engine mesh, already attached to its parent
     */
@@ -86,7 +87,11 @@ namespace
       std::vector<glm::vec2> uvs;
 
       for (unsigned int f = 0; f < source->mNumFaces; f++)
-         for (unsigned int c = 0; c < source->mFaces[f].mNumIndices; c++)
+      {
+         if (source->mFaces[f].mNumIndices != 3)
+            continue;
+
+         for (unsigned int c = 0; c < 3; c++)
          {
             const unsigned int v = source->mFaces[f].mIndices[c];
             glm::vec2 uv(0.0f);
@@ -97,12 +102,14 @@ namespace
             normals.push_back(glm::vec3(source->mNormals[v].x, source->mNormals[v].y, source->mNormals[v].z));
             uvs.push_back(uv);
          }
+      }
 
       mesh->build(positions, normals, uvs);
    }
 
    /**
     * Converts an Assimp node (and recursively its children) into engine nodes.
+    * Meshes without triangles (only points or lines) are skipped.
     * The Assimp matrix is row-major: it is transposed into GLM column-major order.
     * @param scene Assimp scene
     * @param source Assimp node
@@ -120,6 +127,9 @@ namespace
       for (unsigned int i = 0; i < source->mNumMeshes; i++)
       {
          const aiMesh *sourceMesh = scene->mMeshes[source->mMeshes[i]];
+         if ((sourceMesh->mPrimitiveTypes & aiPrimitiveType_TRIANGLE) == 0)
+            continue;
+
          Eng::Mesh *mesh = new Eng::Mesh(sourceMesh->mName.C_Str());
          node->addChild(mesh);
          mesh->setMaterial(materials[sourceMesh->mMaterialIndex]);

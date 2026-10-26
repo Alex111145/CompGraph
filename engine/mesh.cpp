@@ -1,6 +1,6 @@
 /**
  * @file		mesh.cpp
- * @brief	Triangle mesh compiled into an OpenGL display list
+ * @brief	Triangle mesh with its material
  *
  * @author	Alessio Gervasini
  */
@@ -34,6 +34,7 @@ ENG_API Eng::Mesh::~Mesh()
 /**
  * Compiles the triangles into a display list (glNewList + glBegin(GL_TRIANGLES)) and
  * computes the world-space bounding box. Call it after the mesh has been added to its parent.
+ * Nothing happens if there are no triangles.
  * @param positions vertex positions, three per triangle
  * @param normals vertex normals (normalized here)
  * @param uvs texture coordinates
@@ -41,6 +42,9 @@ ENG_API Eng::Mesh::~Mesh()
 void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &uvs)
 {
    const glm::mat4 world = getWorldMatrix();
+
+   if (positions.empty())
+      return;
 
    triangleCount = static_cast<unsigned int>(positions.size() / 3);
    worldMin = glm::vec3(world * glm::vec4(positions[0], 1.0f));

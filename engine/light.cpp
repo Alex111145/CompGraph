@@ -1,6 +1,6 @@
 /**
  * @file		light.cpp
- * @brief	Light source for the OpenGL fixed pipeline (glLight), base of the light types
+ * @brief	Light source, base class of the light types
  *
  * @author	Alessio Gervasini
  */

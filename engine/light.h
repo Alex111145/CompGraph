@@ -1,6 +1,6 @@
 /**
  * @file		light.h
- * @brief	Light source for the OpenGL fixed pipeline (glLight), base of the light types
+ * @brief	Light source, base class of the light types
  *
  * @author	Alessio Gervasini
  */
@@ -29,7 +29,7 @@ protected:
 
    Light(const std::string &name, const glm::vec4 &position, const glm::vec3 &color);
 
-   int lightId;            ///< GL_LIGHT0 + n
+   int lightId;            ///< Internal light slot
    glm::vec4 position;     ///< Homogeneous position in local coordinates
    glm::vec4 color;        ///< Diffuse and specular color
    bool enabled;           ///< On/off

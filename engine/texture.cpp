@@ -1,6 +1,6 @@
 /**
  * @file		texture.cpp
- * @brief	2D texture decoded with stb_image and uploaded with glTexImage2D
+ * @brief	2D image texture (PNG/JPG)
  *
  * @author	Alessio Gervasini
  */

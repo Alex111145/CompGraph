@@ -1,0 +1,22 @@
+@startuml 04_scene_graph
+!include style.iuml
+title Scene graph del viewer
+left to right direction
+
+object "root : Node" as root
+object "modello : Node" as model
+object "letto, sedia, tavolo : Mesh" as bed
+object "pavimento : Mesh" as floor
+object "lampada (base + paralume) : Mesh" as desklamp
+object "torch : DirectionalLight" as torch
+object "lamp : PointLight" as lamp
+object "3 camere : Camera" as cams
+
+root *-- model
+root *-- torch
+root *-- lamp
+root *-- cams
+model *-- bed
+model *-- floor
+model *-- desklamp
+@enduml

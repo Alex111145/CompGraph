@@ -1,6 +1,6 @@
 /**
  * @file		material.h
- * @brief	Surface material for the OpenGL lighting model (glMaterial)
+ * @brief	Surface material: colors, shininess and texture
  *
  * @author	Alessio Gervasini
  */
