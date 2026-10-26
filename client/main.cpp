@@ -34,7 +34,7 @@ namespace
    Eng::Camera *cameras[CAMERA_COUNT] = {};   ///< Free, front and top camera
    int activeCamera = 0;                      ///< Index of the camera in use
    Eng::DirectionalLight *torch = nullptr;    ///< Dynamic light that follows the active camera
-   Eng::PointLight *lamp = nullptr;           ///< Static light inside the lamp shade
+   Eng::Light *lamp = nullptr;                ///< Static light of the lamp, read from the file (can be nullptr)
    Eng::Mesh *lampShade = nullptr;            ///< Glowing mesh of the lamp (can be nullptr)
    glm::vec3 lampGlow(0.0f);                  ///< Emission of the lamp shade when the lamp is on
    glm::vec3 freePosition(0.0f, 1.5f, 4.5f);  ///< Position of the free camera
@@ -77,6 +77,22 @@ namespace
    }
 
    /**
+    * Finds the first light of a (sub)graph.
+    * @param node root of the (sub)graph to search
+    * @return light, or nullptr if there is none
+    */
+   Eng::Light *findLight(Eng::Node *node)
+   {
+      if (Eng::Light *light = dynamic_cast<Eng::Light *>(node))
+         return light;
+
+      for (Eng::Node *child : node->getChildren())
+         if (Eng::Light *found = findLight(child))
+            return found;
+      return nullptr;
+   }
+
+   /**
     * Builds the world matrix of a fixed camera looking at a target (inverse of the lookAt view matrix).
     * @param eye camera position
     * @param target point to look at
@@ -104,6 +120,8 @@ namespace
          break;
 
       case '2':
+         if (lamp == nullptr)
+            break;
          lamp->setEnabled(!lamp->isEnabled());
          if (lampShade != nullptr)
             lampShade->getMaterial()->setEmission(lamp->isEnabled() ? lampGlow : glm::vec3(0.0f));
@@ -175,16 +193,12 @@ int main(int argc, char *argv[])
    }
    root->addChild(model);
 
-   lampShade = findGlowingMesh(root);
+   lamp = findLight(model);
+   lampShade = findGlowingMesh(model);
    if (lampShade != nullptr)
       lampGlow = lampShade->getMaterial()->getEmission();
    torch = new Eng::DirectionalLight("torch", glm::vec3(0.85f, 0.92f, 1.0f) * 1.2f);
-   lamp = new Eng::PointLight("lamp", glm::vec3(1.0f, 0.55f, 0.2f) * 40.0f);
-   lamp->setAttenuation(1.0f, 4.2f, 12.4f);
-   if (lampShade != nullptr)
-      lamp->setMatrix(glm::translate(glm::mat4(1.0f), lampShade->getWorldCenter()));
    root->addChild(torch);
-   root->addChild(lamp);
 
    cameras[0] = new Eng::Camera("free camera", 60.0f, 0.05f, 100.0f);
    cameras[1] = new Eng::Camera("front camera", 60.0f, 0.05f, 100.0f);

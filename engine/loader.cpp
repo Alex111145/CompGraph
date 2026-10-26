@@ -108,8 +108,30 @@ namespace
    }
 
    /**
+    * Converts an Assimp light into an engine light placed at the origin of its node.
+    * A directional light shines along -Z of its node (glTF convention, same as DirectionalLight).
+    * @param source Assimp light
+    * @return engine light, or nullptr if the type is not supported (spot, area)
+    */
+   Eng::Light *readLight(const aiLight *source)
+   {
+      const glm::vec3 color(source->mColorDiffuse.r, source->mColorDiffuse.g, source->mColorDiffuse.b);
+
+      if (source->mType == aiLightSource_DIRECTIONAL)
+         return new Eng::DirectionalLight(source->mName.C_Str(), color);
+
+      if (source->mType != aiLightSource_POINT)
+         return nullptr;
+
+      Eng::PointLight *light = new Eng::PointLight(source->mName.C_Str(), color);
+      light->setAttenuation(source->mAttenuationConstant, source->mAttenuationLinear, source->mAttenuationQuadratic);
+      light->setMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(source->mPosition.x, source->mPosition.y, source->mPosition.z)));
+      return light;
+   }
+
+   /**
     * Converts an Assimp node (and recursively its children) into engine nodes.
-    * Meshes without triangles (only points or lines) are skipped.
+    * Meshes without triangles (only points or lines) are skipped. A light belongs to the node with its name.
     * The Assimp matrix is row-major: it is transposed into GLM column-major order.
     * @param scene Assimp scene
     * @param source Assimp node
@@ -135,6 +157,11 @@ namespace
          mesh->setMaterial(materials[sourceMesh->mMaterialIndex]);
          readMesh(sourceMesh, mesh);
       }
+
+      for (unsigned int i = 0; i < scene->mNumLights; i++)
+         if (scene->mLights[i]->mName == source->mName)
+            if (Eng::Light *light = readLight(scene->mLights[i]))
+               node->addChild(light);
 
       for (unsigned int i = 0; i < source->mNumChildren; i++)
          readNode(scene, source->mChildren[i], materials, node);

@@ -24,7 +24,7 @@ CONTROLLI (mostrati anche nel pannello in alto a destra)
   mouse        guarda in giro (camera libera)
   C            cambia camera (libera, frontale, dall'alto)
   1            accende/spegne la torcia (luce direzionale che segue la camera)
-  2            accende/spegne la lampada (luce puntiforme ferma nel paralume, fa l'ombra)
+  2            accende/spegne la lampada (luce puntiforme letta dal file, nel paralume, fa l'ombra)
   P            stampa la posizione della camera attiva
   ESC          esci
 
@@ -41,7 +41,8 @@ STRUTTURA DEL MOTORE (diagrammi UML in doc/uml/)
   - Eng::Light (astratta)  glLight; Eng::DirectionalLight, Eng::PointLight.
 - Eng::Material, Eng::Texture   glMaterial / glBindTexture.
 - Eng::List      render list: prima le luci, poi le mesh, poi l'ombra.
-- Eng::Loader    file 3D (Assimp) -> scene graph.
+- Eng::Loader    file 3D (Assimp) -> scene graph: nodi, mesh, materiali,
+                 texture e luci (glTF KHR_lights_punctual).
 Il client non chiama mai OpenGL o FreeGLUT: usa solo le classi Eng::.
 
 COMPILAZIONE
@@ -58,11 +59,13 @@ demo/    : lancia demo/run.sh (Linux x86_64, richiede le librerie
 
 DOCUMENTAZIONE
 "doxygen Doxyfile" dalla cartella engine produce doc/html/.
-Progetto UML (diagrammi + scelta del modello 3D): doc/uml/Progetto_UML.pdf.
+Progetto UML (diagrammi + scelta del modello 3D): doc/uml/Progetto_UML.pdf;
+solo i diagrammi: doc/uml/UML_Solo_Grafici.pdf.
 
 MODELLO 3D
 "Bedroom Furniture Set - Game Ready" di General of Thailand
 (https://sketchfab.com/Melonpolygons), licenza CC BY 4.0
 (http://creativecommons.org/licenses/by/4.0/).
 Fonte: https://sketchfab.com/3d-models/bedroom-furniture-set-game-ready-c30a07d2f8bc4f0a843f1629c5ef78c4
-Modificato: aggiunta una lampada da scrivania con paralume luminoso.
+Modificato: aggiunta una lampada da scrivania con paralume luminoso e la
+sua luce puntiforme (LampLight).

@@ -9,7 +9,7 @@
 namespace Eng {
 
 /**
- * @brief Converts the nodes, meshes, materials and textures of a file into engine objects.
+ * @brief Converts the nodes, meshes, materials, textures and lights of a file into engine objects.
  */
 class ENG_API Loader final
 {

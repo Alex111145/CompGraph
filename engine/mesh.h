@@ -26,7 +26,6 @@ public:
    bool isFlat() const;
    float getWorldMinY() const;
    float getWorldMaxY() const;
-   glm::vec3 getWorldCenter() const;
 
    void render(const glm::mat4 &modelView) override;
 

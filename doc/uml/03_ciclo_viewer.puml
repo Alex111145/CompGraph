@@ -10,7 +10,7 @@ participant "List" as list
 
 main -> eng : init("3D model viewer", 1024, 768)
 main -> loader : load(".glb")
-loader --> main : scene graph
+loader --> main : scene graph\n(mesh, materiali, texture, luce)
 main -> list : pass(root)
 loop finché isRunning()
   main -> eng : clearWindow()

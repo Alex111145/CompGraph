@@ -10,6 +10,7 @@
   body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.45; margin: 0; background: #fff; }
   h1 { font-size: 22pt; margin: 0 0 4px; color: var(--accent); }
   h2 { font-size: 14pt; color: var(--accent); border-bottom: 1.5px solid var(--line); padding-bottom: 3px; margin: 20px 0 8px; break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 14px 0 4px; break-after: avoid; }
   p { margin: 5px 0 7px; }
   ul { margin: 4px 0 8px; padding-left: 20px; }
   li { margin: 2px 0; }
@@ -36,7 +37,7 @@
 <div class="box">
   <b>Milestone Series 4.</b> Il codice degli esercizi diventa una libreria con un'API: classi per mesh, luci, materiali,
   camere. L'applicazione usa solo queste classi e non chiama mai OpenGL o FreeGLUT. Questo documento mostra il progetto
-  con quattro diagrammi semplici e spiega quale modello 3D useremo e perché.
+  con cinque diagrammi semplici e spiega quale modello 3D useremo, perché è in formato .glb e come il motore lo carica.
 </div>
 
 <h2>1. Architettura</h2>
@@ -57,7 +58,7 @@ solo con l'API <code>Eng::</code>. OpenGL, FreeGLUT e Assimp restano dentro il m
   <li><b>Light</b>: astratta, con due tipi: <b>DirectionalLight</b> e <b>PointLight</b>.</li>
   <li><b>Material</b> e <b>Texture</b>: aspetto delle superfici.</li>
   <li><b>List</b>: lista delle cose da disegnare (prima le luci, poi le mesh).</li>
-  <li><b>Loader</b>: legge il file 3D e crea lo scene graph.</li>
+  <li><b>Loader</b>: legge il file 3D e crea lo scene graph: nodi, mesh, materiali, texture e luci.</li>
 </ul>
 <figure>
   <img src="02_classi.svg" alt="Diagramma delle classi" style="max-height: 175mm">
@@ -73,15 +74,16 @@ solo con l'API <code>Eng::</code>. OpenGL, FreeGLUT e Assimp restano dentro il m
 </figure>
 
 <h2>4. Scene graph del viewer</h2>
-<p>Il Loader crea il ramo <i>modello</i>; il viewer aggiunge le due luci e le tre camere.</p>
+<p>Il Loader crea il ramo <i>modello</i>, compresa la luce della lampada che sta nel file. Il viewer aggiunge solo la
+torcia (luce dinamica che segue la camera) e le tre camere.</p>
 <figure>
   <img src="04_scene_graph.svg" alt="Diagramma degli oggetti" style="max-height: 85mm">
   <figcaption>Figura 4 &ndash; Oggetti a runtime (semplificato).</figcaption>
 </figure>
 
 <h2 class="page-break">5. Il modello 3D che useremo</h2>
-<p><b>&ldquo;Bedroom Furniture Set &ndash; Game Ready&rdquo;</b>: letto, scrivania e sedia su un pavimento, a cui abbiamo
-aggiunto una lampada da scrivania con il paralume luminoso. Le immagini sono catturate dal nostro viewer.</p>
+<p><b>&ldquo;Bedroom Furniture Set &ndash; Game Ready&rdquo;</b>: letto, scrivania e sedia su un pavimento. Noi abbiamo
+aggiunto una lampada da scrivania con il paralume luminoso e la sua luce. Le immagini sono catturate dal nostro viewer.</p>
 <figure class="photo">
   <img src="img/2_front_camera.jpg" alt="Modello visto dalla camera frontale">
   <figcaption>Figura 5 &ndash; Camera frontale, torcia e lampada accese.</figcaption>
@@ -92,15 +94,20 @@ aggiunto una lampada da scrivania con il paralume luminoso. Le immagini sono cat
 </figure>
 <figure class="photo">
   <img src="img/4_top_torch_off.jpg" alt="Solo la lampada accesa">
-  <figcaption>Figura 7 &ndash; Torcia spenta: illumina solo la lampada, che proietta l'ombra sul pavimento.</figcaption>
+  <figcaption>Figura 7 &ndash; Torcia spenta: illumina solo la luce della lampada (letta dal file), che proietta l'ombra sul pavimento.</figcaption>
+</figure>
+<figure class="photo">
+  <img src="img/5_top_lamp_off.jpg" alt="Lampada spenta">
+  <figcaption>Figura 8 &ndash; Lampada spenta (tasto 2): il paralume non brilla più e l'ombra sparisce.</figcaption>
 </figure>
 
 <table>
   <tr><th>Dato</th><th>Valore</th></tr>
   <tr><td>Mesh</td><td>4 (letto + mobili, pavimento, base e paralume della lampada)</td></tr>
   <tr><td>Triangoli</td><td>14&nbsp;837, molto sotto il limite di 100k del requisito sui 30 FPS</td></tr>
-  <tr><td>Materiali e texture</td><td>4 materiali, 4 immagini PNG dentro il file</td></tr>
-  <tr><td>Dimensioni</td><td>circa 4 &times; 1,3 &times; 4 m (scala reale)</td></tr>
+  <tr><td>Materiali e texture</td><td>4 materiali, 4 immagini PNG 1024&times;1024 dentro il file</td></tr>
+  <tr><td>Luci</td><td>1 luce puntiforme <code>LampLight</code> nel paralume (arancio, intensità 2,5)</td></tr>
+  <tr><td>Dimensioni</td><td>circa 4 &times; 1,3 &times; 4 m (scala reale, in metri)</td></tr>
   <tr><td>Autore e licenza</td><td>General of Thailand (sketchfab.com/Melonpolygons), CC BY 4.0, modificato</td></tr>
 </table>
 
@@ -112,36 +119,82 @@ aggiunto una lampada da scrivania con il paralume luminoso. Le immagini sono cat
   <li><b>Pochi triangoli</b>: il viewer resta fluido anche su PC senza scheda video potente.</li>
 </ul>
 
-<h2 class="page-break">6. Perché il formato .glb</h2>
-<p>Il requisito del viewer (cg_introduction, slide 33) chiede di caricare da file esterno un modello <b>con materiali,
-luci e texture</b>. Il formato deve quindi portare più della sola geometria.</p>
+<h2 class="page-break">6. Il formato .glb: cos'è, perché, come lo usiamo</h2>
 
+<h3>6.1 Cos'è un file .glb</h3>
+<p>È <b>glTF 2.0 in versione binaria</b>, uno standard aperto del <b>Khronos Group</b> (lo stesso gruppo che cura OpenGL),
+pensato apposta per caricare scene 3D pronte per il disegno in tempo reale. Un solo file, in tre parti:</p>
 <table>
-  <tr><th>Formato</th><th>Geometria</th><th>Materiali</th><th>Texture</th><th>Gerarchia di nodi</th><th>Luci</th><th>Note</th></tr>
-  <tr><td><b>.glb</b> (glTF 2.0)</td><td class="yes">sì</td><td class="yes">sì</td><td class="yes">sì, dentro il file</td><td class="yes">sì</td><td class="yes">sì (estensione standard)</td><td>standard aperto Khronos, un solo file</td></tr>
-  <tr><td>.ply</td><td class="yes">sì</td><td class="no">no</td><td class="no">no standard</td><td class="no">no</td><td class="no">no</td><td>pensato per scansioni 3D (nuvole di punti, colori per vertice)</td></tr>
-  <tr><td>.obj + .mtl</td><td class="yes">sì</td><td class="yes">sì</td><td>file separati</td><td class="no">no</td><td class="no">no</td><td>semplice, ma niente nodi né matrici</td></tr>
+  <tr><th>Parte</th><th>Contenuto</th><th>Nel nostro file</th></tr>
+  <tr><td>Intestazione</td><td>12 byte: la parola <code>glTF</code>, la versione (2), la lunghezza totale</td><td>4,45 MB in tutto</td></tr>
+  <tr><td>Blocco JSON</td><td>la descrizione della scena: nodi, mesh, materiali, texture, luci</td><td>5,7 kB</td></tr>
+  <tr><td>Blocco BIN</td><td>i dati veri: vertici, normali, coordinate texture, immagini PNG</td><td>4,45 MB (quasi tutto immagini)</td></tr>
+</table>
+<p>Contenuto del nostro file:</p>
+<table>
+  <tr><th>Elemento</th><th>Quanti</th><th>Dettaglio</th></tr>
+  <tr><td>Nodi</td><td>9</td><td>ognuno con traslazione, rotazione, scala e figli</td></tr>
+  <tr><td>Mesh</td><td>3 (4 dopo Assimp)</td><td>letto + mobili, pavimento, lampada (la lampada ha 2 materiali, quindi diventa 2 mesh)</td></tr>
+  <tr><td>Materiali</td><td>4</td><td>base della lampada, paralume (con <b>emissione</b>), pavimento, letto e mobili (con speculare)</td></tr>
+  <tr><td>Immagini</td><td>4 PNG</td><td>colore del pavimento; colore, normali, occlusione/rugosità del letto</td></tr>
+  <tr><td>Luci</td><td>1</td><td>luce puntiforme <code>LampLight</code> (estensione standard <code>KHR_lights_punctual</code>)</td></tr>
+</table>
+
+<h3>6.2 Perché l'abbiamo scelto</h3>
+<ul>
+  <li><b>Contiene tutto quello che chiede il requisito</b> (cg_introduction, slide 33: modello da file esterno con
+      <i>materiali, luci e texture</i>), in un solo file.</li>
+  <li><b>Un solo file = demo sicura.</b> Le texture sono dentro il .glb: copiando la demo su un altro PC non si perde
+      nessuna immagine (slide 36: demo &ldquo;one-click, foolproof&rdquo;).</li>
+  <li><b>La gerarchia dei nodi è già uno scene graph</b>, come il nostro <code>Node</code>: il Loader copia l'albero così
+      com'è.</li>
+  <li><b>Stesse convenzioni di OpenGL</b>: sistema destrorso, asse Y verso l'alto, unità in metri. Non serve nessuna
+      conversione di assi o di scala.</li>
+  <li><b>Standard aperto e gratuito</b>: Sketchfab lo offre come download, Blender lo apre e lo salva senza plugin (il corso
+      ammette Blender al posto di 3ds Max), Assimp lo legge.</li>
+</ul>
+<table>
+  <tr><th>Formato</th><th>Geometria</th><th>Materiali</th><th>Texture</th><th>Nodi</th><th>Luci</th><th>Note</th></tr>
+  <tr><td><b>.glb</b></td><td class="yes">sì</td><td class="yes">sì</td><td class="yes">sì, dentro il file</td><td class="yes">sì</td><td class="yes">sì</td><td>standard aperto, un solo file</td></tr>
+  <tr><td>.ply</td><td class="yes">sì</td><td class="no">no</td><td class="no">no</td><td class="no">no</td><td class="no">no</td><td>per scansioni 3D (punti, colori per vertice)</td></tr>
+  <tr><td>.obj + .mtl</td><td class="yes">sì</td><td class="yes">sì</td><td>file separati</td><td class="no">no</td><td class="no">no</td><td>niente nodi né matrici</td></tr>
   <tr><td>.fbx</td><td class="yes">sì</td><td class="yes">sì</td><td class="yes">sì</td><td class="yes">sì</td><td class="yes">sì</td><td>formato proprietario Autodesk</td></tr>
 </table>
 
+<h3 class="page-break">6.3 Come lo usa il motore</h3>
+<p><code>Loader::load</code> fa leggere il file ad Assimp (con <code>aiProcess_Triangulate</code> e
+<code>aiProcess_GenSmoothNormals</code>), poi converte ogni parte nella classe del motore corrispondente.</p>
+<figure>
+  <img src="05_caricamento_glb.svg" alt="Dal file .glb alle classi del motore" style="max-height: 80mm">
+  <figcaption>Figura 9 &ndash; Ogni parte del file diventa un oggetto del motore.</figcaption>
+</figure>
+<table>
+  <tr><th>Nel file .glb</th><th>Assimp</th><th>Nel motore</th></tr>
+  <tr><td>nodo: traslazione, rotazione, scala, figli</td><td><code>aiNode</code> (matrice 4&times;4 per righe)</td><td><code>Node</code>: matrice trasposta (GLM è per colonne), stessi figli</td></tr>
+  <tr><td>mesh: posizioni, normali, coordinate UV</td><td><code>aiMesh</code> (solo triangoli)</td><td><code>Mesh::build</code>: triangoli in una display list</td></tr>
+  <tr><td>materiale: colore base, emissione, speculare</td><td><code>aiMaterial</code></td><td><code>Material</code>: colori ambiente, diffuso, speculare, emissione</td></tr>
+  <tr><td>immagine PNG nel blocco BIN</td><td>texture incorporata (<code>aiTexture</code>, ancora compressa)</td><td><code>Texture::load</code>: decodifica dalla memoria con stb_image</td></tr>
+  <tr><td>luce <code>KHR_lights_punctual</code> sul nodo <code>LampLight</code></td><td><code>aiLight</code> con lo stesso nome del nodo (colore &times; intensità, attenuazione 1/d&sup2;)</td><td><code>PointLight</code> figlia di quel nodo</td></tr>
+</table>
+<p>Il viewer poi riconosce le parti importanti <b>senza nomi scritti nel codice</b>:</p>
 <ul>
-  <li><b>Perché non .ply.</b> Un file PLY contiene vertici, facce e al massimo colori o normali per vertice: niente materiali,
-      niente immagini di texture, niente nodi con matrici, niente luci. Con un PLY il requisito non si potrebbe soddisfare.</li>
-  <li><b>Un solo file.</b> Il .glb contiene geometria, normali, coordinate texture, materiali e le immagini PNG. Niente
-      percorsi da sistemare quando si copia la demo su un altro PC.</li>
-  <li><b>Gerarchia = scene graph.</b> I nodi del file hanno una matrice locale e dei figli, come il nostro <code>Node</code>:
-      il Loader copia l'albero così com'è.</li>
-  <li><b>Standard aperto</b> (Khronos, lo stesso gruppo di OpenGL). Blender lo apre e lo salva senza plugin (il corso
-      ammette Blender al posto di 3ds Max) e Sketchfab lo offre come download.</li>
-  <li><b>Lettura con Assimp.</b> Il Loader converte i dati di Assimp nelle nostre classi; le texture si decodificano dalla
-      memoria con <code>stb_image</code>.</li>
+  <li><b>pavimento</b> = la mesh piatta (<code>isFlat()</code>): riceve l'ombra;</li>
+  <li><b>paralume</b> = la mesh con emissione maggiore di zero: il tasto 2 spegne insieme la luce e il suo bagliore;</li>
+  <li><b>lampada</b> = la prima luce trovata nel ramo caricato: è la luce statica e proietta l'ombra.</li>
 </ul>
 
-<div class="box">
-  <b>Da completare.</b> Il file oggi non contiene luci: le due luci le crea il viewer (la lampada viene posizionata
-  sul paralume trovato dal suo materiale luminoso). Prossimo passo: aggiungere la luce della lampada al .glb e farla
-  leggere al Loader, così anche le luci arrivano dal file come chiede il requisito.
-</div>
+<h3>6.4 Perché è perfetto per questo progetto</h3>
+<table>
+  <tr><th>Requisito del corso</th><th>Come lo soddisfa il nostro .glb</th></tr>
+  <tr><td>caricare un modello da un file esterno</td><td>un solo file, letto da <code>Loader::load</code></td></tr>
+  <tr><td>proprietà dei materiali</td><td>4 materiali con colore, speculare ed emissione</td></tr>
+  <tr><td>sorgenti di luce</td><td>la luce <code>LampLight</code> arriva dal file e diventa la luce statica</td></tr>
+  <tr><td>texture mapping</td><td>4 immagini PNG dentro il file + coordinate UV per ogni vertice</td></tr>
+  <tr><td>due luci di tipo diverso, una statica e una dinamica</td><td>puntiforme dal file (statica) + direzionale del viewer (dinamica)</td></tr>
+  <tr><td>più di 30 FPS sotto i 100k triangoli</td><td>14&nbsp;837 triangoli</td></tr>
+  <tr><td>ombre o riflessi su una superficie piana</td><td>pavimento piatto nel file, ombra proiettata dalla lampada</td></tr>
+  <tr><td>scene graph nel motore</td><td>9 nodi con matrici e figli, copiati uno a uno</td></tr>
+</table>
 
 </body>
 </html>

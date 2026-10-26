@@ -124,15 +124,6 @@ float ENG_API Eng::Mesh::getWorldMaxY() const
 }
 
 /**
- * Gets the center of the world-space bounding box.
- * @return center point
- */
-glm::vec3 ENG_API Eng::Mesh::getWorldCenter() const
-{
-   return (worldMin + worldMax) * 0.5f;
-}
-
-/**
  * Renders the mesh with its material.
  * @param modelView view matrix x world matrix
  */

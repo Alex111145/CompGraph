@@ -1,0 +1,26 @@
+@startuml 05_caricamento_glb
+!include style.iuml
+title Dal file .glb alle classi del motore (Loader + Assimp)
+left to right direction
+
+rectangle "file .glb" {
+  card "nodi\n(matrice + figli)" as gn
+  card "mesh\n(posizioni, normali, UV)" as gm
+  card "materiali\n(colori, emissione)" as gmat
+  card "immagini PNG" as gimg
+  card "luce puntiforme" as gl
+}
+rectangle "motore" {
+  card "Node" as n
+  card "Mesh" as m
+  card "Material" as mat
+  card "Texture" as t
+  card "PointLight" as l
+}
+
+gn --> n : aiNode
+gm --> m : aiMesh
+gmat --> mat : aiMaterial
+gimg --> t : aiTexture
+gl --> l : aiLight
+@enduml

@@ -4,19 +4,21 @@ title Scene graph del viewer
 left to right direction
 
 object "root : Node" as root
-object "modello : Node" as model
+object "modello : Node\n(dal file .glb)" as model
 object "letto, sedia, tavolo : Mesh" as bed
 object "pavimento : Mesh" as floor
-object "lampada (base + paralume) : Mesh" as desklamp
-object "torch : DirectionalLight" as torch
-object "lamp : PointLight" as lamp
+object "DeskLamp : Node" as desk
+object "base + paralume : Mesh" as desklamp
+object "LampLight : PointLight\n(dal file)" as lamp
+object "torch : DirectionalLight\n(dal viewer)" as torch
 object "3 camere : Camera" as cams
 
 root *-- model
 root *-- torch
-root *-- lamp
 root *-- cams
 model *-- bed
 model *-- floor
-model *-- desklamp
+model *-- desk
+desk *-- desklamp
+desk *-- lamp
 @enduml
