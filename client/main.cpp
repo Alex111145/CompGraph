@@ -27,6 +27,7 @@ namespace
       { "C", "CAMERA" },
       { "1", "TORCH" },
       { "2", "LAMP" },
+      { "F", "WIREFRAME" },
       { "P", "PRINT" },
       { "ESC", "EXIT" }
    };
@@ -104,7 +105,8 @@ namespace
    }
 
    /**
-    * Keyboard callback: C changes camera, 1 and 2 switch the lights, P prints the camera position.
+    * Keyboard callback: C changes camera, 1 and 2 switch the lights, F switches between wireframe and solid,
+    * P prints the camera position.
     * @param key pressed key (uppercase)
     */
    void keyboardCallback(unsigned char key)
@@ -125,6 +127,10 @@ namespace
          lamp->setEnabled(!lamp->isEnabled());
          if (lampShade != nullptr)
             lampShade->getMaterial()->setEmission(lamp->isEnabled() ? lampGlow : glm::vec3(0.0f));
+         break;
+
+      case 'F':
+         Eng::Base::getInstance().setWireframe(!Eng::Base::getInstance().isWireframe());
          break;
 
       case 'P':

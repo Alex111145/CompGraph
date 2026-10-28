@@ -39,6 +39,7 @@ namespace
       {'C', {".####", "#....", "#....", "#....", "#....", "#....", ".####"}},
       {'D', {"####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####."}},
       {'E', {"#####", "#....", "#....", "####.", "#....", "#....", "#####"}},
+      {'F', {"#####", "#....", "#....", "####.", "#....", "#....", "#...."}},
       {'H', {"#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#"}},
       {'I', {"#####", "..#..", "..#..", "..#..", "..#..", "..#..", "#####"}},
       {'K', {"#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#"}},
@@ -148,6 +149,7 @@ struct Eng::Base::Reserved
    std::string title;                  ///< Window title (the FPS are appended)
    glm::vec3 backgroundColor;          ///< Clear color
    KeyboardCallback keyboardCallback;  ///< Application function called at every key press
+   bool wireframe;                     ///< Polygons drawn as lines (true) or filled (false)
    bool keyDown[KEY_COUNT];            ///< Keys held down, indexed by uppercase character
    glm::vec2 mouseDelta;               ///< Mouse movement since the last getMouseDelta()
    int lastTime;                       ///< Time of the previous frame in milliseconds
@@ -160,7 +162,7 @@ struct Eng::Base::Reserved
     */
    Reserved() :
       initFlag{ false }, running{ false }, windowId{ 0 }, backgroundColor{ glm::vec3(0.0f) }, keyboardCallback{ nullptr },
-      keyDown{}, mouseDelta{ glm::vec2(0.0f) }, lastTime{ 0 }, deltaTime{ 0.0f }, fpsTime{ 0 }, fpsFrames{ 0 }
+      wireframe{ false }, keyDown{}, mouseDelta{ glm::vec2(0.0f) }, lastTime{ 0 }, deltaTime{ 0.0f }, fpsTime{ 0 }, fpsFrames{ 0 }
    {}
 
    /**
@@ -301,6 +303,7 @@ bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
+   glCullFace(GL_BACK);
    glFrontFace(GL_CCW);
    glEnable(GL_LIGHTING);
    glEnable(GL_NORMALIZE);
@@ -365,6 +368,24 @@ void ENG_API Eng::Base::setKeyboardCallback(KeyboardCallback callback)
 }
 
 /**
+ * Chooses how the scene is drawn: polygon edges only (wireframe, for debugging) or filled (solid).
+ * @param wireframe true for wireframe, false for solid
+ */
+void ENG_API Eng::Base::setWireframe(bool wireframe)
+{
+   reserved->wireframe = wireframe;
+}
+
+/**
+ * Tells if the scene is drawn in wireframe.
+ * @return TF
+ */
+bool ENG_API Eng::Base::isWireframe() const
+{
+   return reserved->wireframe;
+}
+
+/**
  * Clears the color, depth and stencil buffers.
  */
 void ENG_API Eng::Base::clearWindow()
@@ -391,6 +412,11 @@ void ENG_API Eng::Base::render(Camera *camera, List *list, Light *shadowLight)
    glMatrixMode(GL_PROJECTION);
    glLoadMatrixf(glm::value_ptr(camera->getProjectionMatrix(static_cast<float>(width) / static_cast<float>(height))));
    glMatrixMode(GL_MODELVIEW);
+
+   if (reserved->wireframe)
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+   else
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
    const glm::mat4 view = camera->getViewMatrix();
    list->render(view);
@@ -443,6 +469,7 @@ void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, st
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

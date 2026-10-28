@@ -3,12 +3,13 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = $(shell pkg-config --cflags glut assimp) -I../dependencies
+INC = -I../dependencies -I../dependencies/freeglut/include -I../dependencies/assimp/include
 CFLAGS = -Wall -std=c++20 -fPIC -m64 -fexceptions
 RCFLAGS =
 RESINC =
-LIBDIR =
-LIB = $(shell pkg-config --libs glut assimp) -lGL
+LIBDIR = -L../dependencies/freeglut/lib/linux -L../dependencies/assimp/lib/linux
+LIB = -l:libglut.so.3 -l:libassimp.so.6 -lGL
+DEPLIBS = ../dependencies/freeglut/lib/linux/libglut.so.3 ../dependencies/assimp/lib/linux/libassimp.so.6
 LDFLAGS = -m64
 
 INC_DEBUG = $(INC)
@@ -46,6 +47,7 @@ before_debug:
 	test -d $(OBJDIR_DEBUG) || mkdir -p $(OBJDIR_DEBUG)
 
 after_debug: 
+	cp $(DEPLIBS) bin/Debug/
 
 debug: before_debug out_debug after_debug
 
@@ -98,6 +100,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE) || mkdir -p $(OBJDIR_RELEASE)
 
 after_release: 
+	cp $(DEPLIBS) bin/Release/
 
 release: before_release out_release after_release
 

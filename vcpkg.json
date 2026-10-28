@@ -1,8 +1,0 @@
-{
-  "name": "compgraph-engine",
-  "version": "0.2.0",
-  "dependencies": [
-    "freeglut",
-    "assimp"
-  ]
-}

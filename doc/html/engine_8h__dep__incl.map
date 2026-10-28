@@ -1,0 +1,27 @@
+<map id="engine.h" name="engine.h">
+<area shape="rect" id="Node000001" title="Graphics engine main include file." alt="" coords="622,5,692,31"/>
+<area shape="rect" id="Node000002" href="$camera_8cpp.html" title="Perspective camera placed in the scene graph." alt="" coords="5,79,95,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="603,24,388,46,248,62,106,82,96,83,95,78,106,76,247,57,388,41,609,23"/>
+<area shape="rect" id="Node000003" href="$directionallight_8cpp.html" title="Directional light: parallel rays along the &#45;Z axis of the node." alt="" coords="119,79,248,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="607,30,260,82,249,83,248,78,259,76,605,24"/>
+<area shape="rect" id="Node000004" href="$engine_8cpp.html" title="Graphics engine main file." alt="" coords="272,79,356,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="609,30,369,82,357,84,356,79,368,76,604,30"/>
+<area shape="rect" id="Node000005" href="$light_8cpp.html" title="Light source, base class of the light types." alt="" coords="380,79,450,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="609,34,452,83,451,77,604,34"/>
+<area shape="rect" id="Node000006" href="$list_8cpp.html" title="Render list: the scene graph flattened in drawing order (lights first, then meshes)." alt="" coords="474,79,538,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="620,37,532,81,531,76,615,39"/>
+<area shape="rect" id="Node000007" href="$loader_8cpp.html" title="Loads a 3D model file (via Assimp) into a scene graph." alt="" coords="562,79,642,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="641,42,613,81,610,76,636,44"/>
+<area shape="rect" id="Node000008" href="$material_8cpp.html" title="Surface material: colors, shininess and texture." alt="" coords="666,79,759,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="676,41,706,80,701,78,674,45"/>
+<area shape="rect" id="Node000009" href="$mesh_8cpp.html" title="Triangle mesh with its material." alt="" coords="783,79,861,105"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="699,35,796,79,791,78,698,40"/>
+<area shape="rect" id="Node000010" href="$node_8cpp.html" title="Scene&#45;graph node: local matrix + parent/children hierarchy." alt="" coords="885,79,959,105"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="707,30,887,80,882,80,706,36"/>
+<area shape="rect" id="Node000011" href="$object_8cpp.html" title="Base class of every engine object: unique id, name and render method." alt="" coords="983,79,1064,105"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="707,26,972,76,985,82,980,81,971,82,707,31"/>
+<area shape="rect" id="Node000012" href="$pointlight_8cpp.html" title="Point light: emits in every direction from the origin of the node." alt="" coords="1088,79,1186,105"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="707,23,872,45,1077,76,1090,81,1084,81,1076,82,871,51,707,29"/>
+<area shape="rect" id="Node000013" href="$texture_8cpp.html" title="2D image texture (PNG/JPG)" alt="" coords="1210,79,1296,105"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="707,21,922,41,1059,57,1198,76,1212,81,1207,81,1198,82,1059,62,921,46,707,26"/>
+</map>

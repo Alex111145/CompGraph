@@ -1,0 +1,8 @@
+<map id="Eng::Camera" name="Eng::Camera">
+<area shape="rect" id="Node000001" title="Scene&#45;graph node that is a camera. Its world matrix places it in the scene, the view matrix is the in..." alt="" coords="5,155,104,181"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_node.html" title="Generic element of the scene graph. Every node has a local matrix relative to its parent." alt="" coords="13,80,96,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,120,57,156,52,154,52,123"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="112,85,123,93,114,101,98,103,96,98,112,96,118,93,112,90"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_object.html" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="9,5,100,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="55,44,57,80,52,80,54,49"/>
+</map>

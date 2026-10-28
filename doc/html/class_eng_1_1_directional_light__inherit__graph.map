@@ -1,0 +1,9 @@
+<map id="Eng::DirectionalLight" name="Eng::DirectionalLight">
+<area shape="rect" id="Node000001" title="Light infinitely far away (like the sun): only its direction matters. The light comes from the +Z axi..." alt="" coords="5,226,148,252"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_light.html" title="Abstract scene&#45;graph node that is a light. The homogeneous local position decides the type: w = 0 dir..." alt="" coords="36,153,117,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,192,79,227,74,225,75,196"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_node.html" title="Generic element of the scene graph. Every node has a local matrix relative to its parent." alt="" coords="35,79,118,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,118,79,153,74,152,75,123"/>
+<area shape="rect" id="Node000004" href="$class_eng_1_1_object.html" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="31,5,122,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="77,44,79,79,74,78,76,49"/>
+</map>

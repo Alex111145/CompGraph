@@ -1,0 +1,15 @@
+<map id="Eng::Node" name="Eng::Node">
+<area shape="rect" id="Node000001" title="Generic element of the scene graph. Every node has a local matrix relative to its parent." alt="" coords="126,79,210,105"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_camera.html" title="Scene&#45;graph node that is a camera. Its world matrix places it in the scene, the view matrix is the in..." alt="" coords="5,153,104,178"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,116,75,154,72,150,137,111"/>
+<area shape="rect" id="Node000004" href="$class_eng_1_1_light.html" title="Abstract scene&#45;graph node that is a light. The homogeneous local position decides the type: w = 0 dir..." alt="" coords="128,153,208,178"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,118,170,153,165,151,166,122"/>
+<area shape="rect" id="Node000007" href="$class_eng_1_1_mesh.html" title="Scene&#45;graph node holding triangles (positions, normals, texture coordinates) and a material." alt="" coords="232,153,317,178"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="199,111,259,152,254,153,198,116"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_object.html" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="123,5,213,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,44,170,79,165,78,167,49"/>
+<area shape="rect" id="Node000005" href="$class_eng_1_1_directional_light.html" title="Light infinitely far away (like the sun): only its direction matters. The light comes from the +Z axi..." alt="" coords="21,226,163,252"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="146,188,106,228,103,224,141,190"/>
+<area shape="rect" id="Node000006" href="$class_eng_1_1_point_light.html" title="Light placed in a point (like a bulb), weaker with the distance." alt="" coords="187,226,298,252"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="192,187,233,226,227,226,190,192"/>
+</map>

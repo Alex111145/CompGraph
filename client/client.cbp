@@ -16,6 +16,7 @@
 					<Add option="-D_DEBUG" />
 				</Compiler>
 				<Linker>
+					<Add option="-Wl,-rpath-link,../engine/bin/Debug" />
 					<Add directory="../engine/bin/Debug" />
 				</Linker>
 			</Target>
@@ -29,6 +30,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-Wl,-rpath-link,../engine/bin/Release" />
 					<Add directory="../engine/bin/Release" />
 				</Linker>
 			</Target>

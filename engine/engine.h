@@ -75,6 +75,8 @@ public:
    bool isRunning() const;
    void setBackgroundColor(const glm::vec3 &color);
    void setKeyboardCallback(KeyboardCallback callback);
+   void setWireframe(bool wireframe);
+   bool isWireframe() const;
 
    void clearWindow();
    void render(Camera *camera, List *list, Light *shadowLight);

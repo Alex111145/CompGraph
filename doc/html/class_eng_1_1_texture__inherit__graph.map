@@ -1,0 +1,5 @@
+<map id="Eng::Texture" name="Eng::Texture">
+<area shape="rect" id="Node000001" title="2D image applied to the surfaces through their texture coordinates." alt="" coords="5,79,101,105"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_object.html" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="8,5,98,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,45,56,79,50,78,51,48"/>
+</map>

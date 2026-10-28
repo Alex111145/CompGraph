@@ -1,0 +1,9 @@
+<map id="Eng::PointLight" name="Eng::PointLight">
+<area shape="rect" id="Node000001" title="Light placed in a point (like a bulb), weaker with the distance." alt="" coords="5,226,116,252"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_light.html" title="Abstract scene&#45;graph node that is a light. The homogeneous local position decides the type: w = 0 dir..." alt="" coords="20,153,101,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,192,63,227,58,225,59,196"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_node.html" title="Generic element of the scene graph. Every node has a local matrix relative to its parent." alt="" coords="19,79,102,105"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,118,63,153,58,152,60,123"/>
+<area shape="rect" id="Node000004" href="$class_eng_1_1_object.html" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="15,5,106,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="61,44,63,79,58,78,60,49"/>
+</map>

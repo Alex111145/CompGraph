@@ -1,0 +1,21 @@
+<map id="Eng::Object" name="Eng::Object">
+<area shape="rect" id="Node000001" title="Abstract base class of everything the engine can render (nodes, materials, textures,..." alt="" coords="164,5,254,31"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_list.html" title="Flat list of the lights and meshes of a scene graph. The lights are drawn before the meshes,..." alt="" coords="5,79,79,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,40,72,81,69,76,168,35"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_material.html" title="Ambient/diffuse/specular/emission colors, shininess and optional texture." alt="" coords="102,79,200,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,41,163,80,159,77,188,45"/>
+<area shape="rect" id="Node000004" href="$class_eng_1_1_node.html" title="Generic element of the scene graph. Every node has a local matrix relative to its parent." alt="" coords="224,79,308,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="228,40,259,79,254,79,227,46"/>
+<area shape="rect" id="Node000010" href="$class_eng_1_1_texture.html" title="2D image applied to the surfaces through their texture coordinates." alt="" coords="332,79,427,105"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="252,35,353,78,348,79,251,40"/>
+<area shape="rect" id="Node000005" href="$class_eng_1_1_camera.html" title="Scene&#45;graph node that is a camera. Its world matrix places it in the scene, the view matrix is the in..." alt="" coords="104,153,202,178"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="236,112,173,154,171,150,232,115"/>
+<area shape="rect" id="Node000006" href="$class_eng_1_1_light.html" title="Abstract scene&#45;graph node that is a light. The homogeneous local position decides the type: w = 0 dir..." alt="" coords="226,153,306,178"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="268,118,268,153,264,151,264,122"/>
+<area shape="rect" id="Node000009" href="$class_eng_1_1_mesh.html" title="Scene&#45;graph node holding triangles (positions, normals, texture coordinates) and a material." alt="" coords="330,153,415,178"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="297,111,357,152,352,152,296,116"/>
+<area shape="rect" id="Node000007" href="$class_eng_1_1_directional_light.html" title="Light infinitely far away (like the sun): only its direction matters. The light comes from the +Z axi..." alt="" coords="119,226,261,252"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="245,188,204,228,201,224,240,190"/>
+<area shape="rect" id="Node000008" href="$class_eng_1_1_point_light.html" title="Light placed in a point (like a bulb), weaker with the distance." alt="" coords="286,226,396,252"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="291,187,331,226,326,225,288,192"/>
+</map>

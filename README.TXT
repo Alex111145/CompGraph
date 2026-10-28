@@ -25,6 +25,7 @@ CONTROLLI (mostrati anche nel pannello in alto a destra)
   C            cambia camera (libera, frontale, dall'alto)
   1            accende/spegne la torcia (luce direzionale che segue la camera)
   2            accende/spegne la lampada (luce puntiforme letta dal file, nel paralume, fa l'ombra)
+  F            wireframe / solido (debug: glPolygonMode GL_LINE / GL_FILL)
   P            stampa la posizione della camera attiva
   ESC          esci
 
@@ -46,16 +47,30 @@ STRUTTURA DEL MOTORE (diagrammi UML in doc/uml/)
 Il client non chiama mai OpenGL o FreeGLUT: usa solo le classi Eng::.
 
 COMPILAZIONE
+Tutte le dipendenze sono nella cartella dependencies/ (allo stesso livello
+di engine/ e client/), niente da installare a parte il compilatore:
+  glm/       GLM 1.0.3 (solo header)
+  stb/       stb_image.h (solo header)
+  freeglut/  FreeGLUT 3.2.2: include/GL, lib/windows/Debug|Release
+             (freeglutd/freeglut .lib + .dll), lib/linux/libglut.so.3
+  assimp/    Assimp 6.0.5: include/assimp, lib/windows
+             (assimp-vc143-mt .lib + .dll), lib/linux/libassimp.so.6
 - Windows: apri cg_Gervasini_Alessio.sln in Visual Studio 2022/2026 (x64).
-  FreeGLUT e Assimp sono gestiti da vcpkg (manifest mode, vcpkg.json).
-  GLM e stb_image sono in dependencies/.
-- Linux: installa freeglut3-dev e libassimp-dev, poi "make" dalla cartella
-  del progetto, oppure apri cg_Gervasini_Alessio.workspace in Code::Blocks.
+  Dopo la build dell'engine le DLL di FreeGLUT e Assimp vengono copiate
+  accanto a client.exe (x64/Debug o x64/Release).
+- Linux: "make" dalla cartella del progetto, oppure apri
+  cg_Gervasini_Alessio.workspace in Code::Blocks. Servono solo gli header
+  OpenGL di sistema (libgl-dev, libglu1-mesa-dev) e le librerie X11 di un
+  normale desktop Ubuntu (libxi6, libxrandr2, libxxf86vm1, usate da
+  FreeGLUT). Le .so di FreeGLUT e Assimp vengono copiate accanto a
+  libengine.so (engine/bin/Debug|Release); per avviare dalla cartella
+  client:
+  LD_LIBRARY_PATH=../engine/bin/Release ./bin/Release/client
 
 DEMO
 windows/ : lancia client.exe.
-demo/    : lancia demo/run.sh (Linux x86_64, richiede le librerie
-           FreeGLUT e Assimp del sistema: freeglut3-dev, libassimp-dev).
+demo/    : lancia demo/run.sh (Linux x86_64, le .so di FreeGLUT e Assimp
+           sono gia' nella cartella).
 
 DOCUMENTAZIONE
 "doxygen Doxyfile" dalla cartella engine produce doc/html/.
