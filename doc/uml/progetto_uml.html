@@ -197,32 +197,32 @@ dipende da chi.</p>
       <td>L'utente comanda il viewer. Dal suo punto di vista parla con il viewer; tecnicamente la finestra appartiene al
       motore: FreeGLUT riceve il tasto, il motore lo passa al viewer chiamando la funzione registrata dal viewer
       (<i>callback</i>), e il viewer chiede a ogni frame quali tasti sono premuti e quanto si è mosso il mouse.</td>
-      <td>registrazione: <code>main.cpp:183</code>; tasti a evento: <code>main.cpp:110-135</code> (C, 1, 2, P);
-      tasti tenuti premuti e mouse: <code>main.cpp:141-167</code>; lato motore: <code>engine.cpp:178-222</code></td></tr>
+      <td>registrazione: <code>main.cpp:189</code>; tasti a evento: <code>main.cpp:112-141</code> (C, 1, 2, F, P);
+      tasti tenuti premuti e mouse: <code>main.cpp:147-173</code>; lato motore: <code>engine.cpp:162-206</code></td></tr>
   <tr><td class="n">2</td><td>client.exe &rarr; engine.dll<br><i>&ldquo;API Eng::&rdquo;</i></td><td>continua</td>
       <td>Il viewer usa le classi del motore. Include un solo header, <code>engine.h</code>, e scrive soltanto codice
       <code>Eng::...</code>: <code>Base</code>, <code>Loader</code>, <code>Node</code>, <code>Camera</code>,
       <code>DirectionalLight</code>, <code>List</code>. Su Windows la macro <code>ENG_API</code> diventa
       <code>__declspec(dllexport)</code> quando si compila la DLL e <code>__declspec(dllimport)</code> quando la usa il
       client: è ciò che rende le classi visibili fuori dalla DLL.</td>
-      <td>include: <code>main.cpp:8</code>; uso: <code>main.cpp:180-230</code>; macro: <code>engine.h:26-36</code></td></tr>
+      <td>include: <code>main.cpp:8</code>; uso: <code>main.cpp:186-236</code>; macro: <code>engine.h:26-36</code></td></tr>
   <tr><td class="n">3</td><td>client.exe &#8674; GLM</td><td>tratteggiata (dipendenza)</td>
       <td>Il viewer usa i tipi e le funzioni di GLM per costruire le matrici delle camere. Tratteggiata perché GLM è solo
       header: non c'è niente da collegare quando il programma parte.</td>
-      <td>costanti <code>main.cpp:20-22</code>; <code>glm::lookAt</code> <code>main.cpp:103</code>;
-      <code>glm::rotate/translate</code> <code>main.cpp:152-166</code></td></tr>
+      <td>costanti <code>main.cpp:20-22</code>; <code>glm::lookAt</code> <code>main.cpp:104</code>;
+      <code>glm::rotate/translate</code> <code>main.cpp:158-172</code></td></tr>
   <tr><td class="n">4</td><td>modello .glb &rarr; engine.dll<br><i>&ldquo;Loader&rdquo;</i></td><td>continua</td>
       <td>Il file entra nel motore solo attraverso la classe <code>Loader</code>. L'etichetta dice <i>quale</i> parte del
       motore lo legge. Il viewer passa solo il nome del file.</td>
-      <td><code>main.cpp:187</code> &rarr; <code>loader.cpp:178-194</code></td></tr>
+      <td><code>main.cpp:193</code> &rarr; <code>loader.cpp:178-194</code></td></tr>
   <tr><td class="n">5</td><td>engine.dll &rarr; OpenGL</td><td>continua</td>
       <td>Il motore disegna chiamando le funzioni <code>gl...</code>: matrici, luci, materiali, texture, display list,
       stencil.</td>
       <td><code>mesh.cpp:53-69</code>, <code>light.cpp:65-76</code>, <code>material.cpp:97-109</code>,
-      <code>texture.cpp:46-51</code>, <code>list.cpp:62-128</code>, <code>engine.cpp:302-307</code></td></tr>
+      <code>texture.cpp:46-51</code>, <code>list.cpp:62-128</code>, <code>engine.cpp:286-292</code></td></tr>
   <tr><td class="n">6</td><td>engine.dll &rarr; FreeGLUT</td><td>continua</td>
       <td>Il motore apre la finestra, registra le funzioni che ricevono tastiera e mouse, misura il tempo, scambia i buffer.</td>
-      <td><code>engine.cpp:282-296</code> (apertura), <code>engine.cpp:488-507</code> (scambio buffer e eventi)</td></tr>
+      <td><code>engine.cpp:266-280</code> (apertura), <code>engine.cpp:456-475</code> (scambio buffer e eventi)</td></tr>
   <tr><td class="n">7</td><td>engine.dll &rarr; Assimp</td><td>continua</td>
       <td>Il <code>Loader</code> fa leggere il file ad Assimp e poi converte il risultato nelle classi del motore.</td>
       <td>include <code>loader.cpp:12-14</code>; lettura <code>loader.cpp:180-181</code></td></tr>
@@ -242,7 +242,7 @@ dipende da chi.</p>
       <code>list.cpp:10</code>); Assimp solo in <code>loader.cpp:12-14</code>.</li>
   <li>I dati interni di <code>Base</code> legati a FreeGLUT (id della finestra, tasti premuti, tempi) stanno in una
       struttura <code>Reserved</code> dichiarata nell'header ma definita solo nel <code>.cpp</code>
-      (<code>engine.h:90-91</code>, <code>engine.cpp:143-231</code>). Questa tecnica si chiama <b>PIMPL</b>
+      (<code>engine.h:92-93</code>, <code>engine.cpp:126-215</code>). Questa tecnica si chiama <b>PIMPL</b>
       (&ldquo;pointer to implementation&rdquo;).</li>
   <li>Le classi che contengono numeri di OpenGL li tengono come <code>unsigned int</code> o <code>int</code>
       (<code>Mesh::displayList</code>, <code>Texture::textureId</code>, <code>Light::lightId</code>), non come tipi
@@ -268,22 +268,23 @@ dalla gerarchia <b>Base</b> (la finestra) e <b>Loader</b> (il lettore di file), 
 
 <h3>2.2 Le 12 classi, una per una</h3>
 
-<div class="card"><h4>Base &laquo;singleton&raquo; &mdash; <code>engine.h:56-94</code>, <code>engine.cpp</code></h4>
+<div class="card"><h4>Base &laquo;singleton&raquo; &mdash; <code>engine.h:56-96</code>, <code>engine.cpp</code></h4>
 <table>
   <tr><td>Eredita da</td><td>nessuno. È <code>final</code> (nessuno può ereditare da lei).</td></tr>
-  <tr><td>Perché singleton</td><td>Costruttore privato (<code>engine.h:93</code>), copia vietata (<code>engine.h:65, 68</code>):
+  <tr><td>Perché singleton</td><td>Costruttore privato (<code>engine.h:95</code>), copia vietata (<code>engine.h:65, 68</code>):
       l'unico modo di averla è <code>Base::getInstance()</code>, che restituisce sempre lo stesso oggetto statico
-      (<code>engine.cpp:257-261</code>). Una finestra e un contesto OpenGL per programma.</td></tr>
+      (<code>engine.cpp:241-245</code>). Una finestra e un contesto OpenGL per programma.</td></tr>
   <tr><td>Metodi nel diagramma</td><td><code>init(title, width, height)</code> apre la finestra 1024&times;768 con doppio
-      buffer, profondità e stencil e accende luci, profondità e culling (<code>engine.cpp:271-317</code>);
-      <code>clearWindow()</code> cancella colore, profondità e stencil (<code>370-374</code>);
-      <code>render(camera, list, light)</code> disegna un frame (<code>382-398</code>);
+      buffer, profondità e stencil e accende luci, profondità e culling (<code>engine.cpp:255-302</code>);
+      <code>clearWindow()</code> cancella colore, profondità e stencil (<code>373-377</code>);
+      <code>render(camera, list, light)</code> disegna un frame (<code>385-406</code>);
       <code>swapBuffers()</code> mostra l'immagine, calcola il tempo tra due frame e gli FPS, legge gli eventi
-      (<code>488-507</code>); <code>free()</code> chiude la finestra (<code>323-338</code>).</td></tr>
+      (<code>456-475</code>); <code>free()</code> chiude la finestra (<code>308-323</code>).</td></tr>
   <tr><td>Altri metodi</td><td><code>isRunning</code>, <code>setBackgroundColor</code>, <code>setKeyboardCallback</code>,
-      <code>renderLegend</code> (pannello &ldquo;CONTROLS&rdquo; con un font 5&times;7 disegnato a quadratini,
-      <code>engine.cpp:406-482</code>), <code>getDeltaTime</code>, <code>isKeyDown</code>, <code>getMouseDelta</code>.</td></tr>
-  <tr><td>Usata da</td><td>solo dal viewer: <code>main.cpp:180-184, 217-230</code>.</td></tr>
+      <code>setWireframe</code>/<code>isWireframe</code> (scena a linee o piena, tasto F), <code>renderLegend</code>
+      (legenda dei tasti in testo bianco in alto a sinistra, font 5&times;7 disegnato a quadratini,
+      <code>engine.cpp:414-450</code>), <code>getDeltaTime</code>, <code>isKeyDown</code>, <code>getMouseDelta</code>.</td></tr>
+  <tr><td>Usata da</td><td>solo dal viewer: <code>main.cpp:186-190, 223-236</code>.</td></tr>
 </table></div>
 
 <div class="card"><h4>Object (astratta) &mdash; <code>object.h:14-35</code>, <code>object.cpp</code></h4>
@@ -312,7 +313,7 @@ dalla gerarchia <b>Base</b> (la finestra) e <b>Loader</b> (il lettore di file), 
       nodo semplice non ha niente da disegnare, serve solo a raggruppare e spostare i figli.</td></tr>
   <tr><td>Distruttore</td><td>cancella tutti i figli (<code>node.cpp:20-24</code>): cancellare la radice cancella
       tutta la scena.</td></tr>
-  <tr><td>Creata da</td><td>il viewer (radice, <code>main.cpp:186</code>) e il Loader (un nodo per ogni nodo del file,
+  <tr><td>Creata da</td><td>il viewer (radice, <code>main.cpp:192</code>) e il Loader (un nodo per ogni nodo del file,
       <code>loader.cpp:144</code>).</td></tr>
 </table></div>
 
@@ -342,7 +343,7 @@ dalla gerarchia <b>Base</b> (la finestra) e <b>Loader</b> (il lettore di file), 
       (<code>camera.cpp:31-34</code>): se la camera si sposta a destra, il mondo deve spostarsi a sinistra.
       <code>getProjectionMatrix(aspect)</code> = prospettiva (<code>camera.cpp:41-44</code>).</td></tr>
   <tr><td>Riscrive</td><td>niente: usa il <code>render</code> vuoto di Node (una camera non si disegna).</td></tr>
-  <tr><td>Creata da</td><td>il viewer, 3 camere: libera, frontale, dall'alto (<code>main.cpp:203-209</code>).</td></tr>
+  <tr><td>Creata da</td><td>il viewer, 3 camere: libera, frontale, dall'alto (<code>main.cpp:209-215</code>).</td></tr>
 </table></div>
 
 <div class="card"><h4>Light (astratta) &mdash; <code>light.h:15-38</code>, <code>light.cpp</code></h4>
@@ -366,8 +367,8 @@ dalla gerarchia <b>Base</b> (la finestra) e <b>Loader</b> (il lettore di file), 
       (<code>directionallight.cpp:15-17</code>). w = 0 significa &ldquo;direzione&rdquo;: la luce arriva dall'asse +Z del
       nodo e viaggia verso &minus;Z, la stessa direzione in cui guarda una camera.</td></tr>
   <tr><td>Riscrive</td><td>niente: il <code>render</code> di Light basta.</td></tr>
-  <tr><td>Nel viewer</td><td>la <b>torcia</b> (<code>main.cpp:200</code>); a ogni frame riceve la matrice della camera
-      attiva (<code>main.cpp:220</code>), quindi illumina ciò che si guarda: è la luce <b>dinamica</b>.</td></tr>
+  <tr><td>Nel viewer</td><td>la <b>torcia</b> (<code>main.cpp:206</code>); a ogni frame riceve la matrice della camera
+      attiva (<code>main.cpp:226</code>), quindi illumina ciò che si guarda: è la luce <b>dinamica</b>.</td></tr>
 </table></div>
 
 <div class="card"><h4>PointLight &mdash; <code>pointlight.h:14-28</code>, <code>pointlight.cpp</code></h4>
@@ -426,7 +427,7 @@ dalla gerarchia <b>Base</b> (la finestra) e <b>Loader</b> (il lettore di file), 
       la radice dell'albero letto, o <code>nullptr</code> se il file non si apre. Le funzioni di supporto
       (<code>readColor</code>, <code>readTexture</code>, <code>readMaterial</code>, <code>readMesh</code>,
       <code>readLight</code>, <code>readNode</code>) sono in un namespace anonimo del <code>.cpp</code>, invisibili fuori.</td></tr>
-  <tr><td>Usata da</td><td><code>main.cpp:187</code>.</td></tr>
+  <tr><td>Usata da</td><td><code>main.cpp:193</code>.</td></tr>
 </table></div>
 
 <h3>2.3 Le 9 frecce di ereditarietà</h3>
@@ -437,7 +438,7 @@ ciò che è pubblico nella madre resta pubblico nella figlia.</p>
   <tr><th class="n">#</th><th style="width:15%">Freccia</th><th style="width:27%">Cosa riceve in eredità</th><th style="width:28%">Cosa aggiunge o riscrive</th><th>Dove l'eredità viene sfruttata</th></tr>
   <tr><td class="n">1</td><td>Node &rarr; Object<br><code>node.h:14</code></td><td>id, nome, <code>getId</code>,
       <code>getName</code>, obbligo di <code>render</code></td><td>matrice, padre, figli; <code>render</code> vuoto</td>
-      <td>Ogni nodo ha un nome stampabile: <code>printNode</code> mostra l'albero all'avvio (<code>main.cpp:49-60</code>).</td></tr>
+      <td>Ogni nodo ha un nome stampabile: <code>printNode</code> mostra l'albero all'avvio (<code>main.cpp:50-61</code>).</td></tr>
   <tr><td class="n">2</td><td>Material &rarr; Object<br><code>material.h:14</code></td><td>id, nome, obbligo di <code>render</code></td>
       <td>colori, lucidità, texture; <code>render</code> = <code>glMaterial</code></td>
       <td><code>Mesh::render</code> chiama <code>material-&gt;render(...)</code> come per qualunque Object (<code>mesh.cpp:134</code>).</td></tr>
@@ -446,27 +447,27 @@ ciò che è pubblico nella madre resta pubblico nella figlia.</p>
       <td><code>Material::render</code> chiama <code>texture-&gt;render(...)</code> (<code>material.cpp:106</code>).</td></tr>
   <tr><td class="n">4</td><td>List &rarr; Object<br><code>list.h:15</code></td><td>id, nome (&ldquo;render list&rdquo;)</td>
       <td>elenchi luci/mesh, <code>pass</code>, <code>clear</code>, <code>renderShadow</code>; <code>render</code> = luci poi mesh</td>
-      <td><code>Base::render</code> chiama <code>list-&gt;render(view)</code> (<code>engine.cpp:396</code>).</td></tr>
+      <td><code>Base::render</code> chiama <code>list-&gt;render(view)</code> (<code>engine.cpp:404</code>).</td></tr>
   <tr><td class="n">5</td><td>Mesh &rarr; Node<br><code>mesh.h:14</code></td><td>tutto di Node: matrice, padre, figli,
       <code>getWorldMatrix</code>, <code>addChild</code></td><td>triangoli, materiale, scatola; <code>render</code> = disegna</td>
       <td>Il Loader appende la mesh a un nodo con <code>addChild</code> (<code>loader.cpp:156</code>); <code>build</code>
       usa <code>getWorldMatrix()</code> ereditata (<code>mesh.cpp:44</code>).</td></tr>
   <tr><td class="n">6</td><td>Camera &rarr; Node<br><code>camera.h:15</code></td><td>tutto di Node</td>
       <td>angolo di vista, piani near/far, vista e proiezione</td>
-      <td>Le camere si mettono nell'albero (<code>main.cpp:208-209</code>) e si muovono con <code>setMatrix</code> ereditato
-      (<code>main.cpp:166, 206-207</code>); la vista nasce da <code>getWorldMatrix()</code> (<code>camera.cpp:33</code>).</td></tr>
+      <td>Le camere si mettono nell'albero (<code>main.cpp:214-215</code>) e si muovono con <code>setMatrix</code> ereditato
+      (<code>main.cpp:172, 212-213</code>); la vista nasce da <code>getWorldMatrix()</code> (<code>camera.cpp:33</code>).</td></tr>
   <tr><td class="n">7</td><td>Light &rarr; Node<br><code>light.h:15</code></td><td>tutto di Node</td>
       <td>slot OpenGL, posizione omogenea, colore, acceso/spento; <code>render</code> = <code>glLight</code></td>
       <td>La luce della lampada è figlia di un nodo del file e segue la lampada (<code>loader.cpp:163-164</code>);
-      la torcia si muove con <code>setMatrix</code> (<code>main.cpp:220</code>).</td></tr>
+      la torcia si muove con <code>setMatrix</code> (<code>main.cpp:226</code>).</td></tr>
   <tr><td class="n">8</td><td>DirectionalLight &rarr; Light<br><code>directionallight.h:15</code></td><td>tutto di Light, incluso
       il suo <code>render</code></td><td>solo il costruttore (w = 0)</td>
-      <td>Il viewer salva la torcia in un <code>DirectionalLight*</code> (<code>main.cpp:36</code>) e usa
-      <code>setEnabled</code>/<code>isEnabled</code> ereditati (<code>main.cpp:119</code>).</td></tr>
+      <td>Il viewer salva la torcia in un <code>DirectionalLight*</code> (<code>main.cpp:37</code>) e usa
+      <code>setEnabled</code>/<code>isEnabled</code> ereditati (<code>main.cpp:121</code>).</td></tr>
   <tr><td class="n">9</td><td>PointLight &rarr; Light<br><code>pointlight.h:14</code></td><td>tutto di Light</td>
       <td>attenuazione; <code>render</code> esteso (chiama quello di Light e aggiunge l'attenuazione)</td>
-      <td>Il viewer la tiene come <code>Light*</code> generico (<code>main.cpp:37</code>) trovato con <code>findLight</code>
-      (<code>main.cpp:84-93</code>): non gli interessa il tipo esatto.</td></tr>
+      <td>Il viewer la tiene come <code>Light*</code> generico (<code>main.cpp:38</code>) trovato con <code>findLight</code>
+      (<code>main.cpp:85-94</code>): non gli interessa il tipo esatto.</td></tr>
 </table>
 
 <div class="box"><b>Dove si vede il polimorfismo.</b> <code>List::pass</code> riceve un generico <code>Node*</code> e
@@ -485,7 +486,7 @@ due comportamenti.</div>
       (o sue figlie, quindi anche Mesh, Camera, Light). Composizione perché il padre cancella i figli nel suo distruttore:
       i figli non sopravvivono al padre. Ogni figlio ha un solo padre.</td>
       <td>dati <code>node.h:34-35</code>; <code>addChild</code> <code>node.cpp:59-63</code>; distruzione
-      <code>node.cpp:20-24</code>; tutto cancellato da <code>delete root</code> (<code>main.cpp:229</code>)</td></tr>
+      <code>node.cpp:20-24</code>; tutto cancellato da <code>delete root</code> (<code>main.cpp:235</code>)</td></tr>
   <tr><td class="n">11</td><td>Mesh &#9671;&mdash; Material</td>
       <td class="sym"><svg width="110" height="20"><use href="#aggr"/></svg><br>aggregazione</td>
       <td>Una mesh <b>usa</b> un materiale (al massimo uno; può non averlo). Aggregazione e non composizione perché il
@@ -505,27 +506,27 @@ due comportamenti.</div>
       questo è aggregazione. In realtà tiene solo due tipi di Node: le luci e le mesh (le camere e i nodi semplici vengono
       saltati). Il viewer svuota la lista prima di cancellare la scena, così non restano puntatori a oggetti cancellati.</td>
       <td>dati <code>list.h:30-31</code>; riempita da <code>pass</code> <code>list.cpp:35-44</code>; svuotata
-      <code>main.cpp:228</code> prima di <code>main.cpp:229</code></td></tr>
+      <code>main.cpp:234</code> prima di <code>main.cpp:235</code></td></tr>
   <tr><td class="n">14</td><td>Loader &#8674; Node<br><i>&ldquo;crea&rdquo;</i></td>
       <td class="sym"><svg width="110" height="20"><use href="#dep"/></svg><br>dipendenza</td>
       <td>Il Loader <b>crea</b> l'albero di nodi e lo consegna a chi l'ha chiamato, che da quel momento ne è il
       proprietario. Dipendenza (tratteggiata) perché il Loader non conserva niente: non ha dati, i nodi non restano &ldquo;suoi&rdquo;.
       Oltre ai Node crea anche Mesh, Material, Texture e luci: il diagramma mostra solo Node perché è il tipo restituito.</td>
       <td>firma <code>loader.h:18</code>; <code>new Eng::Node</code> <code>loader.cpp:144</code>; <code>new Eng::Mesh</code>
-      <code>155</code>; luci <code>121, 126</code>; restituito a <code>main.cpp:187</code> e appeso a <code>root</code> in
-      <code>main.cpp:194</code></td></tr>
+      <code>155</code>; luci <code>121, 126</code>; restituito a <code>main.cpp:193</code> e appeso a <code>root</code> in
+      <code>main.cpp:200</code></td></tr>
   <tr><td class="n">15</td><td>Base &#8674; List<br><i>&ldquo;disegna&rdquo;</i></td>
       <td class="sym"><svg width="110" height="20"><use href="#dep"/></svg><br>dipendenza</td>
       <td>Base <b>riceve</b> la lista come parametro di <code>render</code> e la disegna, ma non la conserva: la lista
       appartiene al viewer (variabile locale di <code>main</code>). Quindi dipendenza, non aggregazione.</td>
-      <td>firma <code>engine.h:80</code>; uso <code>engine.cpp:396-397</code>; lista creata in <code>main.cpp:211</code></td></tr>
+      <td>firma <code>engine.h:82</code>; uso <code>engine.cpp:404-405</code>; lista creata in <code>main.cpp:217</code></td></tr>
 </table>
 
 <h3>2.5 Cosa il diagramma non disegna (per restare semplice)</h3>
 <ul>
   <li><b>Base &#8674; Camera</b> e <b>Base &#8674; Light</b>: anche camera e luce sono parametri di <code>render</code>. Dalla
-      camera Base prende proiezione e vista (<code>engine.cpp:392, 395</code>), la luce la passa a
-      <code>renderShadow</code> (<code>engine.cpp:397</code>).</li>
+      camera Base prende proiezione e vista (<code>engine.cpp:395, 403</code>), la luce la passa a
+      <code>renderShadow</code> (<code>engine.cpp:405</code>).</li>
   <li><b>List &rarr; Mesh &laquo;friend&raquo;</b>: List può chiamare il metodo privato <code>Mesh::renderGeometry()</code>
       (<code>mesh.h:34</code>, usato in <code>list.cpp:113</code>).</li>
   <li><b>List &rarr; Light, List &rarr; Mesh</b>: gli elenchi interni sono già divisi per tipo (<code>list.h:30-31</code>); il
@@ -557,15 +558,15 @@ quelle della camera.</p>
 <h3>2.7 Chi chiama chi durante un frame</h3>
 <p>Seguire una riga del <code>main</code> fino a OpenGL fa vedere tutte le frecce del diagramma al lavoro:</p>
 <ol>
-  <li><code>main</code> chiama <code>eng.render(camera, &amp;list, lamp)</code> (<code>main.cpp:223</code>).</li>
+  <li><code>main</code> chiama <code>eng.render(camera, &amp;list, lamp)</code> (<code>main.cpp:229</code>).</li>
   <li><code>Base::render</code> imposta il viewport e la proiezione presa dalla <b>Camera</b>, calcola la vista e chiama
-      <code>list-&gt;render(view)</code> (<code>engine.cpp:390-396</code>) &mdash; freccia 15.</li>
+      <code>list-&gt;render(view)</code> (<code>engine.cpp:393-404</code>) &mdash; freccia 15.</li>
   <li><code>List::render</code> per ogni <b>Light</b>: <code>light-&gt;render(view &times; mondo)</code> &mdash; parte
       <code>PointLight::render</code> o <code>Light::render</code> (frecce 7, 8, 9).</li>
   <li>Poi per ogni <b>Mesh</b>: <code>mesh-&gt;render(view &times; mondo)</code> (<code>list.cpp:67-71</code>).</li>
   <li><code>Mesh::render</code> chiama <code>material-&gt;render</code> (freccia 11), che chiama
       <code>texture-&gt;render</code> (freccia 12), poi <code>glCallList</code>.</li>
-  <li>Infine <code>Base::render</code> chiama <code>list-&gt;renderShadow(view, lamp)</code> (<code>engine.cpp:397</code>):
+  <li>Infine <code>Base::render</code> chiama <code>list-&gt;renderShadow(view, lamp)</code> (<code>engine.cpp:405</code>):
       calcola la matrice che schiaccia i mobili sul piano del pavimento vista dalla lampada (formula
       <i>MakeShadowMatrix</i> della SuperBible, <code>list.cpp:98-100</code>), disegna i mobili schiacciati solo nello
       stencil (1 &rarr; 2, <code>list.cpp:102-114</code>), poi ridisegna il pavimento <i>con la lampada spenta</i> solo
@@ -599,56 +600,56 @@ alla chiusura. È lo schema richiesto dalla Series 3.</p>
       <td>Apre la finestra con doppio buffer (si disegna in un'immagine nascosta e la si mostra solo quando è finita), buffer
       di profondità e stencil; registra le funzioni per tastiera, mouse e chiusura; nasconde il cursore; accende
       test di profondità, eliminazione delle facce posteriori, illuminazione, normalizzazione delle normali.</td>
-      <td><code>main.cpp:181</code> &rarr; <code>engine.cpp:271-317</code></td></tr>
+      <td><code>main.cpp:187</code> &rarr; <code>engine.cpp:255-302</code></td></tr>
   <tr><td class="n">2</td><td>main &rarr; Loader<br><code>load(".glb")</code></td>
       <td>Legge il file e costruisce l'albero (dettagli nella sezione 6.3). Deve venire <b>dopo</b> <code>init</code>:
       display list e texture si possono creare solo quando esiste già il contesto OpenGL della finestra.</td>
-      <td><code>main.cpp:187</code> &rarr; <code>loader.cpp:178-194</code></td></tr>
+      <td><code>main.cpp:193</code> &rarr; <code>loader.cpp:178-194</code></td></tr>
   <tr><td class="n">3</td><td>Loader &#8672; main<br><i>scene graph</i></td>
       <td>Ritorna il puntatore alla radice dell'albero letto, con dentro mesh, materiali, texture e la luce. Se vale
-      <code>nullptr</code> il viewer chiude subito (<code>main.cpp:188-193</code>). Altrimenti lo appende alla propria
+      <code>nullptr</code> il viewer chiude subito (<code>main.cpp:194-199</code>). Altrimenti lo appende alla propria
       radice, cerca la luce della lampada e il paralume, crea la torcia e le tre camere.</td>
-      <td><code>main.cpp:194-209</code></td></tr>
+      <td><code>main.cpp:200-215</code></td></tr>
   <tr><td class="n">4</td><td>main &rarr; List<br><code>pass(root)</code></td>
       <td>Visita tutto l'albero una volta sola e prepara gli elenchi luci e mesh. Fatto prima del ciclo, non a ogni frame,
       perché l'albero non cambia struttura mentre il programma gira (cambiano solo le matrici).</td>
-      <td><code>main.cpp:211-212</code> &rarr; <code>list.cpp:35-44</code></td></tr>
+      <td><code>main.cpp:217-218</code> &rarr; <code>list.cpp:35-44</code></td></tr>
   <tr><td class="n">&mdash;</td><td><b>loop</b> <code>[finché isRunning()]</code></td>
       <td><code>isRunning()</code> diventa falso quando si preme ESC o si chiude la finestra.</td>
-      <td><code>main.cpp:217</code>; ESC <code>engine.cpp:183-187</code>; chiusura <code>engine.cpp:227-230</code></td></tr>
+      <td><code>main.cpp:223</code>; ESC <code>engine.cpp:167-171</code>; chiusura <code>engine.cpp:211-214</code></td></tr>
   <tr><td class="n">5</td><td>main &rarr; Base<br><code>clearWindow()</code></td>
       <td>Cancella l'immagine nascosta: colore di sfondo, profondità, stencil.</td>
-      <td><code>main.cpp:222</code> &rarr; <code>engine.cpp:370-374</code></td></tr>
+      <td><code>main.cpp:228</code> &rarr; <code>engine.cpp:373-377</code></td></tr>
   <tr><td class="n">6</td><td>main &rarr; Base<br><code>render(camera, list, lamp)</code></td>
       <td>Disegna la scena vista dalla camera attiva, con l'ombra della lampada (catena completa in 2.7).</td>
-      <td><code>main.cpp:223</code> &rarr; <code>engine.cpp:382-398</code></td></tr>
+      <td><code>main.cpp:229</code> &rarr; <code>engine.cpp:385-406</code></td></tr>
   <tr><td class="n">7</td><td>main &rarr; Base<br><code>swapBuffers()</code></td>
       <td>Mostra l'immagine finita, calcola il tempo dall'ultimo frame (serve a muoversi alla stessa velocità su PC veloci e
       lenti), ogni secondo scrive gli FPS nel titolo, elabora tastiera e mouse arrivati nel frattempo.</td>
-      <td><code>main.cpp:225</code> &rarr; <code>engine.cpp:488-507</code></td></tr>
+      <td><code>main.cpp:231</code> &rarr; <code>engine.cpp:456-475</code></td></tr>
   <tr><td class="n">8</td><td>main &rarr; Base<br><code>free()</code></td>
       <td>Fuori dal ciclo: chiude la finestra e FreeGLUT.</td>
-      <td><code>main.cpp:230</code> &rarr; <code>engine.cpp:323-338</code></td></tr>
+      <td><code>main.cpp:236</code> &rarr; <code>engine.cpp:308-323</code></td></tr>
 </table>
 
 <h3>3.3 Cosa succede anche, ma non è nel diagramma</h3>
 <table>
   <tr><th style="width:30%">Passo</th><th>Perché serve</th><th style="width:16%">Dove</th></tr>
   <tr><td><code>setKeyboardCallback</code>, <code>setBackgroundColor</code></td><td>Dopo <code>init</code>: registra la funzione
-      del viewer per i tasti C/1/2/P e imposta il grigio scuro di sfondo.</td><td><code>main.cpp:183-184</code></td></tr>
+      del viewer per i tasti C/1/2/F/P e imposta il grigio scuro di sfondo.</td><td><code>main.cpp:189-190</code></td></tr>
   <tr><td><code>findLight</code>, <code>findGlowingMesh</code></td><td>Trovano la luce della lampada e il paralume
       <b>senza usare nomi</b>: la prima luce dell'albero e la prima mesh con emissione maggiore di zero.</td>
-      <td><code>main.cpp:67-93, 196-199</code></td></tr>
+      <td><code>main.cpp:68-94, 202-205</code></td></tr>
   <tr><td><code>printNode(root)</code></td><td>Stampa nella console l'albero con la posizione mondo di ogni nodo e i
-      triangoli di ogni mesh (14&nbsp;837 in totale).</td><td><code>main.cpp:215</code></td></tr>
+      triangoli di ogni mesh (14&nbsp;837 in totale).</td><td><code>main.cpp:221</code></td></tr>
   <tr><td><code>moveFreeCamera</code></td><td>A ogni frame, se è attiva la camera libera, legge W A S D Q E e il mouse e
-      aggiorna la sua matrice.</td><td><code>main.cpp:141-167, 219</code></td></tr>
+      aggiorna la sua matrice.</td><td><code>main.cpp:147-173, 225</code></td></tr>
   <tr><td><code>torch-&gt;setMatrix(...)</code></td><td>A ogni frame la torcia copia la matrice della camera attiva: è questo
-      che la rende la luce <b>dinamica</b>.</td><td><code>main.cpp:220</code></td></tr>
-  <tr><td><code>renderLegend</code></td><td>Disegna il pannello dei controlli sopra la scena, prima dello scambio dei buffer.</td>
-      <td><code>main.cpp:224</code></td></tr>
+      che la rende la luce <b>dinamica</b>.</td><td><code>main.cpp:226</code></td></tr>
+  <tr><td><code>renderLegend</code></td><td>Scrive in bianco la legenda dei tasti sopra la scena, in alto a sinistra, prima dello scambio dei buffer.</td>
+      <td><code>main.cpp:230</code></td></tr>
   <tr><td><code>list.clear()</code>, <code>delete root</code></td><td>Svuota la lista, poi cancella la radice: per la
-      composizione Node&ndash;Node vengono cancellati a catena tutti i 20 nodi della scena.</td><td><code>main.cpp:228-229</code></td></tr>
+      composizione Node&ndash;Node vengono cancellati a catena tutti i 20 nodi della scena.</td><td><code>main.cpp:234-235</code></td></tr>
 </table>
 
 <!-- ===================================================================== 4 -->
@@ -669,9 +670,9 @@ chiamata <code>padre-&gt;addChild(figlio)</code>.</p>
 <h3>4.2 Gli oggetti</h3>
 <table>
   <tr><th style="width:24%">Oggetto</th><th>Chi lo crea e cos'è</th><th style="width:20%">Dove</th></tr>
-  <tr><td><code>root : Node</code></td><td>Il viewer. Radice di tutto: un nodo vuoto con matrice identità.</td><td><code>main.cpp:186</code></td></tr>
+  <tr><td><code>root : Node</code></td><td>Il viewer. Radice di tutto: un nodo vuoto con matrice identità.</td><td><code>main.cpp:192</code></td></tr>
   <tr><td><code>modello : Node</code></td><td>Il Loader: la radice dell'albero letto dal file. Il file ha due radici
-      (DeskLamp e Sketchfab_model), quindi Assimp aggiunge un nodo sopra di loro.</td><td><code>main.cpp:187</code>, <code>loader.cpp:193</code></td></tr>
+      (DeskLamp e Sketchfab_model), quindi Assimp aggiunge un nodo sopra di loro.</td><td><code>main.cpp:193</code>, <code>loader.cpp:193</code></td></tr>
   <tr><td><code>letto, sedia, tavolo : Mesh</code></td><td>Il Loader. Nel file letto, scrivania e sedia sono <b>una sola
       mesh</b> (l'autore del modello le ha unite).</td><td><code>loader.cpp:155-158</code></td></tr>
   <tr><td><code>pavimento : Mesh</code></td><td>Il Loader. È l'unica mesh piatta: <code>isFlat()</code> la riconosce e
@@ -681,19 +682,19 @@ chiamata <code>padre-&gt;addChild(figlio)</code>.</p>
       <b>due Mesh</b>, una per materiale. Il paralume ha emissione (brilla).</td><td><code>loader.cpp:149-159</code></td></tr>
   <tr><td><code>LampLight : PointLight</code></td><td>Il Loader, dalla luce scritta nel file (estensione
       <code>KHR_lights_punctual</code>): colore arancio (1; 0,55; 0,2), intensità 2,5. Luce statica.</td><td><code>loader.cpp:116-130, 161-164</code></td></tr>
-  <tr><td><code>torch : DirectionalLight</code></td><td>Il viewer. Colore bianco-azzurro. Luce dinamica.</td><td><code>main.cpp:200-201</code></td></tr>
+  <tr><td><code>torch : DirectionalLight</code></td><td>Il viewer. Colore bianco-azzurro. Luce dinamica.</td><td><code>main.cpp:206-207</code></td></tr>
   <tr><td><code>3 camere : Camera</code></td><td>Il viewer: &ldquo;free camera&rdquo; (si muove), &ldquo;front camera&rdquo; in
-      (0; 2; 4,5), &ldquo;top camera&rdquo; in (4; 3,5; 4), tutte rivolte al centro della scena.</td><td><code>main.cpp:203-209</code></td></tr>
+      (0; 2; 4,5), &ldquo;top camera&rdquo; in (4; 3,5; 4), tutte rivolte al centro della scena.</td><td><code>main.cpp:209-215</code></td></tr>
 </table>
 
 <h3>4.3 Le 8 frecce</h3>
 <table>
   <tr><th class="n">#</th><th style="width:30%">Freccia (padre &#9670;&mdash; figlio)</th><th>Cosa significa</th><th style="width:22%">Chiamata <code>addChild</code></th></tr>
-  <tr><td class="n">1</td><td>root &#9670;&mdash; modello</td><td>Tutto il modello del file si muove con root.</td><td><code>main.cpp:194</code></td></tr>
+  <tr><td class="n">1</td><td>root &#9670;&mdash; modello</td><td>Tutto il modello del file si muove con root.</td><td><code>main.cpp:200</code></td></tr>
   <tr><td class="n">2</td><td>root &#9670;&mdash; torch</td><td>La torcia è figlia diretta di root, non della camera: la sua matrice
-      viene copiata da quella della camera attiva a ogni frame, così può seguire qualunque camera.</td><td><code>main.cpp:201</code></td></tr>
+      viene copiata da quella della camera attiva a ogni frame, così può seguire qualunque camera.</td><td><code>main.cpp:207</code></td></tr>
   <tr><td class="n">3</td><td>root &#9670;&mdash; 3 camere</td><td>Le camere stanno nell'albero come gli altri oggetti; la vista
-      nasce dalla loro matrice mondo. (Nel disegno un solo riquadro rappresenta tre oggetti.)</td><td><code>main.cpp:208-209</code></td></tr>
+      nasce dalla loro matrice mondo. (Nel disegno un solo riquadro rappresenta tre oggetti.)</td><td><code>main.cpp:214-215</code></td></tr>
   <tr><td class="n">4</td><td>modello &#9670;&mdash; letto, sedia, tavolo</td><td>Mesh dei mobili (nel file sta alcuni livelli
       più in basso, vedi 4.4).</td><td><code>loader.cpp:156</code> + <code>147</code></td></tr>
   <tr><td class="n">5</td><td>modello &#9670;&mdash; pavimento</td><td>Mesh del pavimento (anche questa più in basso nel file).</td><td><code>loader.cpp:156</code> + <code>147</code></td></tr>
@@ -707,7 +708,7 @@ chiamata <code>padre-&gt;addChild(figlio)</code>.</p>
 <p>Il diagramma salta i nodi intermedi che non aggiungono significato. Questo è l'albero completo (nomi presi dal file
 <code>.glb</code>; in parentesi la classe del motore). Sono 20 oggetti in tutto: 11 Node, 4 Mesh, 1 PointLight,
 1 DirectionalLight, 3 Camera.</p>
-<pre class="tree">root                                     (Node)        main.cpp:186
+<pre class="tree">root                                     (Node)        main.cpp:192
 ├── [radice aggiunta da Assimp]          (Node)        = "modello" nel diagramma
 │   ├── DeskLamp                         (Node)        traslazione (0,93; 0,935; −0,846)
 │   │   ├── base della lampada           (Mesh)        LampBaseMat
@@ -723,10 +724,10 @@ chiamata <code>padre-&gt;addChild(figlio)</code>.</p>
 │               └── SM_Bed_01            (Node)
 │                   └── SM_Bed_01_1_0    (Node)
 │                       └── letto + scrivania + sedia  (Mesh)  3 immagini
-├── torch                                (DirectionalLight)    main.cpp:200
-├── free camera                          (Camera)      main.cpp:203
-├── front camera                         (Camera)      main.cpp:204
-└── top camera                           (Camera)      main.cpp:205</pre>
+├── torch                                (DirectionalLight)    main.cpp:206
+├── free camera                          (Camera)      main.cpp:209
+├── front camera                         (Camera)      main.cpp:210
+└── top camera                           (Camera)      main.cpp:211</pre>
 <p class="small">Ordine dei figli: per ogni nodo il Loader aggiunge prima le sue mesh, poi le luci con lo stesso nome, poi i
 nodi figli (<code>loader.cpp:149-167</code>). Le due rotazioni &plusmn;90&deg; di Sketchfab_model e del nodo .fbx vengono dall'esportazione
 del modello originale e si annullano a vicenda; la scala 0,01 converte i centimetri dell'originale in metri.</p>
@@ -861,7 +862,7 @@ passa il dato.</p>
 <ul>
   <li><b>pavimento</b> = la mesh piatta (<code>isFlat()</code>): riceve l'ombra;</li>
   <li><b>paralume</b> = la mesh con emissione maggiore di zero: il tasto 2 spegne insieme la luce e il suo bagliore
-      (<code>main.cpp:122-128</code>);</li>
+      (<code>main.cpp:124-134</code>);</li>
   <li><b>lampada</b> = la prima luce trovata nel ramo caricato: è la luce statica e proietta l'ombra.</li>
 </ul>
 
@@ -892,7 +893,7 @@ passa il dato.</p>
 <h2>Appendice B &ndash; I file del progetto</h2>
 <table>
   <tr><th style="width:34%">File</th><th style="width:9%">Righe</th><th>Contiene</th></tr>
-  <tr><td><code>engine/engine.h</code>, <code>engine.cpp</code></td><td>96 + 537</td><td>Base (finestra, input, render, legenda), macro <code>ENG_API</code>, include di tutte le classi</td></tr>
+  <tr><td><code>engine/engine.h</code>, <code>engine.cpp</code></td><td>98 + 505</td><td>Base (finestra, input, render, legenda), macro <code>ENG_API</code>, include di tutte le classi</td></tr>
   <tr><td><code>engine/object.h</code>, <code>.cpp</code></td><td>37 + 41</td><td>Object</td></tr>
   <tr><td><code>engine/node.h</code>, <code>.cpp</code></td><td>38 + 88</td><td>Node</td></tr>
   <tr><td><code>engine/mesh.h</code>, <code>.cpp</code></td><td>45 + 144</td><td>Mesh</td></tr>
@@ -904,7 +905,7 @@ passa il dato.</p>
   <tr><td><code>engine/texture.h</code>, <code>.cpp</code></td><td>29 + 64</td><td>Texture (con stb_image)</td></tr>
   <tr><td><code>engine/list.h</code>, <code>.cpp</code></td><td>34 + 129</td><td>List e ombra</td></tr>
   <tr><td><code>engine/loader.h</code>, <code>.cpp</code></td><td>21 + 194</td><td>Loader (Assimp)</td></tr>
-  <tr><td><code>client/main.cpp</code></td><td>234</td><td>il viewer</td></tr>
+  <tr><td><code>client/main.cpp</code></td><td>240</td><td>il viewer</td></tr>
   <tr><td><b>Totale</b></td><td><b>2&nbsp;199</b></td><td>commenti Doxygen inclusi</td></tr>
   <tr><td><code>doc/uml/*.puml</code></td><td>&mdash;</td><td>sorgenti PlantUML dei 5 diagrammi (le figure sono i <code>.svg</code> generati)</td></tr>
 </table>

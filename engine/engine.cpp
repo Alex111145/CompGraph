@@ -118,24 +118,6 @@ namespace
       }
       glEnd();
    }
-
-   /**
-    * Draws a rectangle, filled (GL_QUADS) or as an outline (GL_LINE_LOOP).
-    * @param mode GL_QUADS or GL_LINE_LOOP
-    * @param left left side in pixels
-    * @param top top side in pixels
-    * @param right right side in pixels
-    * @param bottom bottom side in pixels
-    */
-   void drawRectangle(GLenum mode, float left, float top, float right, float bottom)
-   {
-      glBegin(mode);
-      glVertex2f(left, top);
-      glVertex2f(right, top);
-      glVertex2f(right, bottom);
-      glVertex2f(left, bottom);
-      glEnd();
-   }
 }
 
 /**
@@ -424,85 +406,44 @@ void ENG_API Eng::Base::render(Camera *camera, List *list, Light *shadowLight)
 }
 
 /**
- * Draws the controls legend in the top-right corner of the window: a semi-transparent panel with
- * the title CONTROLS and one line per entry (key on the left, action on the right).
- * The panel is drawn in pixel coordinates with an orthographic projection (glOrtho).
+ * Draws the controls legend over the scene, in the top-left corner of the window: one white line per entry
+ * (key on the left, action on the right). The text is drawn in pixel coordinates with an orthographic
+ * projection (glm::ortho).
  * @param entries list of (key, action) pairs
  */
 void ENG_API Eng::Base::renderLegend(const std::vector<std::pair<std::string, std::string>> &entries)
 {
-   const float pixelSize = 4.0f;
-   const float titleSize = pixelSize * 1.5f;
-   const float lineHeight = (GLYPH_ROWS + 2) * pixelSize;
-   const float titleHeight = GLYPH_ROWS * titleSize;
-   const float sectionGap = 2.0f * pixelSize;
-   const float margin = 12.0f;
-   const float padding = 3.0f * pixelSize;
+   const float pixelSize = 3.0f;
+   const float lineHeight = (GLYPH_ROWS + 3) * pixelSize;
+   const float margin = 10.0f;
    const int width = glutGet(GLUT_WINDOW_WIDTH);
    const int height = glutGet(GLUT_WINDOW_HEIGHT);
-   float widestKey = 0.0f;
-   float widestAction = 0.0f;
+   float keyColumnWidth = 0.0f;
+   float penY = margin;
 
    for (const std::pair<std::string, std::string> &entry : entries)
-   {
-      widestKey = std::max(widestKey, textWidth(entry.first, pixelSize));
-      widestAction = std::max(widestAction, textWidth(entry.second, pixelSize));
-   }
-
-   const float keyColumnWidth = widestKey + GLYPH_ADVANCE * pixelSize;
-   const float contentWidth = std::max(keyColumnWidth + widestAction, textWidth("CONTROLS", titleSize));
-   const float contentHeight = titleHeight + 2.0f * sectionGap + entries.size() * lineHeight;
-   const float panelRight = static_cast<float>(width) - margin;
-   const float panelLeft = panelRight - contentWidth - 2.0f * padding;
-   const float panelTop = margin;
-   const float panelBottom = panelTop + contentHeight + 2.0f * padding;
-   const float textLeft = panelLeft + padding;
-   float penY = panelTop + padding;
+      keyColumnWidth = std::max(keyColumnWidth, textWidth(entry.first, pixelSize));
+   keyColumnWidth += GLYPH_ADVANCE * pixelSize;
 
    glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   glOrtho(0.0, width, height, 0.0, -1.0, 1.0);
+   glLoadMatrixf(glm::value_ptr(glm::ortho(0.0f, static_cast<float>(width), static_cast<float>(height), 0.0f, -1.0f, 1.0f)));
    glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
+   glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
 
    glDisable(GL_LIGHTING);
    glDisable(GL_TEXTURE_2D);
    glDisable(GL_DEPTH_TEST);
    glDisable(GL_CULL_FACE);
    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-   glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-   glColor4f(0.05f, 0.05f, 0.07f, 0.55f);
-   drawRectangle(GL_QUADS, panelLeft, panelTop, panelRight, panelBottom);
-
-   glLineWidth(1.5f);
-   glColor4f(1.0f, 0.55f, 0.20f, 0.35f);
-   drawRectangle(GL_LINE_LOOP, panelLeft, panelTop, panelRight, panelBottom);
-
    glColor3f(1.0f, 1.0f, 1.0f);
-   drawText("CONTROLS", textLeft, penY, titleSize);
-   drawText("CONTROLS", textLeft + 1.0f, penY, titleSize);
-   penY += titleHeight + sectionGap;
-
-   glColor4f(1.0f, 0.55f, 0.20f, 0.6f);
-   glBegin(GL_LINES);
-   glVertex2f(textLeft, penY);
-   glVertex2f(textLeft + contentWidth, penY);
-   glEnd();
-   glLineWidth(1.0f);
-   penY += sectionGap;
 
    for (const std::pair<std::string, std::string> &entry : entries)
    {
-      glColor3f(1.0f, 0.72f, 0.40f);
-      drawText(entry.first, textLeft, penY, pixelSize);
-      glColor3f(0.80f, 0.80f, 0.82f);
-      drawText(entry.second, textLeft + keyColumnWidth, penY, pixelSize);
+      drawText(entry.first, margin, penY, pixelSize);
+      drawText(entry.second, margin + keyColumnWidth, penY, pixelSize);
       penY += lineHeight;
    }
 
-   glDisable(GL_BLEND);
    glEnable(GL_CULL_FACE);
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_LIGHTING);

@@ -18,7 +18,7 @@ CONVENZIONI (cg_mathForCg1.pdf, OpenGL SuperBible)
 - Stampa di vettori/matrici con GLM_ENABLE_EXPERIMENTAL +
   glm/gtx/string_cast.hpp (glm::to_string).
 
-CONTROLLI (mostrati anche nel pannello in alto a destra)
+CONTROLLI (mostrati anche nella legenda in alto a sinistra, testo bianco sopra la scena)
   W A S D      muovi la camera libera
   Q / E        giu' / su
   mouse        guarda in giro (camera libera)
