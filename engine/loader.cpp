@@ -84,27 +84,27 @@ namespace
    {
       std::vector<glm::vec3> positions;
       std::vector<glm::vec3> normals;
-      std::vector<glm::vec2> uvs;
+      std::vector<glm::vec2> texCoords;
 
-      for (unsigned int f = 0; f < source->mNumFaces; f++)
+      for (unsigned int face = 0; face < source->mNumFaces; face++)
       {
-         if (source->mFaces[f].mNumIndices != 3)
+         if (source->mFaces[face].mNumIndices != 3)
             continue;
 
-         for (unsigned int c = 0; c < 3; c++)
+         for (unsigned int corner = 0; corner < 3; corner++)
          {
-            const unsigned int v = source->mFaces[f].mIndices[c];
-            glm::vec2 uv(0.0f);
+            const unsigned int vertex = source->mFaces[face].mIndices[corner];
+            glm::vec2 texCoord(0.0f);
             if (source->HasTextureCoords(0))
-               uv = glm::vec2(source->mTextureCoords[0][v].x, source->mTextureCoords[0][v].y);
+               texCoord = glm::vec2(source->mTextureCoords[0][vertex].x, source->mTextureCoords[0][vertex].y);
 
-            positions.push_back(glm::vec3(source->mVertices[v].x, source->mVertices[v].y, source->mVertices[v].z));
-            normals.push_back(glm::vec3(source->mNormals[v].x, source->mNormals[v].y, source->mNormals[v].z));
-            uvs.push_back(uv);
+            positions.push_back(glm::vec3(source->mVertices[vertex].x, source->mVertices[vertex].y, source->mVertices[vertex].z));
+            normals.push_back(glm::vec3(source->mNormals[vertex].x, source->mNormals[vertex].y, source->mNormals[vertex].z));
+            texCoords.push_back(texCoord);
          }
       }
 
-      mesh->build(positions, normals, uvs);
+      mesh->build(positions, normals, texCoords);
    }
 
    /**

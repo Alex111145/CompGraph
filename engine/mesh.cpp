@@ -37,9 +37,9 @@ ENG_API Eng::Mesh::~Mesh()
  * Nothing happens if there are no triangles.
  * @param positions vertex positions, three per triangle
  * @param normals vertex normals (normalized here)
- * @param uvs texture coordinates
+ * @param texCoords texture coordinates
  */
-void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &uvs)
+void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &texCoords)
 {
    const glm::mat4 world = getWorldMatrix();
 
@@ -59,7 +59,7 @@ void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std
       const glm::vec3 worldPosition = glm::vec3(world * glm::vec4(positions[i], 1.0f));
 
       glNormal3f(normal.x, normal.y, normal.z);
-      glTexCoord2f(uvs[i].x, uvs[i].y);
+      glTexCoord2f(texCoords[i].x, texCoords[i].y);
       glVertex3f(positions[i].x, positions[i].y, positions[i].z);
 
       worldMin = glm::min(worldMin, worldPosition);

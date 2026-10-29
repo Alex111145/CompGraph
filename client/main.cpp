@@ -32,7 +32,7 @@ namespace
       { "ESC", "EXIT" }
    };
 
-   Eng::Camera *cameras[CAMERA_COUNT] = {};   ///< Free, front and top camera
+   Eng::Camera *cameras[CAMERA_COUNT] = {};   ///< Free, front and corner camera
    int activeCamera = 0;                      ///< Index of the camera in use
    Eng::DirectionalLight *torch = nullptr;    ///< Dynamic light that follows the active camera
    Eng::Light *lamp = nullptr;                ///< Static light of the lamp, read from the file (can be nullptr)
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 
    cameras[0] = new Eng::Camera("free camera", 60.0f, 0.05f, 100.0f);
    cameras[1] = new Eng::Camera("front camera", 60.0f, 0.05f, 100.0f);
-   cameras[2] = new Eng::Camera("top camera", 60.0f, 0.05f, 100.0f);
+   cameras[2] = new Eng::Camera("corner camera", 60.0f, 0.05f, 100.0f);
    cameras[1]->setMatrix(lookFrom(glm::vec3(0.0f, 2.0f, 4.5f), SCENE_CENTER));
    cameras[2]->setMatrix(lookFrom(glm::vec3(4.0f, 3.5f, 4.0f), SCENE_CENTER));
    for (Eng::Camera *camera : cameras)

@@ -18,7 +18,7 @@ public:
    Mesh(const std::string &name);
    ~Mesh();
 
-   void build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &uvs);
+   void build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &texCoords);
    void setMaterial(std::shared_ptr<Material> material);
    std::shared_ptr<Material> getMaterial() const;
    unsigned int getTriangleCount() const;

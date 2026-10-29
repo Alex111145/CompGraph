@@ -5,13 +5,14 @@ left to right direction
 
 object "root : Node" as root
 object "modello : Node\n(dal file .glb)" as model
-object "letto, sedia, tavolo : Mesh" as bed
-object "pavimento : Mesh" as floor
+object "SM_Bed_01_1_0 : Mesh\n(letto, sedia e scrivania)" as bed
+object "Plane_2_0 : Mesh\n(pavimento)" as floor
 object "DeskLamp : Node" as desk
-object "base + paralume : Mesh" as desklamp
+object "base e paralume : Mesh\n(2 mesh)" as desklamp
+object "LampLight : Node" as lampnode
 object "LampLight : PointLight\n(dal file)" as lamp
-object "torch : DirectionalLight\n(dal viewer)" as torch
-object "3 camere : Camera" as cams
+object "torch : DirectionalLight\n(creata dal viewer)" as torch
+object "free, front, corner camera : Camera" as cams
 
 root *-- model
 root *-- torch
@@ -20,5 +21,6 @@ model *-- bed
 model *-- floor
 model *-- desk
 desk *-- desklamp
-desk *-- lamp
+desk *-- lampnode
+lampnode *-- lamp
 @enduml

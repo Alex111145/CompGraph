@@ -15,6 +15,7 @@ main -> list : pass(root)
 loop finché isRunning()
   main -> eng : clearWindow()
   main -> eng : render(camera, list, lamp)
+  main -> eng : renderLegend(LEGEND)
   main -> eng : swapBuffers()
 end
 main -> eng : free()

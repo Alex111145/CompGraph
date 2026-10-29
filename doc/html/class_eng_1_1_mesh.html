@@ -139,7 +139,7 @@ Collaboration diagram for Eng::Mesh:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a022fd4a3e10b2651b8848c8be518f131" id="r_a022fd4a3e10b2651b8848c8be518f131"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a022fd4a3e10b2651b8848c8be518f131">Mesh</a> (const std::string &amp;name)</td></tr>
 <tr class="memitem:a378dd5ee6b60edebc6b8d6690f9e0e73" id="r_a378dd5ee6b60edebc6b8d6690f9e0e73"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a378dd5ee6b60edebc6b8d6690f9e0e73">~Mesh</a> ()</td></tr>
-<tr class="memitem:a361d03b64f018de8c723c6d588b92f7d" id="r_a361d03b64f018de8c723c6d588b92f7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a361d03b64f018de8c723c6d588b92f7d">build</a> (const std::vector&lt; glm::vec3 &gt; &amp;positions, const std::vector&lt; glm::vec3 &gt; &amp;normals, const std::vector&lt; glm::vec2 &gt; &amp;uvs)</td></tr>
+<tr class="memitem:a70dcda41ded1d1710baa329596f78cc5" id="r_a70dcda41ded1d1710baa329596f78cc5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a70dcda41ded1d1710baa329596f78cc5">build</a> (const std::vector&lt; glm::vec3 &gt; &amp;positions, const std::vector&lt; glm::vec3 &gt; &amp;normals, const std::vector&lt; glm::vec2 &gt; &amp;texCoords)</td></tr>
 <tr class="memitem:a7f8050539d769172b269ecda1e3f0b63" id="r_a7f8050539d769172b269ecda1e3f0b63"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7f8050539d769172b269ecda1e3f0b63">setMaterial</a> (std::shared_ptr&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> &gt; material)</td></tr>
 <tr class="memitem:ac904ae5f5b87787d85948e5c0128648f" id="r_ac904ae5f5b87787d85948e5c0128648f"><td class="memItemLeft">std::shared_ptr&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ac904ae5f5b87787d85948e5c0128648f">getMaterial</a> () const</td></tr>
 <tr class="memitem:a04c9d8099bbb13f640d7896ba50b7603" id="r_a04c9d8099bbb13f640d7896ba50b7603"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#a04c9d8099bbb13f640d7896ba50b7603">getTriangleCount</a> () const</td></tr>
@@ -233,8 +233,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a361d03b64f018de8c723c6d588b92f7d" name="a361d03b64f018de8c723c6d588b92f7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a361d03b64f018de8c723c6d588b92f7d">&#9670;&#160;</a></span>build()</h2>
+<a id="a70dcda41ded1d1710baa329596f78cc5" name="a70dcda41ded1d1710baa329596f78cc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70dcda41ded1d1710baa329596f78cc5">&#9670;&#160;</a></span>build()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,7 +252,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; glm::vec2 &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>uvs</em></span>&#160;)</td>
+          <td class="paramtype">const std::vector&lt; glm::vec2 &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>texCoords</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -260,7 +260,7 @@ Additional Inherited Members</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">positions</td><td>vertex positions, three per triangle </td></tr>
     <tr><td class="paramname">normals</td><td>vertex normals (normalized here) </td></tr>
-    <tr><td class="paramname">uvs</td><td>texture coordinates </td></tr>
+    <tr><td class="paramname">texCoords</td><td>texture coordinates </td></tr>
   </table>
   </dd>
 </dl>
