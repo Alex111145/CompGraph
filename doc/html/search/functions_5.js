@@ -14,7 +14,6 @@ var searchData=
   ['gettrianglecount_11',['getTriangleCount',['../class_eng_1_1_mesh.html#a04c9d8099bbb13f640d7896ba50b7603',1,'Eng::Mesh']]],
   ['getviewmatrix_12',['getViewMatrix',['../class_eng_1_1_camera.html#ad9ad28bb251840dfe35589910af17300',1,'Eng::Camera']]],
   ['getworldmatrix_13',['getWorldMatrix',['../class_eng_1_1_node.html#a95be925952a1c0311d953ae3c2a08708',1,'Eng::Node']]],
-  ['getworldmaxy_14',['getWorldMaxY',['../class_eng_1_1_mesh.html#a7f3f1b6db76167b05b9bce10fbddebda',1,'Eng::Mesh']]],
-  ['getworldminy_15',['getWorldMinY',['../class_eng_1_1_mesh.html#a80f2557d5264af33a76bcccf21d38d6d',1,'Eng::Mesh']]],
-  ['getworldposition_16',['getWorldPosition',['../class_eng_1_1_light.html#ad4c2f6859cacd7030ee08e66d251a92d',1,'Eng::Light']]]
+  ['getworldminy_14',['getWorldMinY',['../class_eng_1_1_mesh.html#a80f2557d5264af33a76bcccf21d38d6d',1,'Eng::Mesh']]],
+  ['getworldposition_15',['getWorldPosition',['../class_eng_1_1_light.html#ad4c2f6859cacd7030ee08e66d251a92d',1,'Eng::Light']]]
 ];

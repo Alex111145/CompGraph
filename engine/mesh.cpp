@@ -19,7 +19,7 @@ namespace
  * @param name mesh name
  */
 ENG_API Eng::Mesh::Mesh(const std::string &name) :
-   Node(name), displayList{ 0 }, triangleCount{ 0 }, worldMin{ glm::vec3(0.0f) }, worldMax{ glm::vec3(0.0f) }
+   Node(name), displayList{ 0 }, triangleCount{ 0 }, localMin{ glm::vec3(0.0f) }, localMax{ glm::vec3(0.0f) }
 {}
 
 /**
@@ -33,22 +33,19 @@ ENG_API Eng::Mesh::~Mesh()
 
 /**
  * Compiles the triangles into a display list (glNewList + glBegin(GL_TRIANGLES)) and
- * computes the world-space bounding box. Call it after the mesh has been added to its parent.
- * Nothing happens if there are no triangles.
+ * computes the bounding box in the mesh coordinates. Nothing happens if there are no triangles.
  * @param positions vertex positions, three per triangle
  * @param normals vertex normals (normalized here)
  * @param texCoords texture coordinates
  */
 void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std::vector<glm::vec3> &normals, const std::vector<glm::vec2> &texCoords)
 {
-   const glm::mat4 world = getWorldMatrix();
-
    if (positions.empty())
       return;
 
    triangleCount = static_cast<unsigned int>(positions.size() / 3);
-   worldMin = glm::vec3(world * glm::vec4(positions[0], 1.0f));
-   worldMax = worldMin;
+   localMin = positions[0];
+   localMax = positions[0];
 
    displayList = glGenLists(1);
    glNewList(displayList, GL_COMPILE);
@@ -56,14 +53,13 @@ void ENG_API Eng::Mesh::build(const std::vector<glm::vec3> &positions, const std
    for (size_t i = 0; i < positions.size(); i++)
    {
       const glm::vec3 normal = glm::normalize(normals[i]);
-      const glm::vec3 worldPosition = glm::vec3(world * glm::vec4(positions[i], 1.0f));
 
       glNormal3f(normal.x, normal.y, normal.z);
       glTexCoord2f(texCoords[i].x, texCoords[i].y);
       glVertex3f(positions[i].x, positions[i].y, positions[i].z);
 
-      worldMin = glm::min(worldMin, worldPosition);
-      worldMax = glm::max(worldMax, worldPosition);
+      localMin = glm::min(localMin, positions[i]);
+      localMax = glm::max(localMax, positions[i]);
    }
    glEnd();
    glEndList();
@@ -102,7 +98,8 @@ unsigned int ENG_API Eng::Mesh::getTriangleCount() const
  */
 bool ENG_API Eng::Mesh::isFlat() const
 {
-   return worldMax.y - worldMin.y < FLAT_TOLERANCE;
+   const glm::vec2 range = getWorldRangeY();
+   return range.y - range.x < FLAT_TOLERANCE;
 }
 
 /**
@@ -111,16 +108,7 @@ bool ENG_API Eng::Mesh::isFlat() const
  */
 float ENG_API Eng::Mesh::getWorldMinY() const
 {
-   return worldMin.y;
-}
-
-/**
- * Gets the highest world-space height of the mesh.
- * @return maximum Y
- */
-float ENG_API Eng::Mesh::getWorldMaxY() const
-{
-   return worldMax.y;
+   return getWorldRangeY().x;
 }
 
 /**
@@ -141,4 +129,26 @@ void ENG_API Eng::Mesh::render(const glm::mat4 &modelView)
 void ENG_API Eng::Mesh::renderGeometry() const
 {
    glCallList(displayList);
+}
+
+/**
+ * Computes the world-space height range of the mesh: the 8 corners of the bounding box are moved
+ * with the current world matrix, so the range follows the mesh when it (or a parent) moves.
+ * @return minimum Y in x, maximum Y in y
+ */
+glm::vec2 ENG_API Eng::Mesh::getWorldRangeY() const
+{
+   const glm::mat4 world = getWorldMatrix();
+   glm::vec2 range((world * glm::vec4(localMin, 1.0f)).y);
+
+   for (int corner = 1; corner < 8; corner++)
+   {
+      const glm::vec3 point((corner & 1) ? localMax.x : localMin.x,
+                            (corner & 2) ? localMax.y : localMin.y,
+                            (corner & 4) ? localMax.z : localMin.z);
+      const float height = (world * glm::vec4(point, 1.0f)).y;
+
+      range = glm::vec2(glm::min(range.x, height), glm::max(range.y, height));
+   }
+   return range;
 }

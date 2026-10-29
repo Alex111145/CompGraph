@@ -145,7 +145,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a04c9d8099bbb13f640d7896ba50b7603" id="r_a04c9d8099bbb13f640d7896ba50b7603"><td class="memItemLeft">unsigned int&#160;</td><td class="memItemRight"><a class="el" href="#a04c9d8099bbb13f640d7896ba50b7603">getTriangleCount</a> () const</td></tr>
 <tr class="memitem:abb1b21f8416450eb4cce7ed061b66173" id="r_abb1b21f8416450eb4cce7ed061b66173"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#abb1b21f8416450eb4cce7ed061b66173">isFlat</a> () const</td></tr>
 <tr class="memitem:a80f2557d5264af33a76bcccf21d38d6d" id="r_a80f2557d5264af33a76bcccf21d38d6d"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a80f2557d5264af33a76bcccf21d38d6d">getWorldMinY</a> () const</td></tr>
-<tr class="memitem:a7f3f1b6db76167b05b9bce10fbddebda" id="r_a7f3f1b6db76167b05b9bce10fbddebda"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a7f3f1b6db76167b05b9bce10fbddebda">getWorldMaxY</a> () const</td></tr>
 <tr class="memitem:a009b710271046680e6b667b59d3e0aba" id="r_a009b710271046680e6b667b59d3e0aba"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a009b710271046680e6b667b59d3e0aba">render</a> (const glm::mat4 &amp;modelView) override</td></tr>
 <tr class="inherit_header pub_methods_class_eng_1_1_node"><td colspan="2">Public Member Functions inherited from <a class="el" href="class_eng_1_1_node.html">Eng::Node</a></td></tr>
 <tr class="memitem:ab0109a135a403f9e7ff7abba75657188 pub_methods_class_eng_1_1_node" id="r_ab0109a135a403f9e7ff7abba75657188"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_eng_1_1_node.html#ab0109a135a403f9e7ff7abba75657188">Node</a> (const std::string &amp;name)</td></tr>
@@ -256,7 +255,7 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Compiles the triangles into a display list (glNewList + glBegin(GL_TRIANGLES)) and computes the world-space bounding box. Call it after the mesh has been added to its parent. Nothing happens if there are no triangles. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Compiles the triangles into a display list (glNewList + glBegin(GL_TRIANGLES)) and computes the bounding box in the mesh coordinates. Nothing happens if there are no triangles. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">positions</td><td>vertex positions, three per triangle </td></tr>
     <tr><td class="paramname">normals</td><td>vertex normals (normalized here) </td></tr>
@@ -300,24 +299,6 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Gets the number of triangles. </p><dl class="section return"><dt>Returns</dt><dd>triangle count </dd></dl>
-
-</div>
-</div>
-<a id="a7f3f1b6db76167b05b9bce10fbddebda" name="a7f3f1b6db76167b05b9bce10fbddebda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f3f1b6db76167b05b9bce10fbddebda">&#9670;&#160;</a></span>getWorldMaxY()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">float <a class="el" href="engine_8h.html#a2ef14742296b6d1fdaf5e70dfdd60996">ENG_API</a> Eng::Mesh::getWorldMaxY </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the highest world-space height of the mesh. </p><dl class="section return"><dt>Returns</dt><dd>maximum Y </dd></dl>
 
 </div>
 </div>

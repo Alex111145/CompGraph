@@ -293,7 +293,7 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Renders the planar shadow cast by a light on the floor. The objects are flattened on the floor with the shadow matrix of the OpenGL SuperBible (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, drawn only into the stencil buffer. The floor is then drawn again, without the light, where the stencil marks the shadow. Only meshes lower than a point light cast a shadow: a point above the light cannot be projected on the floor. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Renders the planar shadow cast by a light on the floor. The objects are flattened on the floor with the shadow matrix of the OpenGL SuperBible (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T, drawn only into the stencil buffer. The floor is then drawn again, without the light, where the stencil marks the shadow. A point above a point light cannot be projected on the floor: the shadow matrix gives every vertex w = light height - vertex height, so the user clip plane (0, 0, 0, 1), set with the identity modelview (eye coordinates), keeps only w &gt;= 0 and cuts each mesh at the height of the light. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">viewMatrix</td><td>view matrix of the camera </td></tr>
     <tr><td class="paramname">light</td><td>light that casts the shadow (nothing happens if nullptr or off) </td></tr>

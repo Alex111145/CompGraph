@@ -76,8 +76,9 @@ void ENG_API Eng::List::render(const glm::mat4 &modelView)
  * Renders the planar shadow cast by a light on the floor. The objects are flattened on the floor with the
  * shadow matrix of the OpenGL SuperBible (MakeShadowMatrix, chapter 9): M = (plane . light) I - light plane^T,
  * drawn only into the stencil buffer. The floor is then drawn again, without the light, where the stencil
- * marks the shadow. Only meshes lower than a point light cast a shadow: a point above the light cannot be
- * projected on the floor.
+ * marks the shadow. A point above a point light cannot be projected on the floor: the shadow matrix gives
+ * every vertex w = light height - vertex height, so the user clip plane (0, 0, 0, 1), set with the identity
+ * modelview (eye coordinates), keeps only w >= 0 and cuts each mesh at the height of the light.
  * @param viewMatrix view matrix of the camera
  * @param light light that casts the shadow (nothing happens if nullptr or off)
  */
@@ -105,13 +106,16 @@ void ENG_API Eng::List::renderShadow(const glm::mat4 &viewMatrix, Light *light)
    glStencilFunc(GL_EQUAL, 1, 0xFF);
    glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 
+   const double belowLight[4] = { 0.0, 0.0, 0.0, 1.0 };
+   glLoadIdentity();
+   glClipPlane(GL_CLIP_PLANE0, belowLight);
+   glEnable(GL_CLIP_PLANE0);
    for (Mesh *mesh : casters)
    {
-      if (position.w != 0.0f && mesh->getWorldMaxY() >= position.y)
-         continue;
       glLoadMatrixf(glm::value_ptr(viewMatrix * shadow * mesh->getWorldMatrix()));
       mesh->renderGeometry();
    }
+   glDisable(GL_CLIP_PLANE0);
 
    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
    glDepthMask(GL_TRUE);

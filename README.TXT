@@ -23,8 +23,9 @@ CONTROLLI (riassunti anche nella legenda in alto a sinistra)
   P            stampa la posizione della camera attiva
   ESC          esci
 
-All'avvio la console stampa lo scene graph con la posizione di ogni nodo
-e il numero di triangoli di ogni mesh.
+All'avvio la console stampa lo scene graph: per ogni nodo id, id del
+padre, posizione locale e posizione nel mondo, e il numero di triangoli
+di ogni mesh.
 
 CLASSI DEL MOTORE (namespace Eng, diagrammi UML in doc/uml/)
 - Base               singleton: finestra, input, clearWindow, render,
@@ -45,7 +46,8 @@ SCELTE PRINCIPALI
   mondo del padre x matrice locale.
 - Ombra planare della lampada sul pavimento, con la matrice di proiezione
   dell'ombra della OpenGL SuperBible (cap. 9); lo stencil buffer la limita
-  al pavimento.
+  al pavimento e un piano di clipping (glClipPlane) toglie la parte degli
+  oggetti che sta sopra la lampada.
 - La luce della lampada e' salvata nel file .glb e letta dal Loader.
 - La legenda usa un piccolo font 5x7 disegnato con GL_QUADS.
 

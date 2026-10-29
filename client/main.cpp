@@ -43,15 +43,20 @@ namespace
    float pitch = -15.0f;                      ///< Free camera rotation around X in degrees
 
    /**
-    * Prints the world position of every node of the scene graph, using glm::to_string.
+    * Prints every node of the scene graph: id, name, id of the parent, local position (relative to the parent)
+    * and world position, using glm::to_string.
     * @param node node to print (with its children)
     * @param depth indentation level
     */
    void printNode(const Eng::Node *node, int depth)
    {
-      const glm::vec3 position = glm::vec3(node->getWorldMatrix()[3]);
+      const glm::vec3 localPosition = glm::vec3(node->getMatrix()[3]);
+      const glm::vec3 worldPosition = glm::vec3(node->getWorldMatrix()[3]);
+      const Eng::Node *parent = node->getParent();
 
-      std::cout << std::string(depth * 3, ' ') << node->getName() << "  " << glm::to_string(position);
+      std::cout << std::string(depth * 3, ' ') << "[" << node->getId() << "] " << node->getName()
+                << "  parent: " << (parent != nullptr ? std::to_string(parent->getId()) : "none")
+                << "  local: " << glm::to_string(localPosition) << "  world: " << glm::to_string(worldPosition);
       if (const Eng::Mesh *mesh = dynamic_cast<const Eng::Mesh *>(node))
          std::cout << "  (" << mesh->getTriangleCount() << " triangles)";
       std::cout << std::endl;
@@ -217,7 +222,7 @@ int main(int argc, char *argv[])
    Eng::List list("render list");
    list.pass(root);
 
-   std::cout << std::endl << "Scene graph (world positions):" << std::endl;
+   std::cout << std::endl << "Scene graph ([id] name, parent id, local and world position):" << std::endl;
    printNode(root, 1);
 
    while (eng.isRunning())

@@ -25,7 +25,6 @@ public:
 
    bool isFlat() const;
    float getWorldMinY() const;
-   float getWorldMaxY() const;
 
    void render(const glm::mat4 &modelView) override;
 
@@ -34,11 +33,12 @@ private:
    friend class List;   ///< The render list draws the bare triangles of the shadow
 
    void renderGeometry() const;
+   glm::vec2 getWorldRangeY() const;
 
    unsigned int displayList;            ///< Compiled triangles (internal handle)
    unsigned int triangleCount;          ///< Number of triangles
-   glm::vec3 worldMin;                  ///< World-space bounding box minimum
-   glm::vec3 worldMax;                  ///< World-space bounding box maximum
+   glm::vec3 localMin;                  ///< Bounding box minimum, in the mesh coordinates
+   glm::vec3 localMax;                  ///< Bounding box maximum, in the mesh coordinates
    std::shared_ptr<Material> material;  ///< Surface material
 };
 
