@@ -1,0 +1,218 @@
+@startuml uml_classi
+' REGOLA DEL COLORE (utente 12/11/2026): ogni aggiunta ha il suo colore e lo tiene: aggiunta n.1 ROSSO ($AGG1), aggiunta n.2 BLU ($AGG2).
+' Aggiunta n.1 (11/11/2026, rosso): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
+' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
+' All'ultima lezione del corso mettere tutti i $AGGn = black e $AGGn_CLASSE = "#line:000000;text:000000" (tutto nero).
+!$AGG1 = "#C00000"
+!$AGG1_CLASSE = "#line:C00000;text:C00000"
+!$AGG2 = "#0047C2"
+!$AGG2_CLASSE = "#line:0047C2;text:0047C2"
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 13
+skinparam classFontSize 15
+skinparam classFontStyle bold
+skinparam packageFontSize 15
+skinparam titleFontSize 20
+skinparam nodesep 60
+skinparam ranksep 70
+skinparam class {
+  BackgroundColor #FFFFFF
+  HeaderBackgroundColor #E8EEF7
+  BorderColor #2B3A55
+  ArrowColor #2B3A55
+  StereotypeFontSize 12
+}
+skinparam package {
+  BorderColor #8090A8
+  BackgroundColor #FBFCFE
+}
+skinparam legend {
+  BackgroundColor #FFFFFF
+  BorderColor #8090A8
+  FontSize 12
+}
+hide empty members
+
+title Motore grafico — diagramma delle classi (namespace Eng)
+
+package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)" as EngPkg {
+
+  class Base <<singleton>> <<final>> {
+    - reserved : std::unique_ptr<Reserved>
+    --
+    - Base()
+    + Base(other : const Base&) «= delete»
+    + ~Base()
+    + operator=(other : const Base&) : void «= delete»
+    + {static} getInstance() : Base&
+    .. init / free ..
+    + init(title : const std::string&, width : int, height : int) : bool
+    + free() : bool
+    .. finestra (FreeGLUT) ..
+    + setKeyboardCallback(callback : void (*)(unsigned char key, int mouseX, int mouseY)) : void
+    + setBackgroundColor(color : const glm::vec3&) : void
+    + isRunning() : bool
+    + clearWindow() : void
+    + swapBuffers() : void
+    + <color:$AGG1>getAspectRatio() : float {query}</color>
+    .. rendering ..
+    + setWireframe(enabled : bool) : void
+    + isWireframe() : bool {query}
+    + <color:$AGG1>render(camera : const Camera&, list : const List&) : void</color>
+    + <color:$AGG2>drawText(text : const std::string&, x : int, y : int, color : const glm::vec3&) : void</color>
+    .. callback FreeGLUT ..
+    - {static} displayCallback() : void
+    - {static} reshapeCallback(width : int, height : int) : void
+    - {static} closeCallback() : void
+  }
+
+  class "Base::Reserved" as Reserved <<struct>> {
+    + initFlag : bool = false
+    + running : bool = false
+    + wireframe : bool = false
+    + width : int = 0
+    + height : int = 1
+    --
+    + Reserved()
+  }
+
+  abstract class Object {
+    - id : unsigned int
+    - name : std::string
+    - {static} nextId : unsigned int = 0
+    --
+    # Object(name : const std::string&)
+    + Object(other : const Object&) «= delete»
+    + ~Object() {virtual}
+    + operator=(other : const Object&) : Object& «= delete»
+    + getId() : unsigned int {query}
+    + getName() : const std::string& {query}
+    + setName(name : const std::string&) : void
+    + {abstract} render(modelViewMatrix : const glm::mat4&) : void {query}
+  }
+
+  class Node {
+    - matrix : glm::mat4 = identity
+    - parent : Node* = nullptr
+    - children : std::vector<Node*>
+    --
+    + Node(name : const std::string&)
+    + ~Node() {override}
+    .. matrici ..
+    + setMatrix(matrix : const glm::mat4&) : void
+    + getMatrix() : const glm::mat4& {query}
+    + getWorldMatrix() : glm::mat4 {query}
+    .. gerarchia ..
+    + addChild(child : Node*) : bool
+    + removeChild(child : Node*) : bool
+    + getChild(index : unsigned int) : Node* {query}
+    + getNumberOfChildren() : unsigned int {query}
+    + getParent() : Node* {query}
+    .. rendering ..
+    + render(modelViewMatrix : const glm::mat4&) : void {query, override}
+  }
+
+  class Material $AGG1_CLASSE {
+    - emission : glm::vec4 = (0, 0, 0, 1)
+    - ambient : glm::vec4 = (0.2, 0.2, 0.2, 1)
+    - diffuse : glm::vec4 = (0.8, 0.8, 0.8, 1)
+    - specular : glm::vec4 = (0.5, 0.5, 0.5, 1)
+    - shininess : float = 128
+    --
+    + Material(name : const std::string&)
+    + setEmission(emission : const glm::vec4&) : void
+    + setAmbient(ambient : const glm::vec4&) : void
+    + setDiffuse(diffuse : const glm::vec4&) : void
+    + setSpecular(specular : const glm::vec4&) : void
+    + setShininess(shininess : float) : void
+    + render(modelViewMatrix : const glm::mat4&) : void {query, override}
+  }
+
+  class Mesh {
+    - <color:$AGG1>size : float</color>
+    - <color:$AGG1>material : const Material* = nullptr</color>
+    --
+    + <color:$AGG1>Mesh(name : const std::string&, size : float)</color>
+    + <color:$AGG1>setMaterial(material : const Material*) : void</color>
+    + render(modelViewMatrix : const glm::mat4&) : void {query, override}
+  }
+
+  class Light $AGG1_CLASSE {
+    - type : Type
+    - lightNumber : int = -1
+    - ambient : glm::vec4 = (0, 0, 0, 1)
+    - diffuse : glm::vec4 = (1, 1, 1, 1)
+    - specular : glm::vec4 = (1, 1, 1, 1)
+    - cutoff : float = 30
+    - {static} nextLightNumber : int = 0
+    --
+    + Light(name : const std::string&, type : Type)
+    + setAmbient(ambient : const glm::vec4&) : void
+    + setDiffuse(diffuse : const glm::vec4&) : void
+    + setSpecular(specular : const glm::vec4&) : void
+    + setCutoff(cutoff : float) : bool
+    + render(modelViewMatrix : const glm::mat4&) : void {query, override}
+  }
+
+  enum "Light::Type" as LightType <<enum class>> $AGG1_CLASSE {
+    DIRECTIONAL
+    OMNI
+    SPOT
+  }
+
+  class Camera {
+    - <color:$AGG1>projectionMatrix : glm::mat4 = identity</color>
+    --
+    + Camera(name : const std::string&)
+    + <color:$AGG1>setProjectionMatrix(projectionMatrix : const glm::mat4&) : void</color>
+    + <color:$AGG1>getProjectionMatrix() : const glm::mat4& {query}</color>
+    + <color:$AGG1>getInverseMatrix() : glm::mat4 {query}</color>
+  }
+
+  class List $AGG1_CLASSE {
+    - instances : std::vector<Instance>
+    --
+    + List(name : const std::string&)
+    + pass(node : const Node*, parentMatrix : const glm::mat4& = identity) : void
+    + clear() : void
+    + render(cameraInverseMatrix : const glm::mat4&) : void {query, override}
+  }
+
+  class "List::Instance" as Instance <<struct>> $AGG1_CLASSE {
+    + nodePtr : const Node*
+    + nodeWorldMatrix : glm::mat4
+  }
+}
+
+Base *-- "1" Reserved : reserved
+Base ..> Camera : <<use>>\nrender()
+Base -[$AGG1]..> List : <<use>>\nrender()
+
+Object <|-- Node
+Object <|-[$AGG1]- Material
+Object <|-[$AGG1]- List
+Node <|-- Mesh
+Node <|-[$AGG1]- Light
+Node <|-- Camera
+Node "0..1\nparent" o-- "0..*\nchildren" Node
+
+Mesh o-[$AGG1]-> "0..1" Material : material\n(non posseduto)
+Light +-[$AGG1]- LightType : type
+List *-[$AGG1]- "0..*" Instance : instances
+Instance -[$AGG1]-> "1" Node : nodePtr
+
+legend bottom left
+  **Legenda**
+  + public    - private    # protected
+  {static} = membro statico (sottolineato)    {abstract} = metodo virtuale puro (corsivo)
+  {query} = metodo const    {override} = ridefinisce il metodo della classe padre
+  «= delete» = funzione cancellata (oggetto non copiabile)
+  rombo pieno = composizione    rombo vuoto = aggregazione    tratteggio = dipendenza (usa)
+  <color:$AGG1>**rosso = aggiunta n.1**: classi, metodi, attributi e frecce nuovi o cambiati</color>
+  <color:$AGG2>**blu = aggiunta n.2**: metodo nuovo drawText (legenda dei tasti)</color>
+  il nero è il resto
+endlegend
+@enduml
