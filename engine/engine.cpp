@@ -18,6 +18,7 @@
    #include <GL/freeglut.h>
 
    // GLM:
+   #include <glm/gtc/matrix_transform.hpp>
    #include <glm/gtc/type_ptr.hpp>
 
    // C/C++:
@@ -297,6 +298,35 @@ void ENG_API Eng::Base::render(const Camera &camera, const List &list)
 
    glMatrixMode(GL_MODELVIEW);
    list.render(camera.getInverseMatrix());
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Draws a 2D text over the rendered scene (e.g. a legend of the keys), with the text function of FreeGLUT.
+ * Call it after render() and before swapBuffers(). Lighting and depth test are off while drawing the text.
+ * @param text text to draw (a newline character starts a new line)
+ * @param x distance from the left border of the window, in pixels
+ * @param y distance from the top border of the window to the first line, in pixels
+ * @param color RGB color, each component between 0 and 1
+ */
+void ENG_API Eng::Base::drawText(const std::string &text, int x, int y, const glm::vec3 &color)
+{
+   if (!reserved->running)
+      return;
+
+   glMatrixMode(GL_PROJECTION);
+   glLoadMatrixf(glm::value_ptr(glm::ortho(0.0f, static_cast<float>(reserved->width), 0.0f, static_cast<float>(reserved->height), -1.0f, 1.0f)));
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+
+   glDisable(GL_LIGHTING);
+   glDisable(GL_DEPTH_TEST);
+   glColor3f(color.r, color.g, color.b);
+   glRasterPos2i(x, reserved->height - y);
+   glutBitmapString(GLUT_BITMAP_8_BY_13, reinterpret_cast<const unsigned char *>(text.c_str()));
+   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_LIGHTING);
 }
 
 

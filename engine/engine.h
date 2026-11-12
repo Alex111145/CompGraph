@@ -113,6 +113,7 @@ public: //
    void setWireframe(bool enabled);
    bool isWireframe() const;
    void render(const Camera &camera, const List &list);
+   void drawText(const std::string &text, int x, int y, const glm::vec3 &color);
 
 
 ///////////

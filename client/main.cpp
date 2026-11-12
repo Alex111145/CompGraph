@@ -20,6 +20,7 @@
    // C/C++:
    #include <iostream>
    #include <iterator>
+   #include <string>
 
 
 
@@ -28,6 +29,7 @@
 /////////////
 
    bool orthographic = false;   ///< True when the orthographic camera is used, false for the perspective one
+   const std::string legend = "F = wireframe / solid\nC = perspective / orthographic camera";   ///< Mini legend of the keys, drawn in the window
 
 
 
@@ -67,7 +69,7 @@ void keyboardCallback(unsigned char key, int mouseX, int mouseY)
 int main(int argc, char *argv[])
 {
    std::cout << "Scene graph of cubes, Alessio Gervasini (C) SUPSI" << std::endl;
-   std::cout << "F = wireframe/solid, C = perspective/orthographic camera" << std::endl;
+   std::cout << legend << std::endl;
    std::cout << std::endl;
 
    Eng::Base &eng = Eng::Base::getInstance();
@@ -129,6 +131,7 @@ int main(int argc, char *argv[])
 
       eng.clearWindow();
       eng.render(orthographic ? orthographicCamera : perspectiveCamera, list);
+      eng.drawText(legend, 10, 20, glm::vec3(1.0f, 1.0f, 1.0f));
       eng.swapBuffers();
    }
 
