@@ -1,0 +1,8 @@
+x64/
+.vs/
+engine/bin/
+engine/obj/
+client/bin/
+client/obj/
+*.depend
+*.layout
