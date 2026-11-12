@@ -1,0 +1,5 @@
+<map id="Eng::Material" name="Eng::Material">
+<area shape="rect" id="Node000001" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn." alt="" coords="5,79,104,105"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_object.html" title="Abstract base class: gives every object a unique id and a name, and declares the render method." alt="" coords="9,5,100,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,45,57,79,52,78,53,48"/>
+</map>

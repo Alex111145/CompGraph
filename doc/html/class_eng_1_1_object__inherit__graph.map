@@ -1,0 +1,15 @@
+<map id="Eng::Object" name="Eng::Object">
+<area shape="rect" id="Node000001" title="Abstract base class: gives every object a unique id and a name, and declares the render method." alt="" coords="106,5,196,31"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_list.html" title="List of the nodes to render, each one with its final matrix in world coordinates. It is filled by vis..." alt="" coords="5,79,79,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,42,62,80,59,76,122,37"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn." alt="" coords="102,79,200,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,44,154,79,149,78,150,49"/>
+<area shape="rect" id="Node000004" href="$class_eng_1_1_node.html" title="Scene graph node: has its own matrix (relative to the parent), one parent and a list of children...." alt="" coords="224,79,308,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="184,37,249,78,244,79,183,42"/>
+<area shape="rect" id="Node000005" href="$class_eng_1_1_camera.html" title="Scene graph node that looks at the scene. It stores only the projection matrix, built by the user (e...." alt="" coords="104,153,202,178"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="237,113,173,154,171,150,231,114"/>
+<area shape="rect" id="Node000006" href="$class_eng_1_1_light.html" title="Scene graph node that emits light. Its position and direction come from its matrix: the light sits at..." alt="" coords="226,153,306,178"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="268,118,268,154,264,151,264,122"/>
+<area shape="rect" id="Node000007" href="$class_eng_1_1_mesh.html" title="Scene graph node that draws a cube centered at its origin, with one normal per face and a material." alt="" coords="330,153,415,178"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="298,111,357,152,352,152,296,116"/>
+</map>

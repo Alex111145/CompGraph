@@ -1,0 +1,8 @@
+<map id="Eng::Light" name="Eng::Light">
+<area shape="rect" id="Node000001" title="Scene graph node that emits light. Its position and direction come from its matrix: the light sits at..." alt="" coords="10,155,91,181"/>
+<area shape="rect" id="Node000002" href="$class_eng_1_1_node.html" title="Scene graph node: has its own matrix (relative to the parent), one parent and a list of children...." alt="" coords="9,80,92,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,120,53,156,48,155,48,123"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="108,85,119,93,110,101,94,103,92,98,108,96,114,93,108,90"/>
+<area shape="rect" id="Node000003" href="$class_eng_1_1_object.html" title="Abstract base class: gives every object a unique id and a name, and declares the render method." alt="" coords="5,5,96,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="51,44,53,80,48,80,50,49"/>
+</map>

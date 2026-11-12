@@ -1,0 +1,21 @@
+<map id="camera.h" name="camera.h">
+<area shape="rect" id="Node000001" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="366,5,441,31"/>
+<area shape="rect" id="Node000002" href="$engine_8h.html" title="Graphics engine main include file." alt="" coords="368,79,438,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="405,44,406,80,401,77,402,49"/>
+<area shape="rect" id="Node000003" href="$camera_8cpp.html" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="5,153,95,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="353,106,107,155,96,157,95,152,105,150,352,101"/>
+<area shape="rect" id="Node000004" href="$engine_8cpp.html" title="Graphics engine main file." alt="" coords="118,153,203,178"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="356,108,203,155,201,150,351,108"/>
+<area shape="rect" id="Node000005" href="$light_8cpp.html" title="Light source (directional, omnidirectional or spot)." alt="" coords="227,153,297,178"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="368,111,287,155,285,150,363,113"/>
+<area shape="rect" id="Node000006" href="$list_8cpp.html" title="List of the nodes to render." alt="" coords="321,153,384,178"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="389,116,363,154,360,150,384,118"/>
+<area shape="rect" id="Node000007" href="$material_8cpp.html" title="Material (emission, ambient, diffuse, specular, shininess)." alt="" coords="408,153,500,178"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="422,115,448,153,443,151,419,119"/>
+<area shape="rect" id="Node000008" href="$mesh_8cpp.html" title="Mesh (a 3D cube for now)." alt="" coords="524,153,602,178"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="445,109,539,152,533,152,444,114"/>
+<area shape="rect" id="Node000009" href="$node_8cpp.html" title="Scene graph node." alt="" coords="626,153,700,178"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="454,104,628,154,623,154,453,110"/>
+<area shape="rect" id="Node000010" href="$object_8cpp.html" title="Base class of every engine object." alt="" coords="724,153,805,178"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="454,100,713,150,726,155,721,155,712,155,454,105"/>
+</map>
