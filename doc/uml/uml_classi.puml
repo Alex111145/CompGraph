@@ -1,12 +1,15 @@
 @startuml uml_classi
-' REGOLA DEL COLORE (utente 12/11/2026): ogni aggiunta ha il suo colore e lo tiene: aggiunta n.1 ROSSO ($AGG1), aggiunta n.2 BLU ($AGG2).
-' Aggiunta n.1 (11/11/2026, rosso): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
-' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
-' All'ultima lezione del corso mettere tutti i $AGGn = black e $AGGn_CLASSE = "#line:000000;text:000000" (tutto nero).
-!$AGG1 = "#C00000"
-!$AGG1_CLASSE = "#line:C00000;text:C00000"
-!$AGG2 = "#0047C2"
-!$AGG2_CLASSE = "#line:0047C2;text:0047C2"
+' REGOLA DEL COLORE (utente 17/11/2026): solo l'ultima aggiunta e' colorata, in ROSSO ($AGG3); le aggiunte n.1 e n.2 sono NERE.
+' Aggiunta n.1 (11/11/2026, nero): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
+' Aggiunta n.2 (12/11/2026, nero): mini legenda dei tasti, Base::drawText.
+' Aggiunta n.3 (17/11/2026, rosso): lezione 6, caricamento scene con Assimp (Base::load, Mesh con lista vertici + lista facce).
+' Alla prossima aggiunta: $AGG3 diventa nero e si crea $AGG4 rosso.
+!$AGG1 = "#000000"
+!$AGG1_CLASSE = "#line:000000;text:000000"
+!$AGG2 = "#000000"
+!$AGG2_CLASSE = "#line:000000;text:000000"
+!$AGG3 = "#C00000"
+!$AGG3_CLASSE = "#line:C00000;text:C00000"
 
 skinparam classAttributeIconSize 0
 skinparam shadowing false
@@ -58,6 +61,8 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + clearWindow() : void
     + swapBuffers() : void
     + <color:$AGG1>getAspectRatio() : float {query}</color>
+    .. caricamento ..
+    + <color:$AGG3>load(fileName : const std::string&) : Node*</color>
     .. rendering ..
     + setWireframe(enabled : bool) : void
     + isWireframe() : bool {query}
@@ -75,8 +80,14 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + wireframe : bool = false
     + width : int = 0
     + height : int = 1
+    + <color:$AGG3>loadedObjects : std::vector<std::unique_ptr<Object>></color>
     --
     + Reserved()
+    + <color:$AGG3>keep(object : std::unique_ptr<T>) : T*</color>
+    + <color:$AGG3>loadMaterial(fileMaterial : const aiMaterial*) : Material*</color>
+    + <color:$AGG3>loadLight(fileLight : const aiLight*) : Light*</color>
+    + <color:$AGG3>loadMesh(fileMesh : const aiMesh*, name : const std::string&, materials : const std::vector<Material*>&) : Mesh*</color>
+    + <color:$AGG3>loadNode(fileScene : const aiScene*, fileNode : const aiNode*, materials : const std::vector<Material*>&) : Node*</color>
   }
 
   abstract class Object {
@@ -132,10 +143,14 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
   }
 
   class Mesh {
-    - <color:$AGG1>size : float</color>
+    - <color:$AGG3>positions : std::vector<glm::vec3></color>
+    - <color:$AGG3>normals : std::vector<glm::vec3></color>
+    - <color:$AGG3>faces : std::vector<glm::uvec3></color>
     - <color:$AGG1>material : const Material* = nullptr</color>
     --
-    + <color:$AGG1>Mesh(name : const std::string&, size : float)</color>
+    + <color:$AGG3>Mesh(name : const std::string&)</color>
+    + <color:$AGG3>addVertex(position : const glm::vec3&, normal : const glm::vec3&) : void</color>
+    + <color:$AGG3>addFace(vertex0 : unsigned int, vertex1 : unsigned int, vertex2 : unsigned int) : bool</color>
     + <color:$AGG1>setMaterial(material : const Material*) : void</color>
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
   }
@@ -188,6 +203,12 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
 }
 
 Base *-- "1" Reserved : reserved
+Base -[$AGG3]..> Node : <<use>>\nload()
+Reserved -[$AGG3]..> Material : <<create>>\nloadMaterial()
+Reserved -[$AGG3]..> Light : <<create>>\nloadLight()
+Reserved -[$AGG3]..> Mesh : <<create>>\nloadMesh()
+Reserved -[$AGG3]..> Node : <<create>>\nloadNode()
+Reserved *-[$AGG3]- "0..*" Object : loadedObjects\n(possiede)
 Base ..> Camera : <<use>>\nrender()
 Base -[$AGG1]..> List : <<use>>\nrender()
 
@@ -211,8 +232,6 @@ legend bottom left
   {query} = metodo const    {override} = ridefinisce il metodo della classe padre
   «= delete» = funzione cancellata (oggetto non copiabile)
   rombo pieno = composizione    rombo vuoto = aggregazione    tratteggio = dipendenza (usa)
-  <color:$AGG1>**rosso = aggiunta n.1**: classi, metodi, attributi e frecce nuovi o cambiati</color>
-  <color:$AGG2>**blu = aggiunta n.2**: metodo nuovo drawText (legenda dei tasti)</color>
-  il nero è il resto
+  <color:$AGG3>**rosso = aggiunta n.3**</color>
 endlegend
 @enduml
