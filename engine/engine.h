@@ -79,7 +79,8 @@ namespace Eng {
 ///////////////////////
 
 /**
- * @brief Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.
+ * @brief Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,
+ * and loads 3D scenes from files (with Assimp).
  */
 class ENG_API Base final
 {
@@ -108,6 +109,9 @@ public: //
    void clearWindow();
    void swapBuffers();
    float getAspectRatio() const;
+
+   // Assets:
+   Node *load(const std::string &fileName);
 
    // Rendering:
    void setWireframe(bool enabled);

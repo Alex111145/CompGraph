@@ -17,11 +17,17 @@
    // FreeGLUT:
    #include <GL/freeglut.h>
 
+   // Assimp:
+   #include <assimp/Importer.hpp>
+   #include <assimp/scene.h>
+   #include <assimp/postprocess.h>
+
    // GLM:
    #include <glm/gtc/matrix_transform.hpp>
    #include <glm/gtc/type_ptr.hpp>
 
    // C/C++:
+   #include <algorithm>
    #include <iostream>
    #include <source_location>
 
@@ -45,13 +51,187 @@ struct Eng::Base::Reserved
    int width;        ///< Window width, in pixels
    int height;       ///< Window height, in pixels (never 0)
 
+   // Loaded scenes:
+   std::vector<std::unique_ptr<Object>> loadedObjects;   ///< Nodes, meshes, lights and materials created by load(), released by free()
+
 
    /**
     * Constructor.
     */
    Reserved() : initFlag{ false }, running{ false }, wireframe{ false }, width{ 0 }, height{ 1 }
    {}
+
+   /**
+    * Keeps an object created by load(), so that free() can release it.
+    * @param object new object
+    * @return pointer to the object
+    */
+   template <typename T> T *keep(std::unique_ptr<T> object)
+   {
+      T *objectPtr = object.get();
+      loadedObjects.push_back(std::move(object));
+      return objectPtr;
+   }
+
+   // Loading:
+   Material *loadMaterial(const aiMaterial *fileMaterial);
+   Light *loadLight(const aiLight *fileLight);
+   Mesh *loadMesh(const aiMesh *fileMesh, const std::string &name, const std::vector<Material *> &materials);
+   Node *loadNode(const aiScene *fileScene, const aiNode *fileNode, const std::vector<Material *> &materials);
 };
+
+
+
+///////////////////////////////////
+// BODY OF STRUCT Base::Reserved //
+///////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts a material of the file into an engine material. Diffuse, specular and emission colors and shininess are copied
+ * when the file has them (otherwise the default values of Material stay). Ambient: the color of the file if there is one,
+ * otherwise 0.2 times the diffuse color (glTF has no ambient color).
+ * @param fileMaterial material read by Assimp
+ * @return new material
+ */
+Eng::Material *Eng::Base::Reserved::loadMaterial(const aiMaterial *fileMaterial)
+{
+   Material *material = keep(std::make_unique<Material>(fileMaterial->GetName().C_Str()));
+
+   aiColor4D color;
+   glm::vec4 diffuse(1.0f);
+   if (fileMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)
+      diffuse = glm::vec4(color.r, color.g, color.b, color.a);
+   material->setDiffuse(diffuse);
+
+   if (fileMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS)
+      material->setAmbient(glm::vec4(color.r, color.g, color.b, color.a));
+   else
+      material->setAmbient(glm::vec4(glm::vec3(diffuse) * 0.2f, diffuse.a));
+
+   if (fileMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS)
+      material->setSpecular(glm::vec4(color.r, color.g, color.b, color.a));
+
+   if (fileMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color) == AI_SUCCESS)
+      material->setEmission(glm::vec4(color.r, color.g, color.b, color.a));
+
+   float shininess;
+   if (fileMaterial->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS)
+      material->setShininess(shininess);
+
+   return material;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts a light of the file into an engine light. Directional, point and spot lights are supported. The diffuse and
+ * specular colors are scaled so that the brightest component is at most 1 (a file can store colors multiplied by an
+ * intensity). The ambient color stays black: glTF lights have no ambient term (the scene ambient is the global one of OpenGL).
+ * @param fileLight light read by Assimp
+ * @return new light, or nullptr if the type of light is not supported
+ */
+Eng::Light *Eng::Base::Reserved::loadLight(const aiLight *fileLight)
+{
+   Light::Type type;
+   if (fileLight->mType == aiLightSource_DIRECTIONAL)
+      type = Light::Type::DIRECTIONAL;
+   else if (fileLight->mType == aiLightSource_POINT)
+      type = Light::Type::OMNI;
+   else if (fileLight->mType == aiLightSource_SPOT)
+      type = Light::Type::SPOT;
+   else
+      return nullptr;
+
+   Light *light = keep(std::make_unique<Light>(fileLight->mName.C_Str(), type));
+
+   glm::vec3 diffuse(fileLight->mColorDiffuse.r, fileLight->mColorDiffuse.g, fileLight->mColorDiffuse.b);
+   glm::vec3 specular(fileLight->mColorSpecular.r, fileLight->mColorSpecular.g, fileLight->mColorSpecular.b);
+   light->setDiffuse(glm::vec4(diffuse / std::max({ diffuse.r, diffuse.g, diffuse.b, 1.0f }), 1.0f));
+   light->setSpecular(glm::vec4(specular / std::max({ specular.r, specular.g, specular.b, 1.0f }), 1.0f));
+
+   if (type == Light::Type::SPOT)
+      light->setCutoff(glm::degrees(fileLight->mAngleOuterCone));
+
+   return light;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts a mesh of the file into an engine mesh: copies the vertex list (positions and normals) and the face list.
+ * Only faces with 3 indices (triangles) are copied.
+ * @param fileMesh mesh read by Assimp
+ * @param name name of the new mesh
+ * @param materials engine materials, in the same order as in the file
+ * @return new mesh
+ */
+Eng::Mesh *Eng::Base::Reserved::loadMesh(const aiMesh *fileMesh, const std::string &name, const std::vector<Material *> &materials)
+{
+   Mesh *mesh = keep(std::make_unique<Mesh>(name));
+
+   for (unsigned int i = 0; i < fileMesh->mNumVertices; i++)
+      mesh->addVertex(glm::vec3(fileMesh->mVertices[i].x, fileMesh->mVertices[i].y, fileMesh->mVertices[i].z),
+                      glm::vec3(fileMesh->mNormals[i].x, fileMesh->mNormals[i].y, fileMesh->mNormals[i].z));
+
+   for (unsigned int i = 0; i < fileMesh->mNumFaces; i++)
+      if (fileMesh->mFaces[i].mNumIndices == 3)
+         mesh->addFace(fileMesh->mFaces[i].mIndices[0], fileMesh->mFaces[i].mIndices[1], fileMesh->mFaces[i].mIndices[2]);
+
+   mesh->setMaterial(materials[fileMesh->mMaterialIndex]);
+   return mesh;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts a node of the file into an engine node and, recursively, its children. The node becomes a Light if a light
+ * of the file has its name, a Mesh if it has one mesh, otherwise a Node (with one child Mesh for each of its meshes).
+ * The matrix of the node, relative to its parent, is copied: Assimp stores it by rows, GLM by columns, so it is transposed.
+ * @param fileScene scene read by Assimp
+ * @param fileNode node to convert
+ * @param materials engine materials, in the same order as in the file
+ * @return new node
+ */
+Eng::Node *Eng::Base::Reserved::loadNode(const aiScene *fileScene, const aiNode *fileNode, const std::vector<Material *> &materials)
+{
+   std::string name = fileNode->mName.C_Str();
+   glm::mat4 matrix = glm::transpose(glm::make_mat4(&fileNode->mTransformation.a1));
+   Node *node = nullptr;
+
+   for (unsigned int i = 0; i < fileScene->mNumLights && node == nullptr; i++)
+      if (fileScene->mLights[i]->mName == fileNode->mName)
+      {
+         const aiLight *fileLight = fileScene->mLights[i];
+         glm::vec3 position(fileLight->mPosition.x, fileLight->mPosition.y, fileLight->mPosition.z);
+         glm::vec3 direction(fileLight->mDirection.x, fileLight->mDirection.y, fileLight->mDirection.z);
+         glm::vec3 up(fileLight->mUp.x, fileLight->mUp.y, fileLight->mUp.z);
+         node = loadLight(fileLight);
+         if (node != nullptr && glm::length(glm::cross(direction, up)) > 0.0f)
+            matrix = matrix * glm::inverse(glm::lookAt(position, position + direction, up));
+         else if (node != nullptr)
+            matrix = matrix * glm::translate(glm::mat4(1.0f), position);
+      }
+
+   if (node == nullptr && fileNode->mNumMeshes == 1)
+      node = loadMesh(fileScene->mMeshes[fileNode->mMeshes[0]], name, materials);
+
+   if (node == nullptr)
+   {
+      node = keep(std::make_unique<Node>(name));
+      for (unsigned int i = 0; i < fileNode->mNumMeshes; i++)
+      {
+         const aiMesh *fileMesh = fileScene->mMeshes[fileNode->mMeshes[i]];
+         node->addChild(loadMesh(fileMesh, fileMesh->mName.C_Str(), materials));
+      }
+   }
+
+   node->setMatrix(matrix);
+   for (unsigned int i = 0; i < fileNode->mNumChildren; i++)
+      node->addChild(loadNode(fileScene, fileNode->mChildren[i], materials));
+
+   return node;
+}
 
 
 
@@ -149,7 +329,7 @@ bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Free internal components: closes the window and releases FreeGLUT.
+ * Free internal components: closes the window, releases FreeGLUT and deletes the objects created by load().
  * @return TF
  */
 bool ENG_API Eng::Base::free()
@@ -162,6 +342,7 @@ bool ENG_API Eng::Base::free()
 
    glutExit();
    reserved->running = false;
+   reserved->loadedObjects.clear();
 
    std::cout << "[<] " << LIB_NAME << " deinitialized" << std::endl;
    reserved->initFlag = false;
@@ -252,6 +433,46 @@ void ENG_API Eng::Base::swapBuffers()
 float ENG_API Eng::Base::getAspectRatio() const
 {
    return static_cast<float>(reserved->width) / static_cast<float>(reserved->height);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Loads a whole 3D scene from a file (glTF/GLB or any other format read by Assimp) and converts it into engine objects:
+ * scene graph (nodes and their matrices), meshes, materials and lights. Assimp turns every polygon into triangles,
+ * removes points, lines and degenerate triangles (area 0) and computes the normals when the file has none.
+ * The objects belong to the engine and are deleted by free().
+ * @param fileName name of the file
+ * @return root node of the loaded scene, or nullptr on error
+ */
+Eng::Node ENG_API *Eng::Base::load(const std::string &fileName)
+{
+   if (!reserved->initFlag)
+   {
+      std::cout << "ERROR: engine not initialized" << std::endl;
+      return nullptr;
+   }
+
+   Assimp::Importer importer;
+   importer.SetPropertyInteger(AI_CONFIG_PP_FD_REMOVE, 1);
+   importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
+   const aiScene *fileScene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+      aiProcess_FindDegenerates | aiProcess_SortByPType | aiProcess_GenSmoothNormals);
+   if (fileScene == nullptr || fileScene->mRootNode == nullptr)
+   {
+      std::cout << "ERROR: unable to load " << fileName << " (" << importer.GetErrorString() << ")" << std::endl;
+      return nullptr;
+   }
+
+   std::vector<Material *> materials;
+   for (unsigned int i = 0; i < fileScene->mNumMaterials; i++)
+      materials.push_back(reserved->loadMaterial(fileScene->mMaterials[i]));
+
+   Node *root = reserved->loadNode(fileScene, fileScene->mRootNode, materials);
+
+   std::cout << "[>] " << fileName << " loaded: " << fileScene->mNumMeshes << " meshes, " << fileScene->mNumMaterials
+             << " materials, " << fileScene->mNumLights << " lights" << std::endl;
+   return root;
 }
 
 

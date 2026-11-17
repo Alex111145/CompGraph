@@ -8,7 +8,7 @@ CFLAGS = -Wall -std=c++20 -fPIC -m64 -fexceptions
 RCFLAGS = 
 RESINC = 
 LIBDIR = 
-LIB = -lglut -lGL
+LIB = -lglut -lGL -lassimp
 LDFLAGS = -m64
 
 INC_DEBUG = $(INC)
