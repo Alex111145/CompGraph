@@ -97,20 +97,26 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 </div><!--header-->
 <div class="contents">
 
-<p>Mesh (a 3D cube for now).  
+<p>Mesh made of triangles (vertex list + face list).  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="engine_8h_source.html">engine.h</a>&quot;</code><br />
 <code>#include &lt;GL/freeglut.h&gt;</code><br />
+<code>#include &lt;glm/gtc/type_ptr.hpp&gt;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for mesh.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="mesh_8cpp__incl.png" border="0" usemap="#amesh_8cpp" loading="lazy" alt=""/></div>
 <map name="amesh_8cpp" id="amesh_8cpp">
-<area shape="rect" title="Mesh (a 3D cube for now)." alt="" coords="510,5,588,31"/>
+<area shape="rect" title="Mesh made of triangles (vertex list + face list)." alt="" coords="635,5,713,31"/>
 <area shape="rect" href="engine_8h.html" title="Graphics engine main include file." alt="" coords="460,79,531,105"/>
-<area shape="poly" title=" " alt="" coords="542,30,515,68,512,64,538,33"/>
+<area shape="poly" title=" " alt="" coords="646,31,541,75,539,70,641,32"/>
 <area shape="rect" title=" " alt="" coords="555,79,652,105"/>
-<area shape="poly" title=" " alt="" coords="559,29,588,67,583,66,557,34"/>
+<area shape="poly" title=" " alt="" coords="665,30,627,70,625,65,660,32"/>
+<area shape="rect" title=" " alt="" coords="675,79,814,105"/>
+<area shape="poly" title=" " alt="" coords="687,29,725,68,720,67,685,34"/>
+<area shape="rect" title=" " alt="" coords="838,79,910,105"/>
+<area shape="poly" title=" " alt="" coords="708,29,828,73,823,73,708,34"/>
 <area shape="rect" title=" " alt="" coords="5,153,74,178"/>
 <area shape="poly" title=" " alt="" coords="457,98,303,120,89,155,89,150,302,115,462,97"/>
 <area shape="rect" title=" " alt="" coords="98,153,152,178"/>
@@ -125,7 +131,7 @@ Include dependency graph for mesh.cpp:</div>
 <area shape="poly" title=" " alt="" coords="497,103,498,139,493,135,494,107"/>
 <area shape="rect" href="material_8h.html" title="Material (emission, ambient, diffuse, specular, shininess)." alt="" coords="550,153,628,178"/>
 <area shape="poly" title=" " alt="" coords="512,103,564,144,559,143,510,108"/>
-<area shape="rect" href="mesh_8h.html" title="Mesh (a 3D cube for now)." alt="" coords="653,153,717,178"/>
+<area shape="rect" href="mesh_8h.html" title="Mesh made of triangles (vertex list + face list)." alt="" coords="653,153,717,178"/>
 <area shape="poly" title=" " alt="" coords="528,103,641,147,636,147,527,108"/>
 <area shape="rect" href="light_8h.html" title="Light source (directional, omnidirectional or spot)." alt="" coords="741,153,797,178"/>
 <area shape="poly" title=" " alt="" coords="532,99,728,152,723,152,531,105"/>
@@ -136,7 +142,7 @@ Include dependency graph for mesh.cpp:</div>
 </map>
 </div>
 </div><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Mesh (a 3D cube for now). </p>
+<div class="textblock"><p>Mesh made of triangles (vertex list + face list). </p>
 <dl class="section author"><dt>Author</dt><dd>Alessio Gervasini (C) SUPSI </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->

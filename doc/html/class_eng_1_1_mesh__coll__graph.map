@@ -1,5 +1,5 @@
 <map id="Eng::Mesh" name="Eng::Mesh">
-<area shape="rect" id="Node000001" title="Scene graph node that draws a cube centered at its origin, with one normal per face and a material." alt="" coords="96,177,180,203"/>
+<area shape="rect" id="Node000001" title="Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D fil..." alt="" coords="96,177,180,203"/>
 <area shape="rect" id="Node000002" href="$class_eng_1_1_node.html" title="Scene graph node: has its own matrix (relative to the parent), one parent and a list of children...." alt="" coords="5,80,89,106"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,115,128,175,123,177,67,119"/>
 <area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="104,85,115,93,107,101,90,103,88,98,105,96,110,93,104,90"/>

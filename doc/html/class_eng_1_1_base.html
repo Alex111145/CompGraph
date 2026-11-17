@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.">Base</a> engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.  
+<p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,...">Base</a> engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context, and loads 3D scenes from files (with Assimp).  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="engine_8h_source.html">engine.h</a>&gt;</code></p>
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:Reserved" id="r_Reserved"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="struct_eng_1_1_base_1_1_reserved.html">Reserved</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>).  <a href="struct_eng_1_1_base_1_1_reserved.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,...">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>).  <a href="struct_eng_1_1_base_1_1_reserved.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -132,6 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a69cfa13a646a2034902058d9f8a43714" id="r_a69cfa13a646a2034902058d9f8a43714"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a69cfa13a646a2034902058d9f8a43714">clearWindow</a> ()</td></tr>
 <tr class="memitem:a97a4fd8cd48e6222fbd5f8921ad2cb8f" id="r_a97a4fd8cd48e6222fbd5f8921ad2cb8f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a97a4fd8cd48e6222fbd5f8921ad2cb8f">swapBuffers</a> ()</td></tr>
 <tr class="memitem:a422d312c8910364ceb2fa1661814cb8b" id="r_a422d312c8910364ceb2fa1661814cb8b"><td class="memItemLeft">float&#160;</td><td class="memItemRight"><a class="el" href="#a422d312c8910364ceb2fa1661814cb8b">getAspectRatio</a> () const</td></tr>
+<tr class="memitem:a5cd6c6a85479e8dd3433281b4b7e7737" id="r_a5cd6c6a85479e8dd3433281b4b7e7737"><td class="memItemLeft"><a class="el" href="class_eng_1_1_node.html">Node</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a5cd6c6a85479e8dd3433281b4b7e7737">load</a> (const std::string &amp;fileName)</td></tr>
 <tr class="memitem:a4589b5975200d4f5994e4a4e5e9f7fa3" id="r_a4589b5975200d4f5994e4a4e5e9f7fa3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4589b5975200d4f5994e4a4e5e9f7fa3">setWireframe</a> (bool enabled)</td></tr>
 <tr class="memitem:a0161b3227601a96867528fc126fcd5c8" id="r_a0161b3227601a96867528fc126fcd5c8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a0161b3227601a96867528fc126fcd5c8">isWireframe</a> () const</td></tr>
 <tr class="memitem:a1dce6b6e19ae98c455322e6cba3be884" id="r_a1dce6b6e19ae98c455322e6cba3be884"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1dce6b6e19ae98c455322e6cba3be884">render</a> (const <a class="el" href="class_eng_1_1_camera.html">Camera</a> &amp;camera, const <a class="el" href="class_eng_1_1_list.html">List</a> &amp;list)</td></tr>
@@ -156,7 +157,7 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a17dea5630935db11dec6d91c9fc88693" id="r_a17dea5630935db11dec6d91c9fc88693"><td class="memItemLeft">std::unique_ptr&lt; <a class="el" href="struct_eng_1_1_base_1_1_reserved.html">Reserved</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a17dea5630935db11dec6d91c9fc88693">reserved</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.">Base</a> engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context. </p>
+<div class="textblock"><p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,...">Base</a> engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context, and loads 3D scenes from files (with Assimp). </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac9bc36f2293d517cc6f1b2ab348d4f69" name="ac9bc36f2293d517cc6f1b2ab348d4f69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac9bc36f2293d517cc6f1b2ab348d4f69">&#9670;&#160;</a></span>Base() <span class="overload">[1/2]</span></h2>
@@ -352,7 +353,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Free internal components: closes the window and releases FreeGLUT. </p><dl class="section return"><dt>Returns</dt><dd>TF </dd></dl>
+<p>Free internal components: closes the window, releases FreeGLUT and deletes the objects created by <a class="el" href="#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a>. </p><dl class="section return"><dt>Returns</dt><dd>TF </dd></dl>
 
 </div>
 </div>
@@ -468,6 +469,30 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Tells whether wireframe mode is active. </p><dl class="section return"><dt>Returns</dt><dd>TF </dd></dl>
+
+</div>
+</div>
+<a id="a5cd6c6a85479e8dd3433281b4b7e7737" name="a5cd6c6a85479e8dd3433281b4b7e7737"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cd6c6a85479e8dd3433281b4b7e7737">&#9670;&#160;</a></span>load()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_eng_1_1_node.html">Eng::Node</a> <a class="el" href="engine_8h.html#a2ef14742296b6d1fdaf5e70dfdd60996">ENG_API</a> * Eng::Base::load </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>fileName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Loads a whole 3D scene from a file (glTF/GLB or any other format read by Assimp) and converts it into engine objects: scene graph (nodes and their matrices), meshes, materials and lights. Assimp turns every polygon into triangles, removes points, lines and degenerate triangles (area 0) and computes the normals when the file has none. The objects belong to the engine and are deleted by <a class="el" href="#afd7e1923deb411907695c0b27114f62a">free()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>name of the file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>root node of the loaded scene, or nullptr on error </dd></dl>
 
 </div>
 </div>

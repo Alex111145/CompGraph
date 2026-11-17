@@ -100,14 +100,14 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 </div><!--header-->
 <div class="contents">
 
-<p>Mesh (a 3D cube for now).  
+<p>Mesh made of triangles (vertex list + face list).  
 <a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="mesh_8h__dep__incl.png" border="0" usemap="#amesh_8hdep" loading="lazy" alt=""/></div>
 <map name="amesh_8hdep" id="amesh_8hdep">
-<area shape="rect" title="Mesh (a 3D cube for now)." alt="" coords="371,5,436,31"/>
+<area shape="rect" title="Mesh made of triangles (vertex list + face list)." alt="" coords="371,5,436,31"/>
 <area shape="rect" href="engine_8h.html" title="Graphics engine main include file." alt="" coords="368,79,438,105"/>
 <area shape="poly" title=" " alt="" coords="405,44,406,80,401,77,402,49"/>
 <area shape="rect" href="camera_8cpp.html" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="5,153,95,178"/>
@@ -120,7 +120,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <area shape="poly" title=" " alt="" coords="389,116,363,154,360,150,384,118"/>
 <area shape="rect" href="material_8cpp.html" title="Material (emission, ambient, diffuse, specular, shininess)." alt="" coords="408,153,500,178"/>
 <area shape="poly" title=" " alt="" coords="422,115,448,153,443,151,419,119"/>
-<area shape="rect" href="mesh_8cpp.html" title="Mesh (a 3D cube for now)." alt="" coords="524,153,602,178"/>
+<area shape="rect" href="mesh_8cpp.html" title="Mesh made of triangles (vertex list + face list)." alt="" coords="524,153,602,178"/>
 <area shape="poly" title=" " alt="" coords="445,109,539,152,533,152,444,114"/>
 <area shape="rect" href="node_8cpp.html" title="Scene graph node." alt="" coords="626,153,700,178"/>
 <area shape="poly" title=" " alt="" coords="454,104,628,154,623,154,453,110"/>
@@ -134,14 +134,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:Eng_3A_3AMesh" id="r_Eng_3A_3AMesh"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_eng_1_1_mesh.html">Eng::Mesh</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scene graph node that draws a cube centered at its origin, with one normal per face and a material.  <a href="class_eng_1_1_mesh.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D file formats: a list of vertices (each one defined once, with its position and normal) and a list of faces, where each face is a triangle given by the indices of its 3 vertices.  <a href="class_eng_1_1_mesh.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:Eng" id="r_Eng"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespace_eng.html">Eng</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Mesh (a 3D cube for now). </p>
+<div class="textblock"><p>Mesh made of triangles (vertex list + face list). </p>
 <dl class="section author"><dt>Author</dt><dd>Alessio Gervasini (C) SUPSI </dd></dl>
 </div></div><!-- contents -->
 <!-- start footer part -->

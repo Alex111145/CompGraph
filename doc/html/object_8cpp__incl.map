@@ -16,7 +16,7 @@
 <area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="497,103,498,139,493,135,494,107"/>
 <area shape="rect" id="Node000009" href="$material_8h.html" title="Material (emission, ambient, diffuse, specular, shininess)." alt="" coords="550,153,628,178"/>
 <area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="512,103,564,144,559,143,510,108"/>
-<area shape="rect" id="Node000010" href="$mesh_8h.html" title="Mesh (a 3D cube for now)." alt="" coords="653,153,717,178"/>
+<area shape="rect" id="Node000010" href="$mesh_8h.html" title="Mesh made of triangles (vertex list + face list)." alt="" coords="653,153,717,178"/>
 <area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="528,103,641,147,636,147,527,108"/>
 <area shape="rect" id="Node000011" href="$light_8h.html" title="Light source (directional, omnidirectional or spot)." alt="" coords="741,153,797,178"/>
 <area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="532,99,728,152,723,152,531,105"/>

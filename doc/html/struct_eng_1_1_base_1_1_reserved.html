@@ -105,12 +105,18 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>).  
+<p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,...">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>).  
  <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a23a63ad2e2bb27c78351c21dd08e6ae1" id="r_a23a63ad2e2bb27c78351c21dd08e6ae1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a23a63ad2e2bb27c78351c21dd08e6ae1">Reserved</a> ()</td></tr>
+<tr class="memitem:a64d9bbef0cd57f80be92fd7f08712fd2" id="r_a64d9bbef0cd57f80be92fd7f08712fd2"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a64d9bbef0cd57f80be92fd7f08712fd2 template"><td class="memItemLeft">T *&#160;</td><td class="memItemRight"><a class="el" href="#a64d9bbef0cd57f80be92fd7f08712fd2">keep</a> (std::unique_ptr&lt; T &gt; object)</td></tr>
+<tr class="memitem:a21d5f3f147794f5afdeb84fb061701ad" id="r_a21d5f3f147794f5afdeb84fb061701ad"><td class="memItemLeft"><a class="el" href="class_eng_1_1_material.html">Material</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a21d5f3f147794f5afdeb84fb061701ad">loadMaterial</a> (const aiMaterial *fileMaterial)</td></tr>
+<tr class="memitem:aa5f883287944064b1bccd20398cdba80" id="r_aa5f883287944064b1bccd20398cdba80"><td class="memItemLeft"><a class="el" href="class_eng_1_1_light.html">Light</a> *&#160;</td><td class="memItemRight"><a class="el" href="#aa5f883287944064b1bccd20398cdba80">loadLight</a> (const aiLight *fileLight)</td></tr>
+<tr class="memitem:a524847a25e309c7611f6d0fbbec73a4b" id="r_a524847a25e309c7611f6d0fbbec73a4b"><td class="memItemLeft"><a class="el" href="class_eng_1_1_mesh.html">Mesh</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a524847a25e309c7611f6d0fbbec73a4b">loadMesh</a> (const aiMesh *fileMesh, const std::string &amp;name, const std::vector&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> * &gt; &amp;materials)</td></tr>
+<tr class="memitem:a774bf28646024c6b7dab457e13ecfa0f" id="r_a774bf28646024c6b7dab457e13ecfa0f"><td class="memItemLeft"><a class="el" href="class_eng_1_1_node.html">Node</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a774bf28646024c6b7dab457e13ecfa0f">loadNode</a> (const aiScene *fileScene, const aiNode *fileNode, const std::vector&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> * &gt; &amp;materials)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -124,9 +130,11 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:ab5d5cbe00e88f65b01da60b323f9cb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Window width, in pixels.  <br /></td></tr>
 <tr class="memitem:a8a5e99d455db8cc06498331d99766e15" id="r_a8a5e99d455db8cc06498331d99766e15"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#a8a5e99d455db8cc06498331d99766e15">height</a></td></tr>
 <tr class="memdesc:a8a5e99d455db8cc06498331d99766e15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Window height, in pixels (never 0).  <br /></td></tr>
+<tr class="memitem:a547f204a9954c5049d96de855c6233ba" id="r_a547f204a9954c5049d96de855c6233ba"><td class="memItemLeft">std::vector&lt; std::unique_ptr&lt; <a class="el" href="class_eng_1_1_object.html">Object</a> &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a547f204a9954c5049d96de855c6233ba">loadedObjects</a></td></tr>
+<tr class="memdesc:a547f204a9954c5049d96de855c6233ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nodes, meshes, lights and materials created by <a class="el" href="class_eng_1_1_base.html#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a>, released by <a class="el" href="class_eng_1_1_base.html#afd7e1923deb411907695c0b27114f62a">free()</a>.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context.">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>). </p>
+<div class="textblock"><p><a class="el" href="class_eng_1_1_base.html" title="Base engine main class. This class is a singleton that wraps FreeGLUT and the OpenGL context,...">Base</a> class reserved structure (using PIMPL/Bridge design pattern <a href="https://en.wikipedia.org/wiki/Opaque_pointer">https://en.wikipedia.org/wiki/Opaque_pointer</a>). </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a23a63ad2e2bb27c78351c21dd08e6ae1" name="a23a63ad2e2bb27c78351c21dd08e6ae1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a23a63ad2e2bb27c78351c21dd08e6ae1">&#9670;&#160;</a></span>Reserved()</h2>
@@ -151,6 +159,159 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Constructor. </p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a64d9bbef0cd57f80be92fd7f08712fd2" name="a64d9bbef0cd57f80be92fd7f08712fd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64d9bbef0cd57f80be92fd7f08712fd2">&#9670;&#160;</a></span>keep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T * Eng::Base::Reserved::keep </td>
+          <td>(</td>
+          <td class="paramtype">std::unique_ptr&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em>object</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Keeps an object created by <a class="el" href="class_eng_1_1_base.html#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a>, so that <a class="el" href="class_eng_1_1_base.html#afd7e1923deb411907695c0b27114f62a">free()</a> can release it. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">object</td><td>new object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the object </dd></dl>
+
+</div>
+</div>
+<a id="aa5f883287944064b1bccd20398cdba80" name="aa5f883287944064b1bccd20398cdba80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5f883287944064b1bccd20398cdba80">&#9670;&#160;</a></span>loadLight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_eng_1_1_light.html">Eng::Light</a> * Eng::Base::Reserved::loadLight </td>
+          <td>(</td>
+          <td class="paramtype">const aiLight *</td>          <td class="paramname"><span class="paramname"><em>fileLight</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Converts a light of the file into an engine light. Directional, point and spot lights are supported. The diffuse and specular colors are scaled so that the brightest component is at most 1 (a file can store colors multiplied by an intensity). The ambient color stays black: glTF lights have no ambient term (the scene ambient is the global one of OpenGL). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileLight</td><td>light read by Assimp </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new light, or nullptr if the type of light is not supported </dd></dl>
+
+</div>
+</div>
+<a id="a21d5f3f147794f5afdeb84fb061701ad" name="a21d5f3f147794f5afdeb84fb061701ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21d5f3f147794f5afdeb84fb061701ad">&#9670;&#160;</a></span>loadMaterial()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_eng_1_1_material.html">Eng::Material</a> * Eng::Base::Reserved::loadMaterial </td>
+          <td>(</td>
+          <td class="paramtype">const aiMaterial *</td>          <td class="paramname"><span class="paramname"><em>fileMaterial</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Converts a material of the file into an engine material. Diffuse, specular and emission colors and shininess are copied when the file has them (otherwise the default values of <a class="el" href="class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn.">Material</a> stay). Ambient: the color of the file if there is one, otherwise 0.2 times the diffuse color (glTF has no ambient color). </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileMaterial</td><td>material read by Assimp </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new material </dd></dl>
+
+</div>
+</div>
+<a id="a524847a25e309c7611f6d0fbbec73a4b" name="a524847a25e309c7611f6d0fbbec73a4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a524847a25e309c7611f6d0fbbec73a4b">&#9670;&#160;</a></span>loadMesh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_eng_1_1_mesh.html">Eng::Mesh</a> * Eng::Base::Reserved::loadMesh </td>
+          <td>(</td>
+          <td class="paramtype">const aiMesh *</td>          <td class="paramname"><span class="paramname"><em>fileMesh</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> * &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>materials</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Converts a mesh of the file into an engine mesh: copies the vertex list (positions and normals) and the face list. Only faces with 3 indices (triangles) are copied. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileMesh</td><td>mesh read by Assimp </td></tr>
+    <tr><td class="paramname">name</td><td>name of the new mesh </td></tr>
+    <tr><td class="paramname">materials</td><td>engine materials, in the same order as in the file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new mesh </dd></dl>
+
+</div>
+</div>
+<a id="a774bf28646024c6b7dab457e13ecfa0f" name="a774bf28646024c6b7dab457e13ecfa0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a774bf28646024c6b7dab457e13ecfa0f">&#9670;&#160;</a></span>loadNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_eng_1_1_node.html">Eng::Node</a> * Eng::Base::Reserved::loadNode </td>
+          <td>(</td>
+          <td class="paramtype">const aiScene *</td>          <td class="paramname"><span class="paramname"><em>fileScene</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const aiNode *</td>          <td class="paramname"><span class="paramname"><em>fileNode</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="class_eng_1_1_material.html">Material</a> * &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>materials</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Converts a node of the file into an engine node and, recursively, its children. The node becomes a <a class="el" href="class_eng_1_1_light.html" title="Scene graph node that emits light. Its position and direction come from its matrix: the light sits at...">Light</a> if a light of the file has its name, a <a class="el" href="class_eng_1_1_mesh.html" title="Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D fil...">Mesh</a> if it has one mesh, otherwise a <a class="el" href="class_eng_1_1_node.html" title="Scene graph node: has its own matrix (relative to the parent), one parent and a list of children....">Node</a> (with one child <a class="el" href="class_eng_1_1_mesh.html" title="Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D fil...">Mesh</a> for each of its meshes). The matrix of the node, relative to its parent, is copied: Assimp stores it by rows, GLM by columns, so it is transposed. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileScene</td><td>scene read by Assimp </td></tr>
+    <tr><td class="paramname">fileNode</td><td>node to convert </td></tr>
+    <tr><td class="paramname">materials</td><td>engine materials, in the same order as in the file </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>new node </dd></dl>
 
 </div>
 </div>
@@ -184,6 +345,22 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>True between <a class="el" href="class_eng_1_1_base.html#a127ac22db3127dfeac25817006f2a094">init()</a> and <a class="el" href="class_eng_1_1_base.html#afd7e1923deb411907695c0b27114f62a">free()</a>. </p>
+
+</div>
+</div>
+<a id="a547f204a9954c5049d96de855c6233ba" name="a547f204a9954c5049d96de855c6233ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a547f204a9954c5049d96de855c6233ba">&#9670;&#160;</a></span>loadedObjects</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::unique_ptr&lt;<a class="el" href="class_eng_1_1_object.html">Object</a>&gt; &gt; Eng::Base::Reserved::loadedObjects</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Nodes, meshes, lights and materials created by <a class="el" href="class_eng_1_1_base.html#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a>, released by <a class="el" href="class_eng_1_1_base.html#afd7e1923deb411907695c0b27114f62a">free()</a>. </p>
 
 </div>
 </div>

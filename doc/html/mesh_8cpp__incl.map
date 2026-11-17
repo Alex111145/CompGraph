@@ -1,9 +1,13 @@
 <map id="mesh.cpp" name="mesh.cpp">
-<area shape="rect" id="Node000001" title="Mesh (a 3D cube for now)." alt="" coords="510,5,588,31"/>
+<area shape="rect" id="Node000001" title="Mesh made of triangles (vertex list + face list)." alt="" coords="635,5,713,31"/>
 <area shape="rect" id="Node000002" href="$engine_8h.html" title="Graphics engine main include file." alt="" coords="460,79,531,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="542,30,515,68,512,64,538,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="646,31,541,75,539,70,641,32"/>
 <area shape="rect" id="Node000014" title=" " alt="" coords="555,79,652,105"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="559,29,588,67,583,66,557,34"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="665,30,627,70,625,65,660,32"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="675,79,814,105"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="687,29,725,68,720,67,685,34"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="838,79,910,105"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="708,29,828,73,823,73,708,34"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,153,74,178"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="457,98,303,120,89,155,89,150,302,115,462,97"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="98,153,152,178"/>
@@ -18,7 +22,7 @@
 <area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="497,103,498,139,493,135,494,107"/>
 <area shape="rect" id="Node000009" href="$material_8h.html" title="Material (emission, ambient, diffuse, specular, shininess)." alt="" coords="550,153,628,178"/>
 <area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="512,103,564,144,559,143,510,108"/>
-<area shape="rect" id="Node000010" href="$mesh_8h.html" title="Mesh (a 3D cube for now)." alt="" coords="653,153,717,178"/>
+<area shape="rect" id="Node000010" href="$mesh_8h.html" title="Mesh made of triangles (vertex list + face list)." alt="" coords="653,153,717,178"/>
 <area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="528,103,641,147,636,147,527,108"/>
 <area shape="rect" id="Node000011" href="$light_8h.html" title="Light source (directional, omnidirectional or spot)." alt="" coords="741,153,797,178"/>
 <area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="532,99,728,152,723,152,531,105"/>
