@@ -1,4 +1,6 @@
-x64/
+/x64/
+engine/x64/
+client/x64/
 .vs/
 engine/bin/
 engine/obj/
