@@ -1,13 +1,12 @@
 @startuml uml_classi
-' REGOLA DEL COLORE (utente 17/11/2026): solo l'ultima aggiunta e' colorata, in ROSSO ($AGG3); le aggiunte n.1 e n.2 sono NERE.
-' Aggiunta n.1 (11/11/2026, nero): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
-' Aggiunta n.2 (12/11/2026, nero): mini legenda dei tasti, Base::drawText.
+' REGOLA DEL COLORE (utente 17/11/2026, sera): aggiunte della volta scorsa (n.1 e n.2) in BLU, aggiunta di oggi (n.3) in ROSSO.
+' Aggiunta n.1 (11/11/2026, blu): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
+' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
 ' Aggiunta n.3 (17/11/2026, rosso): lezione 6, caricamento scene con Assimp (Base::load, Mesh con lista vertici + lista facce).
-' Alla prossima aggiunta: $AGG3 diventa nero e si crea $AGG4 rosso.
-!$AGG1 = "#000000"
-!$AGG1_CLASSE = "#line:000000;text:000000"
-!$AGG2 = "#000000"
-!$AGG2_CLASSE = "#line:000000;text:000000"
+!$AGG1 = "#0047C2"
+!$AGG1_CLASSE = "#line:0047C2;text:0047C2"
+!$AGG2 = "#0047C2"
+!$AGG2_CLASSE = "#line:0047C2;text:0047C2"
 !$AGG3 = "#C00000"
 !$AGG3_CLASSE = "#line:C00000;text:C00000"
 
@@ -232,6 +231,7 @@ legend bottom left
   {query} = metodo const    {override} = ridefinisce il metodo della classe padre
   «= delete» = funzione cancellata (oggetto non copiabile)
   rombo pieno = composizione    rombo vuoto = aggregazione    tratteggio = dipendenza (usa)
+  <color:$AGG1>**blu = aggiunte n.1 e n.2**</color>
   <color:$AGG3>**rosso = aggiunta n.3**</color>
 endlegend
 @enduml
