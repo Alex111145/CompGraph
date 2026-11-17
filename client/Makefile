@@ -46,6 +46,7 @@ before_debug:
 	test -d $(OBJDIR_DEBUG) || mkdir -p $(OBJDIR_DEBUG)
 
 after_debug: 
+	cp ../models/* bin/Debug/
 
 debug: before_debug out_debug after_debug
 
@@ -65,6 +66,7 @@ before_release:
 	test -d $(OBJDIR_RELEASE) || mkdir -p $(OBJDIR_RELEASE)
 
 after_release: 
+	cp ../models/* bin/Release/
 
 release: before_release out_release after_release
 

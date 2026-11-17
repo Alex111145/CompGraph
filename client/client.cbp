@@ -8,6 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/client" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Debug/" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -21,6 +22,7 @@
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/client" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Release/" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -43,6 +45,9 @@
 		<Linker>
 			<Add library="engine" />
 		</Linker>
+		<ExtraCommands>
+			<Add after="cp ../models/* $(TARGET_OUTPUT_DIR)" />
+		</ExtraCommands>
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
