@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
@@ -127,6 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a127ac22db3127dfeac25817006f2a094" id="r_a127ac22db3127dfeac25817006f2a094"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a127ac22db3127dfeac25817006f2a094">init</a> (const std::string &amp;title, int width, int height)</td></tr>
 <tr class="memitem:afd7e1923deb411907695c0b27114f62a" id="r_afd7e1923deb411907695c0b27114f62a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#afd7e1923deb411907695c0b27114f62a">free</a> ()</td></tr>
 <tr class="memitem:ad5328ada8b41153bf157220b9fa4e243" id="r_ad5328ada8b41153bf157220b9fa4e243"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ad5328ada8b41153bf157220b9fa4e243">setKeyboardCallback</a> (void(*callback)(unsigned char key, int mouseX, int mouseY))</td></tr>
+<tr class="memitem:a1b10cc2884b57372b3c10a0827282d63" id="r_a1b10cc2884b57372b3c10a0827282d63"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1b10cc2884b57372b3c10a0827282d63">setKeyboardUpCallback</a> (void(*callback)(unsigned char key, int mouseX, int mouseY))</td></tr>
+<tr class="memitem:acb582bed19ee40a806b76d0ef8d74ed1" id="r_acb582bed19ee40a806b76d0ef8d74ed1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#acb582bed19ee40a806b76d0ef8d74ed1">setSpecialKeyCallback</a> (void(*callback)(int key, int mouseX, int mouseY))</td></tr>
+<tr class="memitem:ab8188a63ffa520dd09703622369c9e88" id="r_ab8188a63ffa520dd09703622369c9e88"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab8188a63ffa520dd09703622369c9e88">setSpecialKeyUpCallback</a> (void(*callback)(int key, int mouseX, int mouseY))</td></tr>
 <tr class="memitem:a361085daf50c493d1239b8a5f6f14bc1" id="r_a361085daf50c493d1239b8a5f6f14bc1"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a361085daf50c493d1239b8a5f6f14bc1">setBackgroundColor</a> (const glm::vec3 &amp;color)</td></tr>
 <tr class="memitem:adbcb70de3e4528a68c3e5f891ecf1686" id="r_adbcb70de3e4528a68c3e5f891ecf1686"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#adbcb70de3e4528a68c3e5f891ecf1686">isRunning</a> ()</td></tr>
 <tr class="memitem:a69cfa13a646a2034902058d9f8a43714" id="r_a69cfa13a646a2034902058d9f8a43714"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a69cfa13a646a2034902058d9f8a43714">clearWindow</a> ()</td></tr>
@@ -141,6 +145,17 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c21bcd7bace09d5913ced6de5b15518" id="r_a3c21bcd7bace09d5913ced6de5b15518"><td class="memItemLeft">static <a class="el" href="#ac9bc36f2293d517cc6f1b2ab348d4f69">Base</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a3c21bcd7bace09d5913ced6de5b15518">getInstance</a> ()</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a758e4813605ec2274aeb87ee4124ced4" id="r_a758e4813605ec2274aeb87ee4124ced4"><td class="memItemLeft">static constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#a758e4813605ec2274aeb87ee4124ced4">KEY_LEFT</a> = 100</td></tr>
+<tr class="memdesc:a758e4813605ec2274aeb87ee4124ced4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Left arrow.  <br /></td></tr>
+<tr class="memitem:a6af1e1414a70416f9a6193b08d905a76" id="r_a6af1e1414a70416f9a6193b08d905a76"><td class="memItemLeft">static constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#a6af1e1414a70416f9a6193b08d905a76">KEY_UP</a> = 101</td></tr>
+<tr class="memdesc:a6af1e1414a70416f9a6193b08d905a76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Up arrow.  <br /></td></tr>
+<tr class="memitem:a9e6baa5be782797892f225a3f9dcb507" id="r_a9e6baa5be782797892f225a3f9dcb507"><td class="memItemLeft">static constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#a9e6baa5be782797892f225a3f9dcb507">KEY_RIGHT</a> = 102</td></tr>
+<tr class="memdesc:a9e6baa5be782797892f225a3f9dcb507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right arrow.  <br /></td></tr>
+<tr class="memitem:a09fa2359272dc8208a1c533ba0bb4e99" id="r_a09fa2359272dc8208a1c533ba0bb4e99"><td class="memItemLeft">static constexpr int&#160;</td><td class="memItemRight"><a class="el" href="#a09fa2359272dc8208a1c533ba0bb4e99">KEY_DOWN</a> = 103</td></tr>
+<tr class="memdesc:a09fa2359272dc8208a1c533ba0bb4e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Down arrow.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -631,6 +646,75 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1b10cc2884b57372b3c10a0827282d63" name="a1b10cc2884b57372b3c10a0827282d63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b10cc2884b57372b3c10a0827282d63">&#9670;&#160;</a></span>setKeyboardUpCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="engine_8h.html#a2ef14742296b6d1fdaf5e70dfdd60996">ENG_API</a> Eng::Base::setKeyboardUpCallback </td>
+          <td>(</td>
+          <td class="paramtype">void(*</td>          <td class="paramname"><span class="paramname"><em>callback&#160;</em></span>)(unsigned char key, int mouseX, int mouseY)</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the function called when a key is released. Together with <a class="el" href="#ad5328ada8b41153bf157220b9fa4e243">setKeyboardCallback()</a> it tells which keys are held down (the key repeat of the system is ignored: a held key gives one press and one release). Using it is optional. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>function receiving the key and the mouse position, in pixels (nullptr = no key release callback) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acb582bed19ee40a806b76d0ef8d74ed1" name="acb582bed19ee40a806b76d0ef8d74ed1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb582bed19ee40a806b76d0ef8d74ed1">&#9670;&#160;</a></span>setSpecialKeyCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="engine_8h.html#a2ef14742296b6d1fdaf5e70dfdd60996">ENG_API</a> Eng::Base::setSpecialKeyCallback </td>
+          <td>(</td>
+          <td class="paramtype">void(*</td>          <td class="paramname"><span class="paramname"><em>callback&#160;</em></span>)(int key, int mouseX, int mouseY)</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the function called when a special key (e.g. an arrow: KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN) is pressed. Using it is optional. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>function receiving the key and the mouse position, in pixels (nullptr = no special key callback) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab8188a63ffa520dd09703622369c9e88" name="ab8188a63ffa520dd09703622369c9e88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8188a63ffa520dd09703622369c9e88">&#9670;&#160;</a></span>setSpecialKeyUpCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="engine_8h.html#a2ef14742296b6d1fdaf5e70dfdd60996">ENG_API</a> Eng::Base::setSpecialKeyUpCallback </td>
+          <td>(</td>
+          <td class="paramtype">void(*</td>          <td class="paramname"><span class="paramname"><em>callback&#160;</em></span>)(int key, int mouseX, int mouseY)</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the function called when a special key (e.g. an arrow) is released. Using it is optional. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>function receiving the key and the mouse position, in pixels (nullptr = no special key release callback) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a4589b5975200d4f5994e4a4e5e9f7fa3" name="a4589b5975200d4f5994e4a4e5e9f7fa3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4589b5975200d4f5994e4a4e5e9f7fa3">&#9670;&#160;</a></span>setWireframe()</h2>
 
@@ -673,6 +757,102 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a09fa2359272dc8208a1c533ba0bb4e99" name="a09fa2359272dc8208a1c533ba0bb4e99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09fa2359272dc8208a1c533ba0bb4e99">&#9670;&#160;</a></span>KEY_DOWN</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Eng::Base::KEY_DOWN = 103</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Down arrow. </p>
+
+</div>
+</div>
+<a id="a758e4813605ec2274aeb87ee4124ced4" name="a758e4813605ec2274aeb87ee4124ced4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a758e4813605ec2274aeb87ee4124ced4">&#9670;&#160;</a></span>KEY_LEFT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Eng::Base::KEY_LEFT = 100</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Left arrow. </p>
+
+</div>
+</div>
+<a id="a9e6baa5be782797892f225a3f9dcb507" name="a9e6baa5be782797892f225a3f9dcb507"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e6baa5be782797892f225a3f9dcb507">&#9670;&#160;</a></span>KEY_RIGHT</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Eng::Base::KEY_RIGHT = 102</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Right arrow. </p>
+
+</div>
+</div>
+<a id="a6af1e1414a70416f9a6193b08d905a76" name="a6af1e1414a70416f9a6193b08d905a76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6af1e1414a70416f9a6193b08d905a76">&#9670;&#160;</a></span>KEY_UP</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Eng::Base::KEY_UP = 101</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Up arrow. </p>
+
+</div>
+</div>
 <a id="a17dea5630935db11dec6d91c9fc88693" name="a17dea5630935db11dec6d91c9fc88693"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17dea5630935db11dec6d91c9fc88693">&#9670;&#160;</a></span>reserved</h2>
 

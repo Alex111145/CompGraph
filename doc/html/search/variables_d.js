@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['type_0',['type',['../class_eng_1_1_light.html#a1fd30de233b43f7e17a159a491915164',1,'Eng::Light']]]
+  ['shininess_0',['shininess',['../class_eng_1_1_material.html#a86e00d4dee9d65b91c1e9baa75d0f558',1,'Eng::Material']]],
+  ['specular_1',['specular',['../class_eng_1_1_light.html#a8e0aa6e0c1cf05214747a729b18303b4',1,'Eng::Light::specular'],['../class_eng_1_1_material.html#ad37bd285a7caf90ad22bb118a4e0003e',1,'Eng::Material::specular']]]
 ];

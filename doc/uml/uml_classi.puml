@@ -1,14 +1,17 @@
 @startuml uml_classi
-' REGOLA DEL COLORE (utente 17/11/2026, sera): aggiunte della volta scorsa (n.1 e n.2) in BLU, aggiunta di oggi (n.3) in ROSSO.
+' REGOLA DEL COLORE: aggiunte n.1 e n.2 in BLU, n.3 in ROSSO, n.4 (24/11/2026) in VERDE.
 ' Aggiunta n.1 (11/11/2026, blu): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
 ' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
 ' Aggiunta n.3 (17/11/2026, rosso): lezione 6, caricamento scene con Assimp (Base::load, Mesh con lista vertici + lista facce).
+' Aggiunta n.4 (24/11/2026, verde): camera libera da tastiera (Camera::move/turn, rilascio tasti e tasti speciali in Base).
 !$AGG1 = "#0047C2"
 !$AGG1_CLASSE = "#line:0047C2;text:0047C2"
 !$AGG2 = "#0047C2"
 !$AGG2_CLASSE = "#line:0047C2;text:0047C2"
 !$AGG3 = "#C00000"
 !$AGG3_CLASSE = "#line:C00000;text:C00000"
+!$AGG4 = "#1E7B34"
+!$AGG4_CLASSE = "#line:1E7B34;text:1E7B34"
 
 skinparam classAttributeIconSize 0
 skinparam shadowing false
@@ -44,6 +47,10 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
 
   class Base <<singleton>> <<final>> {
     - reserved : std::unique_ptr<Reserved>
+    + <color:$AGG4>{static} KEY_LEFT : const int = 100</color>
+    + <color:$AGG4>{static} KEY_UP : const int = 101</color>
+    + <color:$AGG4>{static} KEY_RIGHT : const int = 102</color>
+    + <color:$AGG4>{static} KEY_DOWN : const int = 103</color>
     --
     - Base()
     + Base(other : const Base&) «= delete»
@@ -55,6 +62,9 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + free() : bool
     .. finestra (FreeGLUT) ..
     + setKeyboardCallback(callback : void (*)(unsigned char key, int mouseX, int mouseY)) : void
+    + <color:$AGG4>setKeyboardUpCallback(callback : void (*)(unsigned char key, int mouseX, int mouseY)) : void</color>
+    + <color:$AGG4>setSpecialKeyCallback(callback : void (*)(int key, int mouseX, int mouseY)) : void</color>
+    + <color:$AGG4>setSpecialKeyUpCallback(callback : void (*)(int key, int mouseX, int mouseY)) : void</color>
     + setBackgroundColor(color : const glm::vec3&) : void
     + isRunning() : bool
     + clearWindow() : void
@@ -184,6 +194,9 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + <color:$AGG1>setProjectionMatrix(projectionMatrix : const glm::mat4&) : void</color>
     + <color:$AGG1>getProjectionMatrix() : const glm::mat4& {query}</color>
     + <color:$AGG1>getInverseMatrix() : glm::mat4 {query}</color>
+    .. movimento ..
+    + <color:$AGG4>move(offset : const glm::vec3&) : void</color>
+    + <color:$AGG4>turn(angle : float) : void</color>
   }
 
   class List $AGG1_CLASSE {
@@ -233,5 +246,6 @@ legend bottom left
   rombo pieno = composizione    rombo vuoto = aggregazione    tratteggio = dipendenza (usa)
   <color:$AGG1>**blu = aggiunte n.1 e n.2**</color>
   <color:$AGG3>**rosso = aggiunta n.3**</color>
+  <color:$AGG4>**verde = aggiunta n.4**</color>
 endlegend
 @enduml

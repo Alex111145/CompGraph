@@ -1,7 +1,9 @@
 <map id="camera.cpp" name="camera.cpp">
-<area shape="rect" id="Node000001" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="451,5,540,31"/>
+<area shape="rect" id="Node000001" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="528,5,618,31"/>
 <area shape="rect" id="Node000002" href="$engine_8h.html" title="Graphics engine main include file." alt="" coords="460,79,531,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="497,29,498,65,493,62,494,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="562,30,521,71,518,66,557,33"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="554,79,746,105"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="587,29,629,69,623,68,585,34"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,153,74,178"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="457,98,303,120,89,155,89,150,302,115,462,97"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="98,153,152,178"/>
@@ -21,7 +23,7 @@
 <area shape="rect" id="Node000011" href="$light_8h.html" title="Light source (directional, omnidirectional or spot)." alt="" coords="741,153,797,178"/>
 <area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="532,99,728,152,723,152,531,105"/>
 <area shape="rect" id="Node000012" href="$camera_8h.html" title="Camera (perspective or orthographic, chosen by the user)." alt="" coords="820,153,896,178"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="532,97,808,152,803,152,531,102"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="531,100,543,102,673,126,808,152,803,152,672,131,542,107,531,105"/>
 <area shape="rect" id="Node000013" href="$list_8h.html" title="List of the nodes to render." alt="" coords="920,153,970,178"/>
-<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="531,94,690,112,795,129,907,153,902,152,794,134,689,118,531,99"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="531,100,543,102,643,117,722,124,803,132,908,153,902,152,802,138,722,130,642,122,542,107,531,105"/>
 </map>

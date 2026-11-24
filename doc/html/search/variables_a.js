@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['parent_0',['parent',['../class_eng_1_1_node.html#a8adf99ef92cc40ccf96442eed1f1407d',1,'Eng::Node']]],
-  ['positions_1',['positions',['../class_eng_1_1_mesh.html#a7b914ced8eff40d19500b6311ab414ee',1,'Eng::Mesh']]],
-  ['projectionmatrix_2',['projectionMatrix',['../class_eng_1_1_camera.html#a805dbf16412e79fc72be4ace7b9d5269',1,'Eng::Camera']]]
+  ['name_0',['name',['../class_eng_1_1_object.html#a8a16efa83bc60805bb7e0cda25becc28',1,'Eng::Object']]],
+  ['nextid_1',['nextId',['../class_eng_1_1_object.html#a90c44eb95047e2bbefd8dfa202bda427',1,'Eng::Object']]],
+  ['nextlightnumber_2',['nextLightNumber',['../class_eng_1_1_light.html#aa817a03ab8a7c6637578668edb49d9ac',1,'Eng::Light']]],
+  ['nodeptr_3',['nodePtr',['../struct_eng_1_1_list_1_1_instance.html#ac985e3ccbcc262049b227b48a6eb01c3',1,'Eng::List::Instance']]],
+  ['nodeworldmatrix_4',['nodeWorldMatrix',['../struct_eng_1_1_list_1_1_instance.html#a54c893dd10799644de4090705aa6c632',1,'Eng::List::Instance']]],
+  ['normals_5',['normals',['../class_eng_1_1_mesh.html#a36060c063382f9b3684ea18353a13db7',1,'Eng::Mesh']]]
 ];

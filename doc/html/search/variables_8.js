@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['material_0',['material',['../class_eng_1_1_mesh.html#a7ea7c935ec5f86f6eaf072fecdf1c697',1,'Eng::Mesh']]],
-  ['matrix_1',['matrix',['../class_eng_1_1_node.html#adb30f0262b4a72e9ff23fc2d789ea80a',1,'Eng::Node']]]
+  ['lightnumber_0',['lightNumber',['../class_eng_1_1_light.html#a81e7925b0cd6245f47dfae4fc37c05ab',1,'Eng::Light']]],
+  ['loadedobjects_1',['loadedObjects',['../struct_eng_1_1_base_1_1_reserved.html#a547f204a9954c5049d96de855c6233ba',1,'Eng::Base::Reserved']]]
 ];
