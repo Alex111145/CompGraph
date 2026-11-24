@@ -342,7 +342,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Draws a 2D text over the rendered scene (e.g. a legend of the keys), with the text function of FreeGLUT. Call it after <a class="el" href="#a1dce6b6e19ae98c455322e6cba3be884">render()</a> and before <a class="el" href="#a97a4fd8cd48e6222fbd5f8921ad2cb8f">swapBuffers()</a>. Lighting and depth test are off while drawing the text. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Draws a 2D text over the rendered scene (e.g. a legend of the keys), with the text function of FreeGLUT. Call it after <a class="el" href="#a1dce6b6e19ae98c455322e6cba3be884">render()</a> and before <a class="el" href="#a97a4fd8cd48e6222fbd5f8921ad2cb8f">swapBuffers()</a>. Lighting, depth test and texture mapping are off while drawing the text. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">text</td><td>text to draw (a newline character starts a new line) </td></tr>
     <tr><td class="paramname">x</td><td>distance from the left border of the window, in pixels </td></tr>
@@ -368,7 +368,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Free internal components: closes the window, releases FreeGLUT and deletes the objects created by <a class="el" href="#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a>. </p><dl class="section return"><dt>Returns</dt><dd>TF </dd></dl>
+<p>Free internal components: deletes the objects created by <a class="el" href="#a5cd6c6a85479e8dd3433281b4b7e7737">load()</a> (the textures release their images while the OpenGL context still exists), then closes the window and releases FreeGLUT. </p><dl class="section return"><dt>Returns</dt><dd>TF </dd></dl>
 
 </div>
 </div>
@@ -501,7 +501,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Loads a whole 3D scene from a file (glTF/GLB or any other format read by Assimp) and converts it into engine objects: scene graph (nodes and their matrices), meshes, materials and lights. Assimp turns every polygon into triangles, removes points, lines and degenerate triangles (area 0) and computes the normals when the file has none. The objects belong to the engine and are deleted by <a class="el" href="#afd7e1923deb411907695c0b27114f62a">free()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Loads a whole 3D scene from a file (glTF/GLB or any other format read by Assimp) and converts it into engine objects: scene graph (nodes and their matrices), meshes, materials, textures and lights. Assimp turns every polygon into triangles, removes points, lines and degenerate triangles (area 0) and computes the normals when the file has none. The objects belong to the engine and are deleted by <a class="el" href="#afd7e1923deb411907695c0b27114f62a">free()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">fileName</td><td>name of the file </td></tr>
   </table>

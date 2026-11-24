@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', codefold.init);
 </div><!--header-->
 <div class="contents">
 
-<p>Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D file formats: a list of vertices (each one defined once, with its position and normal) and a list of faces, where each face is a triangle given by the indices of its 3 vertices.  
+<p>Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D file formats: a list of vertices (each one defined once, with its position, normal and texture coordinates) and a list of faces, where each face is a triangle given by the indices of its 3 vertices.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="mesh_8h_source.html">mesh.h</a>&gt;</code></p>
@@ -141,7 +141,7 @@ Collaboration diagram for Eng::Mesh:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a022fd4a3e10b2651b8848c8be518f131" id="r_a022fd4a3e10b2651b8848c8be518f131"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a022fd4a3e10b2651b8848c8be518f131">Mesh</a> (const std::string &amp;name)</td></tr>
-<tr class="memitem:ae904e8d74ad22abfe75038827efeca5c" id="r_ae904e8d74ad22abfe75038827efeca5c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae904e8d74ad22abfe75038827efeca5c">addVertex</a> (const glm::vec3 &amp;position, const glm::vec3 &amp;normal)</td></tr>
+<tr class="memitem:ae21887899364ad0d1782ef5af1a1fb08" id="r_ae21887899364ad0d1782ef5af1a1fb08"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ae21887899364ad0d1782ef5af1a1fb08">addVertex</a> (const glm::vec3 &amp;position, const glm::vec3 &amp;normal, const glm::vec2 &amp;texCoord)</td></tr>
 <tr class="memitem:ae42f04c73d2ba124a99774e7b1b95a58" id="r_ae42f04c73d2ba124a99774e7b1b95a58"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ae42f04c73d2ba124a99774e7b1b95a58">addFace</a> (unsigned int vertex0, unsigned int vertex1, unsigned int vertex2)</td></tr>
 <tr class="memitem:a4b80432c1f2132e9fcc4fe44934f7af2" id="r_a4b80432c1f2132e9fcc4fe44934f7af2"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4b80432c1f2132e9fcc4fe44934f7af2">setMaterial</a> (const <a class="el" href="class_eng_1_1_material.html">Material</a> *material)</td></tr>
 <tr class="memitem:a29feed0187b0145e83e2c4740055524e" id="r_a29feed0187b0145e83e2c4740055524e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a29feed0187b0145e83e2c4740055524e">render</a> (const glm::mat4 &amp;modelViewMatrix) const override</td></tr>
@@ -171,10 +171,12 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:a7b914ced8eff40d19500b6311ab414ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertex list: position of each vertex.  <br /></td></tr>
 <tr class="memitem:a36060c063382f9b3684ea18353a13db7" id="r_a36060c063382f9b3684ea18353a13db7"><td class="memItemLeft">std::vector&lt; glm::vec3 &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a36060c063382f9b3684ea18353a13db7">normals</a></td></tr>
 <tr class="memdesc:a36060c063382f9b3684ea18353a13db7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Normal of each vertex (same index as in positions).  <br /></td></tr>
+<tr class="memitem:a6c823ab5bdc4950b5bae66ed59d5610d" id="r_a6c823ab5bdc4950b5bae66ed59d5610d"><td class="memItemLeft">std::vector&lt; glm::vec2 &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a6c823ab5bdc4950b5bae66ed59d5610d">texCoords</a></td></tr>
+<tr class="memdesc:a6c823ab5bdc4950b5bae66ed59d5610d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_eng_1_1_texture.html" title="Material painted with a 2D image. The image is loaded only once into the memory of the graphics card,...">Texture</a> coordinates (s, t) of each vertex (same index as in positions).  <br /></td></tr>
 <tr class="memitem:acc42ee289ae041c9feee851a85853973" id="r_acc42ee289ae041c9feee851a85853973"><td class="memItemLeft">std::vector&lt; glm::uvec3 &gt;&#160;</td><td class="memItemRight"><a class="el" href="#acc42ee289ae041c9feee851a85853973">faces</a></td></tr>
 <tr class="memdesc:acc42ee289ae041c9feee851a85853973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Face list: each face is a triangle, given by the indices of its 3 vertices.  <br /></td></tr>
 <tr class="memitem:a7ea7c935ec5f86f6eaf072fecdf1c697" id="r_a7ea7c935ec5f86f6eaf072fecdf1c697"><td class="memItemLeft">const <a class="el" href="class_eng_1_1_material.html">Material</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a7ea7c935ec5f86f6eaf072fecdf1c697">material</a></td></tr>
-<tr class="memdesc:a7ea7c935ec5f86f6eaf072fecdf1c697"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn.">Material</a> used (nullptr = OpenGL default material).  <br /></td></tr>
+<tr class="memdesc:a7ea7c935ec5f86f6eaf072fecdf1c697"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn.">Material</a> used, also a <a class="el" href="class_eng_1_1_texture.html" title="Material painted with a 2D image. The image is loaded only once into the memory of the graphics card,...">Texture</a> (nullptr = OpenGL default material).  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -182,7 +184,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:aefe1bb0bdf31ba50ddd35f2abcbebc1d pro_methods_class_eng_1_1_object" id="r_aefe1bb0bdf31ba50ddd35f2abcbebc1d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_eng_1_1_object.html#aefe1bb0bdf31ba50ddd35f2abcbebc1d">Object</a> (const std::string &amp;name)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D file formats: a list of vertices (each one defined once, with its position and normal) and a list of faces, where each face is a triangle given by the indices of its 3 vertices. </p>
+<div class="textblock"><p>Scene graph node that draws a triangle mesh with a material. The geometry is stored as in most 3D file formats: a list of vertices (each one defined once, with its position, normal and texture coordinates) and a list of faces, where each face is a triangle given by the indices of its 3 vertices. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a022fd4a3e10b2651b8848c8be518f131" name="a022fd4a3e10b2651b8848c8be518f131"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a022fd4a3e10b2651b8848c8be518f131">&#9670;&#160;</a></span>Mesh()</h2>
@@ -251,8 +253,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ae904e8d74ad22abfe75038827efeca5c" name="ae904e8d74ad22abfe75038827efeca5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae904e8d74ad22abfe75038827efeca5c">&#9670;&#160;</a></span>addVertex()</h2>
+<a id="ae21887899364ad0d1782ef5af1a1fb08" name="ae21887899364ad0d1782ef5af1a1fb08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae21887899364ad0d1782ef5af1a1fb08">&#9670;&#160;</a></span>addVertex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +267,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const glm::vec3 &amp;</td>          <td class="paramname"><span class="paramname"><em>normal</em></span>&#160;)</td>
+          <td class="paramtype">const glm::vec3 &amp;</td>          <td class="paramname"><span class="paramname"><em>normal</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const glm::vec2 &amp;</td>          <td class="paramname"><span class="paramname"><em>texCoord</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -273,6 +280,7 @@ Additional Inherited Members</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">position</td><td>position of the vertex, in object coordinates </td></tr>
     <tr><td class="paramname">normal</td><td>normal of the vertex </td></tr>
+    <tr><td class="paramname">texCoord</td><td>texture coordinates (s, t) of the vertex, usually between 0 and 1 </td></tr>
   </table>
   </dd>
 </dl>
@@ -301,7 +309,7 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Loads the modelview matrix, applies the material and draws the faces. Starting from the vertex list and the face list, the coordinates of each face are rebuilt inside one glBegin(GL_TRIANGLES) / glEnd() block: for each corner of the face, its normal and its position are taken from the vertex list through the index stored in the face. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Loads the modelview matrix, applies the material and draws the faces. Starting from the vertex list and the face list, the coordinates of each face are rebuilt inside one glBegin(GL_TRIANGLES) / glEnd() block: for each corner of the face, its normal, its texture coordinates and its position are taken from the vertex list through the index stored in the face. Without a material, texture mapping is disabled. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">modelViewMatrix</td><td>matrix that brings the object coordinates into eye coordinates </td></tr>
   </table>
@@ -328,7 +336,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Sets the material. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">material</td><td>material used to draw the mesh (nullptr = OpenGL default material) </td></tr>
+    <tr><td class="paramname">material</td><td>material used to draw the mesh, also a <a class="el" href="class_eng_1_1_texture.html" title="Material painted with a 2D image. The image is loaded only once into the memory of the graphics card,...">Texture</a> (nullptr = OpenGL default material) </td></tr>
   </table>
   </dd>
 </dl>
@@ -380,7 +388,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn.">Material</a> used (nullptr = OpenGL default material). </p>
+<p><a class="el" href="class_eng_1_1_material.html" title="Material properties of the lighting model, passed to OpenGL when a mesh is drawn.">Material</a> used, also a <a class="el" href="class_eng_1_1_texture.html" title="Material painted with a 2D image. The image is loaded only once into the memory of the graphics card,...">Texture</a> (nullptr = OpenGL default material). </p>
 
 </div>
 </div>
@@ -429,6 +437,30 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Vertex list: position of each vertex. </p>
+
+</div>
+</div>
+<a id="a6c823ab5bdc4950b5bae66ed59d5610d" name="a6c823ab5bdc4950b5bae66ed59d5610d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c823ab5bdc4950b5bae66ed59d5610d">&#9670;&#160;</a></span>texCoords</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;glm::vec2&gt; Eng::Mesh::texCoords</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="class_eng_1_1_texture.html" title="Material painted with a 2D image. The image is loaded only once into the memory of the graphics card,...">Texture</a> coordinates (s, t) of each vertex (same index as in positions). </p>
 
 </div>
 </div>

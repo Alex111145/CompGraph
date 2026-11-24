@@ -1,9 +1,10 @@
 @startuml uml_classi
-' REGOLA DEL COLORE: aggiunte n.1 e n.2 in BLU, n.3 in ROSSO, n.4 (24/11/2026) in VERDE.
+' REGOLA DEL COLORE: aggiunte n.1 e n.2 in BLU, n.3 in ROSSO, n.4 (24/11/2026) in VERDE, n.5 (24/11/2026) in VIOLA.
 ' Aggiunta n.1 (11/11/2026, blu): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
 ' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
 ' Aggiunta n.3 (17/11/2026, rosso): lezione 6, caricamento scene con Assimp (Base::load, Mesh con lista vertici + lista facce).
 ' Aggiunta n.4 (24/11/2026, verde): camera libera da tastiera (Camera::move/turn, rilascio tasti e tasti speciali in Base).
+' Aggiunta n.5 (24/11/2026, viola): lezione 7, texture mapping (classe Texture, coordinate texture nella Mesh, scacchiera procedurale).
 !$AGG1 = "#0047C2"
 !$AGG1_CLASSE = "#line:0047C2;text:0047C2"
 !$AGG2 = "#0047C2"
@@ -12,6 +13,8 @@
 !$AGG3_CLASSE = "#line:C00000;text:C00000"
 !$AGG4 = "#1E7B34"
 !$AGG4_CLASSE = "#line:1E7B34;text:1E7B34"
+!$AGG5 = "#7B1FA2"
+!$AGG5_CLASSE = "#line:7B1FA2;text:7B1FA2"
 
 skinparam classAttributeIconSize 0
 skinparam shadowing false
@@ -90,9 +93,12 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + width : int = 0
     + height : int = 1
     + <color:$AGG3>loadedObjects : std::vector<std::unique_ptr<Object>></color>
+    + <color:$AGG5>{static} checkerboardSize : constexpr int = 256</color>
+    + <color:$AGG5>{static} checkerboardSquare : constexpr int = 32</color>
     --
     + Reserved()
     + <color:$AGG3>keep(object : std::unique_ptr<T>) : T*</color>
+    + <color:$AGG5>{static} createCheckerboard() : std::vector<unsigned char></color>
     + <color:$AGG3>loadMaterial(fileMaterial : const aiMaterial*) : Material*</color>
     + <color:$AGG3>loadLight(fileLight : const aiLight*) : Light*</color>
     + <color:$AGG3>loadMesh(fileMesh : const aiMesh*, name : const std::string&, materials : const std::vector<Material*>&) : Mesh*</color>
@@ -151,14 +157,23 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
   }
 
+  class Texture $AGG5_CLASSE {
+    - texId : unsigned int
+    --
+    + Texture(name : const std::string&, width : int, height : int, bitmap : const unsigned char*)
+    + ~Texture()
+    + render(modelViewMatrix : const glm::mat4&) : void {query, override}
+  }
+
   class Mesh {
     - <color:$AGG3>positions : std::vector<glm::vec3></color>
     - <color:$AGG3>normals : std::vector<glm::vec3></color>
+    - <color:$AGG5>texCoords : std::vector<glm::vec2></color>
     - <color:$AGG3>faces : std::vector<glm::uvec3></color>
     - <color:$AGG1>material : const Material* = nullptr</color>
     --
     + <color:$AGG3>Mesh(name : const std::string&)</color>
-    + <color:$AGG3>addVertex(position : const glm::vec3&, normal : const glm::vec3&) : void</color>
+    + <color:$AGG5>addVertex(position : const glm::vec3&, normal : const glm::vec3&, texCoord : const glm::vec2&) : void</color>
     + <color:$AGG3>addFace(vertex0 : unsigned int, vertex1 : unsigned int, vertex2 : unsigned int) : bool</color>
     + <color:$AGG1>setMaterial(material : const Material*) : void</color>
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
@@ -217,6 +232,7 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
 Base *-- "1" Reserved : reserved
 Base -[$AGG3]..> Node : <<use>>\nload()
 Reserved -[$AGG3]..> Material : <<create>>\nloadMaterial()
+Reserved -[$AGG5]..> Texture : <<create>>\nloadMaterial()
 Reserved -[$AGG3]..> Light : <<create>>\nloadLight()
 Reserved -[$AGG3]..> Mesh : <<create>>\nloadMesh()
 Reserved -[$AGG3]..> Node : <<create>>\nloadNode()
@@ -226,6 +242,7 @@ Base -[$AGG1]..> List : <<use>>\nrender()
 
 Object <|-- Node
 Object <|-[$AGG1]- Material
+Material <|-[$AGG5]- Texture
 Object <|-[$AGG1]- List
 Node <|-- Mesh
 Node <|-[$AGG1]- Light
@@ -247,5 +264,6 @@ legend bottom left
   <color:$AGG1>**blu = aggiunte n.1 e n.2**</color>
   <color:$AGG3>**rosso = aggiunta n.3**</color>
   <color:$AGG4>**verde = aggiunta n.4**</color>
+  <color:$AGG5>**viola = aggiunta n.5**</color>
 endlegend
 @enduml
