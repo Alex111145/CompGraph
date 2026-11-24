@@ -94,7 +94,8 @@ void ENG_API Eng::Material::setShininess(float shininess)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Passes the material properties to OpenGL.
+ * Passes the material properties to OpenGL and disables texture mapping (a material without a texture paints its faces
+ * only with its colors).
  * @param modelViewMatrix not used: a material has no position
  */
 void ENG_API Eng::Material::render(const glm::mat4 &modelViewMatrix) const
@@ -104,4 +105,6 @@ void ENG_API Eng::Material::render(const glm::mat4 &modelViewMatrix) const
    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, glm::value_ptr(diffuse));
    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, glm::value_ptr(specular));
    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+
+   glDisable(GL_TEXTURE_2D);
 }

@@ -55,6 +55,8 @@
 		<Unit filename="node.h" />
 		<Unit filename="material.cpp" />
 		<Unit filename="material.h" />
+		<Unit filename="texture.cpp" />
+		<Unit filename="texture.h" />
 		<Unit filename="mesh.cpp" />
 		<Unit filename="mesh.h" />
 		<Unit filename="light.cpp" />

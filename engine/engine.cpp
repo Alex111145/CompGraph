@@ -52,7 +52,11 @@ struct Eng::Base::Reserved
    int height;       ///< Window height, in pixels (never 0)
 
    // Loaded scenes:
-   std::vector<std::unique_ptr<Object>> loadedObjects;   ///< Nodes, meshes, lights and materials created by load(), released by free()
+   std::vector<std::unique_ptr<Object>> loadedObjects;   ///< Nodes, meshes, lights, materials and textures created by load(), released by free()
+
+   // Textures:
+   static constexpr int checkerboardSize = 256;   ///< Width and height of the procedural checkerboard image, in pixels
+   static constexpr int checkerboardSquare = 32;  ///< Side of one square of the checkerboard, in pixels
 
 
    /**
@@ -74,6 +78,7 @@ struct Eng::Base::Reserved
    }
 
    // Loading:
+   static std::vector<unsigned char> createCheckerboard();
    Material *loadMaterial(const aiMaterial *fileMaterial);
    Light *loadLight(const aiLight *fileLight);
    Mesh *loadMesh(const aiMesh *fileMesh, const std::string &name, const std::vector<Material *> &materials);
@@ -88,15 +93,43 @@ struct Eng::Base::Reserved
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Converts a material of the file into an engine material. Diffuse, specular and emission colors and shininess are copied
- * when the file has them (otherwise the default values of Material stay). Ambient: the color of the file if there is one,
- * otherwise 0.2 times the diffuse color (glTF has no ambient color).
+ * Creates procedurally, in memory, an RGB image with a white and gray checkerboard, used as the image of the textures
+ * until the images of the file can be read.
+ * @return image of checkerboardSize x checkerboardSize pixels, 3 bytes per pixel, row by row
+ */
+std::vector<unsigned char> Eng::Base::Reserved::createCheckerboard()
+{
+   std::vector<unsigned char> bitmap;
+   for (int row = 0; row < checkerboardSize; row++)
+      for (int column = 0; column < checkerboardSize; column++)
+      {
+         unsigned char value = (row / checkerboardSquare + column / checkerboardSquare) % 2 == 0 ? 255 : 96;
+         bitmap.insert(bitmap.end(), { value, value, value });
+      }
+   return bitmap;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Converts a material of the file into an engine material. If the material of the file has a diffuse (base color)
+ * texture, a Texture is created instead, loaded once here with the procedural checkerboard image. Diffuse, specular and
+ * emission colors and shininess are copied when the file has them (otherwise the default values of Material stay).
+ * Ambient: the color of the file if there is one, otherwise 0.2 times the diffuse color (glTF has no ambient color).
  * @param fileMaterial material read by Assimp
- * @return new material
+ * @return new material (a Texture if the material of the file has a diffuse texture)
  */
 Eng::Material *Eng::Base::Reserved::loadMaterial(const aiMaterial *fileMaterial)
 {
-   Material *material = keep(std::make_unique<Material>(fileMaterial->GetName().C_Str()));
+   std::string name = fileMaterial->GetName().C_Str();
+   Material *material = nullptr;
+   if (fileMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+   {
+      std::vector<unsigned char> bitmap = createCheckerboard();
+      material = keep(std::make_unique<Texture>(name, checkerboardSize, checkerboardSize, bitmap.data()));
+   }
+   else
+      material = keep(std::make_unique<Material>(name));
 
    aiColor4D color;
    glm::vec4 diffuse(1.0f);
@@ -159,8 +192,8 @@ Eng::Light *Eng::Base::Reserved::loadLight(const aiLight *fileLight)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Converts a mesh of the file into an engine mesh: copies the vertex list (positions and normals) and the face list.
- * Only faces with 3 indices (triangles) are copied.
+ * Converts a mesh of the file into an engine mesh: copies the vertex list (positions, normals and texture coordinates)
+ * and the face list. Only faces with 3 indices (triangles) are copied. A mesh without texture coordinates gets (0, 0).
  * @param fileMesh mesh read by Assimp
  * @param name name of the new mesh
  * @param materials engine materials, in the same order as in the file
@@ -171,8 +204,13 @@ Eng::Mesh *Eng::Base::Reserved::loadMesh(const aiMesh *fileMesh, const std::stri
    Mesh *mesh = keep(std::make_unique<Mesh>(name));
 
    for (unsigned int i = 0; i < fileMesh->mNumVertices; i++)
+   {
+      glm::vec2 texCoord(0.0f);
+      if (fileMesh->HasTextureCoords(0))
+         texCoord = glm::vec2(fileMesh->mTextureCoords[0][i].x, fileMesh->mTextureCoords[0][i].y);
       mesh->addVertex(glm::vec3(fileMesh->mVertices[i].x, fileMesh->mVertices[i].y, fileMesh->mVertices[i].z),
-                      glm::vec3(fileMesh->mNormals[i].x, fileMesh->mNormals[i].y, fileMesh->mNormals[i].z));
+                      glm::vec3(fileMesh->mNormals[i].x, fileMesh->mNormals[i].y, fileMesh->mNormals[i].z), texCoord);
+   }
 
    for (unsigned int i = 0; i < fileMesh->mNumFaces; i++)
       if (fileMesh->mFaces[i].mNumIndices == 3)
@@ -330,7 +368,8 @@ bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * Free internal components: closes the window, releases FreeGLUT and deletes the objects created by load().
+ * Free internal components: deletes the objects created by load() (the textures release their images while the OpenGL
+ * context still exists), then closes the window and releases FreeGLUT.
  * @return TF
  */
 bool ENG_API Eng::Base::free()
@@ -341,9 +380,9 @@ bool ENG_API Eng::Base::free()
       return false;
    }
 
+   reserved->loadedObjects.clear();
    glutExit();
    reserved->running = false;
-   reserved->loadedObjects.clear();
 
    std::cout << "[<] " << LIB_NAME << " deinitialized" << std::endl;
    reserved->initFlag = false;
@@ -494,7 +533,7 @@ float ENG_API Eng::Base::getAspectRatio() const
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Loads a whole 3D scene from a file (glTF/GLB or any other format read by Assimp) and converts it into engine objects:
- * scene graph (nodes and their matrices), meshes, materials and lights. Assimp turns every polygon into triangles,
+ * scene graph (nodes and their matrices), meshes, materials, textures and lights. Assimp turns every polygon into triangles,
  * removes points, lines and degenerate triangles (area 0) and computes the normals when the file has none.
  * The objects belong to the engine and are deleted by free().
  * @param fileName name of the file
@@ -580,7 +619,7 @@ void ENG_API Eng::Base::render(const Camera &camera, const List &list)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Draws a 2D text over the rendered scene (e.g. a legend of the keys), with the text function of FreeGLUT.
- * Call it after render() and before swapBuffers(). Lighting and depth test are off while drawing the text.
+ * Call it after render() and before swapBuffers(). Lighting, depth test and texture mapping are off while drawing the text.
  * @param text text to draw (a newline character starts a new line)
  * @param x distance from the left border of the window, in pixels
  * @param y distance from the top border of the window to the first line, in pixels
@@ -598,6 +637,7 @@ void ENG_API Eng::Base::drawText(const std::string &text, int x, int y, const gl
 
    glDisable(GL_LIGHTING);
    glDisable(GL_DEPTH_TEST);
+   glDisable(GL_TEXTURE_2D);
    glColor3f(color.r, color.g, color.b);
    glRasterPos2i(x, reserved->height - y);
    glutBitmapString(GLUT_BITMAP_8_BY_13, reinterpret_cast<const unsigned char *>(text.c_str()));

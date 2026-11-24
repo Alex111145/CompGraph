@@ -30,6 +30,7 @@
 // GLOBALS //
 /////////////
 
+   const std::string defaultFileName = "bedroom_furniture_set_-_game_ready.glb";   ///< 3D file loaded when none is given on the command line: model "Bedroom Furniture Set - Game Ready" by General of Thailand (CC BY 4.0), taken from https://sketchfab.com/
    bool orthographic = false;   ///< True when the orthographic camera is used, false for the perspective one
    const float cameraSpeed = 2.0f;   ///< Camera speed while a movement key is held down, in units per second
    const float maxFrameSeconds = 0.1f;   ///< Longest frame time used for the movement, so the camera does not jump after the window was blocked
@@ -106,8 +107,8 @@ void specialKeyUpCallback(int key, int mouseX, int mouseY)
 //////////
 
 /**
- * Application entry point: loads a 3D scene from a file (scene.glb, or the file given on the command line), puts it in
- * a scene graph with two cameras and renders it through a list until the window is closed.
+ * Application entry point: loads a 3D scene from a file (defaultFileName, or the file given on the command line), puts it
+ * in a scene graph with two cameras and a light and renders it through a list until the window is closed.
  * @param argc number of command-line arguments passed
  * @param argv array containing up to argc passed arguments
  * @return error code (0 on success, error code otherwise)
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
    std::cout << legend << std::endl;
    std::cout << std::endl;
 
-   std::string fileName = argc > 1 ? argv[1] : "scene.glb";
+   std::string fileName = argc > 1 ? argv[1] : defaultFileName;
 
    Eng::Base &eng = Eng::Base::getInstance();
    if (!eng.init("3D scene loaded from file", 800, 600))
@@ -130,13 +131,17 @@ int main(int argc, char *argv[])
    eng.setBackgroundColor(glm::vec3(0.2f, 0.2f, 0.7f));
 
    Eng::Node root("root");
-   glm::mat4 cameraMatrix = glm::inverse(glm::lookAt(glm::vec3(-4.0f, 4.5f, 7.0f), glm::vec3(0.5f, 0.3f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+   glm::mat4 cameraMatrix = glm::inverse(glm::lookAt(glm::vec3(-3.0f, 3.6f, 5.5f), glm::vec3(0.2f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
    Eng::Camera perspectiveCamera("perspective camera");
    Eng::Camera orthographicCamera("orthographic camera");
    perspectiveCamera.setMatrix(cameraMatrix);
    orthographicCamera.setMatrix(cameraMatrix);
    root.addChild(&perspectiveCamera);
    root.addChild(&orthographicCamera);
+
+   Eng::Light light("light", Eng::Light::Type::OMNI);
+   light.setMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 2.0f)));
+   root.addChild(&light);
 
    Eng::Node *scene = eng.load(fileName);
    if (scene == nullptr)
@@ -169,7 +174,7 @@ int main(int argc, char *argv[])
 
       float aspectRatio = eng.getAspectRatio();
       perspectiveCamera.setProjectionMatrix(glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f));
-      orthographicCamera.setProjectionMatrix(glm::ortho(-4.0f * aspectRatio, 4.0f * aspectRatio, -4.0f, 4.0f, 0.1f, 100.0f));
+      orthographicCamera.setProjectionMatrix(glm::ortho(-2.6f * aspectRatio, 2.6f * aspectRatio, -2.6f, 2.6f, 0.1f, 100.0f));
 
       list.clear();
       list.pass(&root);

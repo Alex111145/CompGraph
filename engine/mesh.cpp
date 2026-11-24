@@ -43,11 +43,13 @@ ENG_API Eng::Mesh::Mesh(const std::string &name) : Node(name), material{ nullptr
  * Adds a vertex at the end of the vertex list. Its index is the number of vertices added before it.
  * @param position position of the vertex, in object coordinates
  * @param normal normal of the vertex
+ * @param texCoord texture coordinates (s, t) of the vertex, usually between 0 and 1
  */
-void ENG_API Eng::Mesh::addVertex(const glm::vec3 &position, const glm::vec3 &normal)
+void ENG_API Eng::Mesh::addVertex(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &texCoord)
 {
    positions.push_back(position);
    normals.push_back(normal);
+   texCoords.push_back(texCoord);
 }
 
 
@@ -76,7 +78,7 @@ bool ENG_API Eng::Mesh::addFace(unsigned int vertex0, unsigned int vertex1, unsi
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Sets the material.
- * @param material material used to draw the mesh (nullptr = OpenGL default material)
+ * @param material material used to draw the mesh, also a Texture (nullptr = OpenGL default material)
  */
 void ENG_API Eng::Mesh::setMaterial(const Material *material)
 {
@@ -88,7 +90,8 @@ void ENG_API Eng::Mesh::setMaterial(const Material *material)
 /**
  * Loads the modelview matrix, applies the material and draws the faces. Starting from the vertex list and the face list,
  * the coordinates of each face are rebuilt inside one glBegin(GL_TRIANGLES) / glEnd() block: for each corner of the face,
- * its normal and its position are taken from the vertex list through the index stored in the face.
+ * its normal, its texture coordinates and its position are taken from the vertex list through the index stored in the face.
+ * Without a material, texture mapping is disabled.
  * @param modelViewMatrix matrix that brings the object coordinates into eye coordinates
  */
 void ENG_API Eng::Mesh::render(const glm::mat4 &modelViewMatrix) const
@@ -97,12 +100,15 @@ void ENG_API Eng::Mesh::render(const glm::mat4 &modelViewMatrix) const
 
    if (material != nullptr)
       material->render(modelViewMatrix);
+   else
+      glDisable(GL_TEXTURE_2D);
 
    glBegin(GL_TRIANGLES);
    for (const glm::uvec3 &face : faces)
       for (int corner = 0; corner < 3; corner++)
       {
          glNormal3fv(glm::value_ptr(normals[face[corner]]));
+         glTexCoord2fv(glm::value_ptr(texCoords[face[corner]]));
          glVertex3fv(glm::value_ptr(positions[face[corner]]));
       }
    glEnd();

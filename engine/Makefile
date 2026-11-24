@@ -33,9 +33,9 @@ OBJDIR_RELEASE = obj/Release
 DEP_RELEASE = 
 OUT_RELEASE = bin/Release/libengine.so
 
-OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/object.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/material.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/list.o
+OBJ_DEBUG = $(OBJDIR_DEBUG)/engine.o $(OBJDIR_DEBUG)/object.o $(OBJDIR_DEBUG)/node.o $(OBJDIR_DEBUG)/material.o $(OBJDIR_DEBUG)/texture.o $(OBJDIR_DEBUG)/mesh.o $(OBJDIR_DEBUG)/light.o $(OBJDIR_DEBUG)/camera.o $(OBJDIR_DEBUG)/list.o
 
-OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/object.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/material.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/list.o
+OBJ_RELEASE = $(OBJDIR_RELEASE)/engine.o $(OBJDIR_RELEASE)/object.o $(OBJDIR_RELEASE)/node.o $(OBJDIR_RELEASE)/material.o $(OBJDIR_RELEASE)/texture.o $(OBJDIR_RELEASE)/mesh.o $(OBJDIR_RELEASE)/light.o $(OBJDIR_RELEASE)/camera.o $(OBJDIR_RELEASE)/list.o
 
 all: debug release
 
@@ -63,6 +63,9 @@ $(OBJDIR_DEBUG)/node.o: node.cpp
 
 $(OBJDIR_DEBUG)/material.o: material.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c material.cpp -o $(OBJDIR_DEBUG)/material.o
+
+$(OBJDIR_DEBUG)/texture.o: texture.cpp
+	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c texture.cpp -o $(OBJDIR_DEBUG)/texture.o
 
 $(OBJDIR_DEBUG)/mesh.o: mesh.cpp
 	$(CXX) $(CFLAGS_DEBUG) $(INC_DEBUG) -c mesh.cpp -o $(OBJDIR_DEBUG)/mesh.o
@@ -103,6 +106,9 @@ $(OBJDIR_RELEASE)/node.o: node.cpp
 
 $(OBJDIR_RELEASE)/material.o: material.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c material.cpp -o $(OBJDIR_RELEASE)/material.o
+
+$(OBJDIR_RELEASE)/texture.o: texture.cpp
+	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c texture.cpp -o $(OBJDIR_RELEASE)/texture.o
 
 $(OBJDIR_RELEASE)/mesh.o: mesh.cpp
 	$(CXX) $(CFLAGS_RELEASE) $(INC_RELEASE) -c mesh.cpp -o $(OBJDIR_RELEASE)/mesh.o

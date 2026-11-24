@@ -59,6 +59,7 @@
    #include "object.h"
    #include "node.h"
    #include "material.h"
+   #include "texture.h"
    #include "mesh.h"
    #include "light.h"
    #include "camera.h"
