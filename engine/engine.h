@@ -2,7 +2,7 @@
  * @file		engine.h
  * @brief	Graphics engine main include file
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 

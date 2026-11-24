@@ -2,7 +2,7 @@
  * @file		mesh.cpp
  * @brief	Mesh made of triangles (vertex list + face list)
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 

@@ -2,7 +2,7 @@
  * @file		object.h
  * @brief	Base class of every engine object
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 

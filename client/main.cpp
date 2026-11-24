@@ -2,7 +2,7 @@
  * @file		main.cpp
  * @brief	Client application (that uses the graphics engine)
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 
@@ -67,7 +67,7 @@ void keyboardCallback(unsigned char key, int mouseX, int mouseY)
  */
 int main(int argc, char *argv[])
 {
-   std::cout << "3D scene loaded from file, Alessio Gervasini (C) SUPSI" << std::endl;
+   std::cout << "3D scene loaded from file, Alessio Gervasini (Master) SUPSI" << std::endl;
    std::cout << legend << std::endl;
    std::cout << std::endl;
 

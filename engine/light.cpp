@@ -2,7 +2,7 @@
  * @file		light.cpp
  * @brief	Light source (directional, omnidirectional or spot)
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 

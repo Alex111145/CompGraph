@@ -2,7 +2,7 @@
  * @file		list.h
  * @brief	List of the nodes to render
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 

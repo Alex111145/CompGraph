@@ -2,7 +2,7 @@
  * @file		object.cpp
  * @brief	Base class of every engine object
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 

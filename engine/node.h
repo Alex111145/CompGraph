@@ -2,7 +2,7 @@
  * @file		node.h
  * @brief	Scene graph node
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 

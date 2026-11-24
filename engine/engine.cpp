@@ -2,7 +2,7 @@
  * @file		engine.cpp
  * @brief	Graphics engine main file
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 

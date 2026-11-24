@@ -2,7 +2,7 @@
  * @file		list.cpp
  * @brief	List of the nodes to render
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 
 

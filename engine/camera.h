@@ -2,7 +2,7 @@
  * @file		camera.h
  * @brief	Camera (perspective or orthographic, chosen by the user)
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 

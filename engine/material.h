@@ -2,7 +2,7 @@
  * @file		material.h
  * @brief	Material (emission, ambient, diffuse, specular, shininess)
  *
- * @author	Alessio Gervasini (C) SUPSI
+ * @author	Alessio Gervasini (Master) SUPSI
  */
 #pragma once
 
