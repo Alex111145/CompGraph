@@ -40,6 +40,10 @@ public: //
    // View:
    glm::mat4 getInverseMatrix() const;
 
+   // Movement:
+   void move(const glm::vec3 &offset);
+   void turn(float angle);
+
 
 ///////////
 private: //

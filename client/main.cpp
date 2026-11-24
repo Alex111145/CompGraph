@@ -18,6 +18,9 @@
    #include <glm/gtc/matrix_transform.hpp>
 
    // C/C++:
+   #include <algorithm>
+   #include <cctype>
+   #include <chrono>
    #include <iostream>
    #include <string>
 
@@ -28,7 +31,12 @@
 /////////////
 
    bool orthographic = false;   ///< True when the orthographic camera is used, false for the perspective one
-   const std::string legend = "F = wireframe / solid\nC = perspective / orthographic camera";   ///< Mini legend of the keys, drawn in the window
+   const float cameraSpeed = 2.0f;   ///< Camera speed while a movement key is held down, in units per second
+   const float maxFrameSeconds = 0.1f;   ///< Longest frame time used for the movement, so the camera does not jump after the window was blocked
+   const float turnSpeed = 45.0f;   ///< Camera turning speed while an arrow key is held down, in degrees per second
+   bool heldKeys[256] = {};   ///< True for each key held down (index = lowercase key)
+   bool heldSpecialKeys[256] = {};   ///< True for each special key held down (index = Eng::Base::KEY_LEFT, KEY_RIGHT, ...)
+   const std::string legend = "F = wireframe / solid\nC = perspective / orthographic camera\nW, A, S, D = move forward, left, back, right\nE, Q = move up, down\nLEFT, RIGHT arrows = turn left, right";   ///< Mini legend of the keys, drawn in the window
 
 
 
@@ -37,8 +45,8 @@
 ///////////////
 
 /**
- * Keyboard callback: F switches between wireframe and solid mode, C between perspective and orthographic camera.
- * W, A, S, D stay free for moving the camera.
+ * Keyboard callback: F switches between wireframe and solid mode, C between perspective and orthographic camera,
+ * W, A, S, D, E, Q start moving the camera (it keeps moving while the key is held down).
  * @param key pressed key
  * @param mouseX mouse x position, in pixels
  * @param mouseY mouse y position, in pixels
@@ -50,6 +58,45 @@ void keyboardCallback(unsigned char key, int mouseX, int mouseY)
       eng.setWireframe(!eng.isWireframe());
    if (key == 'c' || key == 'C')
       orthographic = !orthographic;
+   heldKeys[std::tolower(key)] = true;
+}
+
+
+/**
+ * Key release callback: releasing W, A, S, D, E, Q stops the camera movement in that direction.
+ * @param key released key
+ * @param mouseX mouse x position, in pixels
+ * @param mouseY mouse y position, in pixels
+ */
+void keyboardUpCallback(unsigned char key, int mouseX, int mouseY)
+{
+   heldKeys[std::tolower(key)] = false;
+}
+
+
+/**
+ * Special key callback: the left and right arrows start turning the camera (it keeps turning while the key is held down).
+ * @param key pressed special key
+ * @param mouseX mouse x position, in pixels
+ * @param mouseY mouse y position, in pixels
+ */
+void specialKeyCallback(int key, int mouseX, int mouseY)
+{
+   if (key >= 0 && key < 256)
+      heldSpecialKeys[key] = true;
+}
+
+
+/**
+ * Special key release callback: releasing an arrow stops the camera turning.
+ * @param key released special key
+ * @param mouseX mouse x position, in pixels
+ * @param mouseY mouse y position, in pixels
+ */
+void specialKeyUpCallback(int key, int mouseX, int mouseY)
+{
+   if (key >= 0 && key < 256)
+      heldSpecialKeys[key] = false;
 }
 
 
@@ -77,6 +124,9 @@ int main(int argc, char *argv[])
    if (!eng.init("3D scene loaded from file", 800, 600))
       return 1;
    eng.setKeyboardCallback(keyboardCallback);
+   eng.setKeyboardUpCallback(keyboardUpCallback);
+   eng.setSpecialKeyCallback(specialKeyCallback);
+   eng.setSpecialKeyUpCallback(specialKeyUpCallback);
    eng.setBackgroundColor(glm::vec3(0.2f, 0.2f, 0.7f));
 
    Eng::Node root("root");
@@ -97,8 +147,26 @@ int main(int argc, char *argv[])
    root.addChild(scene);
 
    Eng::List list("list");
+   std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();
    while (eng.isRunning())
    {
+      std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+      float elapsedSeconds = std::min(std::chrono::duration<float>(currentTime - previousTime).count(), maxFrameSeconds);
+      previousTime = currentTime;
+      glm::vec3 direction = glm::vec3(float(heldKeys['d']) - float(heldKeys['a']), float(heldKeys['e']) - float(heldKeys['q']), float(heldKeys['s']) - float(heldKeys['w']));
+      if (glm::length(direction) > 0.0f)
+      {
+         glm::vec3 offset = glm::normalize(direction) * cameraSpeed * elapsedSeconds;
+         perspectiveCamera.move(offset);
+         orthographicCamera.move(offset);
+      }
+      float turning = float(heldSpecialKeys[Eng::Base::KEY_LEFT]) - float(heldSpecialKeys[Eng::Base::KEY_RIGHT]);
+      if (turning != 0.0f)
+      {
+         perspectiveCamera.turn(turning * turnSpeed * elapsedSeconds);
+         orthographicCamera.turn(turning * turnSpeed * elapsedSeconds);
+      }
+
       float aspectRatio = eng.getAspectRatio();
       perspectiveCamera.setProjectionMatrix(glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f));
       orthographicCamera.setProjectionMatrix(glm::ortho(-4.0f * aspectRatio, 4.0f * aspectRatio, -4.0f, 4.0f, 0.1f, 100.0f));

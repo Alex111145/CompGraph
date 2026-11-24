@@ -310,6 +310,7 @@ bool ENG_API Eng::Base::init(const std::string &title, int width, int height)
    glutDisplayFunc(displayCallback);
    glutReshapeFunc(reshapeCallback);
    glutCloseFunc(closeCallback);
+   glutIgnoreKeyRepeat(1);
 
    glEnable(GL_DEPTH_TEST);
    glEnable(GL_CULL_FACE);
@@ -364,6 +365,60 @@ void ENG_API Eng::Base::setKeyboardCallback(void (*callback)(unsigned char key, 
    }
 
    glutKeyboardFunc(callback);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Sets the function called when a key is released. Together with setKeyboardCallback() it tells which keys are held
+ * down (the key repeat of the system is ignored: a held key gives one press and one release). Using it is optional.
+ * @param callback function receiving the key and the mouse position, in pixels (nullptr = no key release callback)
+ */
+void ENG_API Eng::Base::setKeyboardUpCallback(void (*callback)(unsigned char key, int mouseX, int mouseY))
+{
+   if (!reserved->initFlag)
+   {
+      std::cout << "ERROR: engine not initialized" << std::endl;
+      return;
+   }
+
+   glutKeyboardUpFunc(callback);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Sets the function called when a special key (e.g. an arrow: KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN) is pressed.
+ * Using it is optional.
+ * @param callback function receiving the key and the mouse position, in pixels (nullptr = no special key callback)
+ */
+void ENG_API Eng::Base::setSpecialKeyCallback(void (*callback)(int key, int mouseX, int mouseY))
+{
+   if (!reserved->initFlag)
+   {
+      std::cout << "ERROR: engine not initialized" << std::endl;
+      return;
+   }
+
+   static_assert(KEY_LEFT == GLUT_KEY_LEFT && KEY_UP == GLUT_KEY_UP && KEY_RIGHT == GLUT_KEY_RIGHT && KEY_DOWN == GLUT_KEY_DOWN);
+   glutSpecialFunc(callback);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Sets the function called when a special key (e.g. an arrow) is released. Using it is optional.
+ * @param callback function receiving the key and the mouse position, in pixels (nullptr = no special key release callback)
+ */
+void ENG_API Eng::Base::setSpecialKeyUpCallback(void (*callback)(int key, int mouseX, int mouseY))
+{
+   if (!reserved->initFlag)
+   {
+      std::cout << "ERROR: engine not initialized" << std::endl;
+      return;
+   }
+
+   glutSpecialUpFunc(callback);
 }
 
 

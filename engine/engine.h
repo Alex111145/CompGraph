@@ -98,12 +98,21 @@ public: //
    // Singleton:
    static Base &getInstance();
 
+   // Special keys (values received by the special key callbacks):
+   static constexpr int KEY_LEFT = 100;    ///< Left arrow
+   static constexpr int KEY_UP = 101;      ///< Up arrow
+   static constexpr int KEY_RIGHT = 102;   ///< Right arrow
+   static constexpr int KEY_DOWN = 103;    ///< Down arrow
+
    // Init/free:
    bool init(const std::string &title, int width, int height);
    bool free();
 
    // Window:
    void setKeyboardCallback(void (*callback)(unsigned char key, int mouseX, int mouseY));
+   void setKeyboardUpCallback(void (*callback)(unsigned char key, int mouseX, int mouseY));
+   void setSpecialKeyCallback(void (*callback)(int key, int mouseX, int mouseY));
+   void setSpecialKeyUpCallback(void (*callback)(int key, int mouseX, int mouseY));
    void setBackgroundColor(const glm::vec3 &color);
    bool isRunning();
    void clearWindow();
