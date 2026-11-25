@@ -33,7 +33,7 @@
 
    /**
     * @brief Light of the 3D file that the user switches on and off, with the meshes that glow around it
-    * (bulb and shade of the desk lamp, sphere above the bed): while the light is off they lose their glow.
+    * (bulb and shade of the desk lamp, sphere in front of the bed): while the light is off they lose their glow.
     */
    struct SwitchableLight
    {
@@ -48,9 +48,9 @@
 // GLOBALS //
 /////////////
 
-   const std::string defaultFileName = "bedroom_furniture_set_-_game_ready.glb";   ///< 3D file loaded when none is given on the command line: model "Bedroom Furniture Set - Game Ready" by General of Thailand (CC BY 4.0), taken from https://sketchfab.com/, with a desk lamp, a glowing sphere above the bed and their two lights added
+   const std::string defaultFileName = "bedroom_furniture_set_-_game_ready.glb";   ///< 3D file loaded when none is given on the command line: model "Bedroom Furniture Set - Game Ready" by General of Thailand (CC BY 4.0), taken from https://sketchfab.com/, with a desk lamp, a glowing sphere in front of the bed and their two lights added
    SwitchableLight lampLight;   ///< Light inside the desk lamp (LampLight in the file) with its bulb and shade, switched on and off with key 1
-   SwitchableLight ceilingLight;   ///< Light inside the sphere above the bed (CeilingLight in the file) with the sphere, switched on and off with key 2
+   SwitchableLight ceilingLight;   ///< Light inside the sphere in front of the bed (CeilingLight in the file) with the sphere, switched on and off with key 2
    Eng::Material offMaterial("switched off");   ///< Material without emission given to the glowing meshes while their light is off
    bool orthographic = false;   ///< True when the orthographic camera is used, false for the perspective one
    const float cameraSpeed = 2.0f;   ///< Camera speed while a movement key is held down, in units per second
@@ -176,7 +176,7 @@ void specialKeyUpCallback(int key, int mouseX, int mouseY)
 /**
  * Application entry point: loads a 3D scene from a file (defaultFileName, or the file given on the command line), puts it
  * in a scene graph with two cameras and renders it through a list until the window is closed. The lights come from the file:
- * the light of the desk lamp and the light of the sphere above the bed are looked up by name, with the meshes that glow
+ * the light of the desk lamp and the light of the sphere in front of the bed are looked up by name, with the meshes that glow
  * around them, to switch them on and off.
  * @param argc number of command-line arguments passed
  * @param argv array containing up to argc passed arguments
