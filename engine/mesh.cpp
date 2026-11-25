@@ -88,6 +88,17 @@ void ENG_API Eng::Mesh::setMaterial(const Material *material)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
+ * Gets the material.
+ * @return material used to draw the mesh (nullptr = OpenGL default material)
+ */
+const Eng::Material ENG_API *Eng::Mesh::getMaterial() const
+{
+   return material;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
  * Loads the modelview matrix, applies the material and draws the faces. Starting from the vertex list and the face list,
  * the coordinates of each face are rebuilt inside one glBegin(GL_TRIANGLES) / glEnd() block: for each corner of the face,
  * its normal, its texture coordinates and its position are taken from the vertex list through the index stored in the face.

@@ -40,6 +40,7 @@ public: //
 
    // Material:
    void setMaterial(const Material *material);
+   const Material *getMaterial() const;
 
    // Rendering:
    void render(const glm::mat4 &modelViewMatrix) const override;

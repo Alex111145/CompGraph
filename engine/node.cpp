@@ -167,6 +167,27 @@ Eng::Node ENG_API *Eng::Node::getParent() const
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
+ * Searches this node and, recursively, its children (depth-first) for the first node with the given name.
+ * @param name name of the node to find
+ * @return node found, or nullptr if no node has that name
+ */
+Eng::Node ENG_API *Eng::Node::find(const std::string &name)
+{
+   if (getName() == name)
+      return this;
+
+   for (Node *child : children)
+   {
+      Node *node = child->find(name);
+      if (node != nullptr)
+         return node;
+   }
+   return nullptr;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
  * Loads the modelview matrix of the node into OpenGL. An empty node has nothing else to draw.
  * @param modelViewMatrix matrix that brings the node coordinates into eye coordinates
  */

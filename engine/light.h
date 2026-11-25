@@ -48,6 +48,8 @@ public: //
    void setDiffuse(const glm::vec4 &diffuse);
    void setSpecular(const glm::vec4 &specular);
    bool setCutoff(float cutoff);
+   void setEnabled(bool enabled);
+   bool isEnabled() const;
 
    // Rendering:
    void render(const glm::mat4 &modelViewMatrix) const override;
@@ -63,6 +65,7 @@ private: //
    glm::vec4 diffuse;                 ///< Diffuse color (RGBA)
    glm::vec4 specular;                ///< Specular color (RGBA)
    float cutoff;                      ///< Half angle of the cone, in degrees (spot light only)
+   bool enabled;                      ///< True when the light is switched on
    static int nextLightNumber;        ///< OpenGL light given to the next light created
 };
 

@@ -45,6 +45,7 @@ public: //
    Node *getChild(unsigned int index) const;
    unsigned int getNumberOfChildren() const;
    Node *getParent() const;
+   Node *find(const std::string &name);
 
    // Rendering:
    void render(const glm::mat4 &modelViewMatrix) const override;

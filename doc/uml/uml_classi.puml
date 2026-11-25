@@ -1,10 +1,11 @@
 @startuml uml_classi
-' REGOLA DEL COLORE: aggiunte n.1 e n.2 in BLU, n.3 in ROSSO, n.4 (24/11/2026) in VERDE, n.5 (24/11/2026) in VIOLA.
+' REGOLA DEL COLORE: aggiunte n.1 e n.2 in BLU, n.3 in ROSSO, n.4 (24/11/2026) in VERDE, n.5 (24/11/2026) in VIOLA, n.6 (25/11/2026) in ARANCIONE.
 ' Aggiunta n.1 (11/11/2026, blu): lezione Graphics Engines 2 (List, Light, Material) + correzioni del prof (Camera, Mesh, Base).
 ' Aggiunta n.2 (12/11/2026, blu): mini legenda dei tasti, Base::drawText.
 ' Aggiunta n.3 (17/11/2026, rosso): lezione 6, caricamento scene con Assimp (Base::load, Mesh con lista vertici + lista facce).
 ' Aggiunta n.4 (24/11/2026, verde): camera libera da tastiera (Camera::move/turn, rilascio tasti e tasti speciali in Base).
 ' Aggiunta n.5 (24/11/2026, viola): lezione 7, texture mapping (classe Texture, coordinate texture nella Mesh, scacchiera procedurale).
+' Aggiunta n.6 (25/11/2026, arancione): luci accese/spente da tastiera (Node::find, Light::setEnabled/isEnabled, Mesh::getMaterial).
 !$AGG1 = "#0047C2"
 !$AGG1_CLASSE = "#line:0047C2;text:0047C2"
 !$AGG2 = "#0047C2"
@@ -15,6 +16,8 @@
 !$AGG4_CLASSE = "#line:1E7B34;text:1E7B34"
 !$AGG5 = "#7B1FA2"
 !$AGG5_CLASSE = "#line:7B1FA2;text:7B1FA2"
+!$AGG6 = "#E65100"
+!$AGG6_CLASSE = "#line:E65100;text:E65100"
 
 skinparam classAttributeIconSize 0
 skinparam shadowing false
@@ -137,6 +140,7 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + getChild(index : unsigned int) : Node* {query}
     + getNumberOfChildren() : unsigned int {query}
     + getParent() : Node* {query}
+    + <color:$AGG6>find(name : const std::string&) : Node*</color>
     .. rendering ..
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
   }
@@ -176,6 +180,7 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + <color:$AGG5>addVertex(position : const glm::vec3&, normal : const glm::vec3&, texCoord : const glm::vec2&) : void</color>
     + <color:$AGG3>addFace(vertex0 : unsigned int, vertex1 : unsigned int, vertex2 : unsigned int) : bool</color>
     + <color:$AGG1>setMaterial(material : const Material*) : void</color>
+    + <color:$AGG6>getMaterial() : const Material* {query}</color>
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
   }
 
@@ -186,6 +191,7 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     - diffuse : glm::vec4 = (1, 1, 1, 1)
     - specular : glm::vec4 = (1, 1, 1, 1)
     - cutoff : float = 30
+    - <color:$AGG6>enabled : bool = true</color>
     - {static} nextLightNumber : int = 0
     --
     + Light(name : const std::string&, type : Type)
@@ -193,6 +199,8 @@ package "namespace Eng  —  libreria del motore (DLL su Windows, .so su Linux)"
     + setDiffuse(diffuse : const glm::vec4&) : void
     + setSpecular(specular : const glm::vec4&) : void
     + setCutoff(cutoff : float) : bool
+    + <color:$AGG6>setEnabled(enabled : bool) : void</color>
+    + <color:$AGG6>isEnabled() : bool {query}</color>
     + render(modelViewMatrix : const glm::mat4&) : void {query, override}
   }
 
@@ -265,5 +273,6 @@ legend bottom left
   <color:$AGG3>**rosso = aggiunta n.3**</color>
   <color:$AGG4>**verde = aggiunta n.4**</color>
   <color:$AGG5>**viola = aggiunta n.5**</color>
+  <color:$AGG6>**arancione = aggiunta n.6**</color>
 endlegend
 @enduml

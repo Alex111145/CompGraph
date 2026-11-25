@@ -23,6 +23,24 @@
    #include <chrono>
    #include <iostream>
    #include <string>
+   #include <vector>
+
+
+
+///////////
+// TYPES //
+///////////
+
+   /**
+    * @brief Light of the 3D file that the user switches on and off, with the meshes that glow around it
+    * (bulb and shade of the desk lamp, sphere above the bed): while the light is off they lose their glow.
+    */
+   struct SwitchableLight
+   {
+      Eng::Light *light = nullptr;                         ///< Light of the file (nullptr if the file has no such light)
+      std::vector<Eng::Mesh *> glowMeshes;                 ///< Meshes that glow while the light is on
+      std::vector<const Eng::Material *> glowMaterials;    ///< Own material (with emission) of each glowing mesh, same order
+   };
 
 
 
@@ -30,14 +48,17 @@
 // GLOBALS //
 /////////////
 
-   const std::string defaultFileName = "bedroom_furniture_set_-_game_ready.glb";   ///< 3D file loaded when none is given on the command line: model "Bedroom Furniture Set - Game Ready" by General of Thailand (CC BY 4.0), taken from https://sketchfab.com/
+   const std::string defaultFileName = "bedroom_furniture_set_-_game_ready.glb";   ///< 3D file loaded when none is given on the command line: model "Bedroom Furniture Set - Game Ready" by General of Thailand (CC BY 4.0), taken from https://sketchfab.com/, with a desk lamp, a glowing sphere above the bed and their two lights added
+   SwitchableLight lampLight;   ///< Light inside the desk lamp (LampLight in the file) with its bulb and shade, switched on and off with key 1
+   SwitchableLight ceilingLight;   ///< Light inside the sphere above the bed (CeilingLight in the file) with the sphere, switched on and off with key 2
+   Eng::Material offMaterial("switched off");   ///< Material without emission given to the glowing meshes while their light is off
    bool orthographic = false;   ///< True when the orthographic camera is used, false for the perspective one
    const float cameraSpeed = 2.0f;   ///< Camera speed while a movement key is held down, in units per second
    const float maxFrameSeconds = 0.1f;   ///< Longest frame time used for the movement, so the camera does not jump after the window was blocked
    const float turnSpeed = 45.0f;   ///< Camera turning speed while an arrow key is held down, in degrees per second
    bool heldKeys[256] = {};   ///< True for each key held down (index = lowercase key)
    bool heldSpecialKeys[256] = {};   ///< True for each special key held down (index = Eng::Base::KEY_LEFT, KEY_RIGHT, ...)
-   const std::string legend = "F = wireframe / solid\nC = perspective / orthographic camera\nW, A, S, D = move forward, left, back, right\nE, Q = move up, down\nLEFT, RIGHT arrows = turn left, right";   ///< Mini legend of the keys, drawn in the window
+   const std::string legend = "F = wireframe / solid\nC = perspective / orthographic camera\nW, A, S, D = move forward, left, back, right\nE, Q = move up, down\nLEFT, RIGHT arrows = turn left, right\n1, 2 = lamp light, ceiling light on / off";   ///< Mini legend of the keys, drawn in the window
 
 
 
@@ -46,8 +67,50 @@
 ///////////////
 
 /**
+ * Looks up in the scene a light of the file and the meshes that glow around it, and remembers their own materials.
+ * @param scene root of the loaded scene
+ * @param lightName name of the light in the file
+ * @param glowMeshNames names of the meshes that glow while the light is on
+ * @return the light with its glowing meshes (light = nullptr if the file has no light with that name)
+ */
+SwitchableLight findSwitchableLight(Eng::Node *scene, const std::string &lightName, const std::vector<std::string> &glowMeshNames)
+{
+   SwitchableLight switchable;
+   switchable.light = dynamic_cast<Eng::Light *>(scene->find(lightName));
+   for (const std::string &name : glowMeshNames)
+   {
+      Eng::Mesh *mesh = dynamic_cast<Eng::Mesh *>(scene->find(name));
+      if (mesh != nullptr)
+      {
+         switchable.glowMeshes.push_back(mesh);
+         switchable.glowMaterials.push_back(mesh->getMaterial());
+      }
+   }
+   return switchable;
+}
+
+
+/**
+ * Switches a light on or off. Switched on, its glowing meshes get back their own material; switched off, they get
+ * offMaterial (no emission), so they do not look lit any more.
+ * @param switchable light to switch, with its glowing meshes
+ */
+void switchLight(SwitchableLight &switchable)
+{
+   if (switchable.light == nullptr)
+      return;
+
+   bool on = !switchable.light->isEnabled();
+   switchable.light->setEnabled(on);
+   for (size_t i = 0; i < switchable.glowMeshes.size(); i++)
+      switchable.glowMeshes[i]->setMaterial(on ? switchable.glowMaterials[i] : &offMaterial);
+}
+
+
+/**
  * Keyboard callback: F switches between wireframe and solid mode, C between perspective and orthographic camera,
- * W, A, S, D, E, Q start moving the camera (it keeps moving while the key is held down).
+ * W, A, S, D, E, Q start moving the camera (it keeps moving while the key is held down),
+ * 1 and 2 switch the lamp light and the ceiling light on and off.
  * @param key pressed key
  * @param mouseX mouse x position, in pixels
  * @param mouseY mouse y position, in pixels
@@ -59,6 +122,10 @@ void keyboardCallback(unsigned char key, int mouseX, int mouseY)
       eng.setWireframe(!eng.isWireframe());
    if (key == 'c' || key == 'C')
       orthographic = !orthographic;
+   if (key == '1')
+      switchLight(lampLight);
+   if (key == '2')
+      switchLight(ceilingLight);
    heldKeys[std::tolower(key)] = true;
 }
 
@@ -108,7 +175,9 @@ void specialKeyUpCallback(int key, int mouseX, int mouseY)
 
 /**
  * Application entry point: loads a 3D scene from a file (defaultFileName, or the file given on the command line), puts it
- * in a scene graph with two cameras and a light and renders it through a list until the window is closed.
+ * in a scene graph with two cameras and renders it through a list until the window is closed. The lights come from the file:
+ * the light of the desk lamp and the light of the sphere above the bed are looked up by name, with the meshes that glow
+ * around them, to switch them on and off.
  * @param argc number of command-line arguments passed
  * @param argv array containing up to argc passed arguments
  * @return error code (0 on success, error code otherwise)
@@ -139,10 +208,6 @@ int main(int argc, char *argv[])
    root.addChild(&perspectiveCamera);
    root.addChild(&orthographicCamera);
 
-   Eng::Light light("light", Eng::Light::Type::OMNI);
-   light.setMatrix(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 2.0f)));
-   root.addChild(&light);
-
    Eng::Node *scene = eng.load(fileName);
    if (scene == nullptr)
    {
@@ -150,6 +215,8 @@ int main(int argc, char *argv[])
       return 1;
    }
    root.addChild(scene);
+   lampLight = findSwitchableLight(scene, "LampLight", { "LampBulb", "LampShade" });
+   ceilingLight = findSwitchableLight(scene, "CeilingLight", { "CeilingSphere" });
 
    Eng::List list("list");
    std::chrono::steady_clock::time_point previousTime = std::chrono::steady_clock::now();

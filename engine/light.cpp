@@ -35,12 +35,13 @@ int Eng::Light::nextLightNumber = 0;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Constructor. Takes the next free OpenGL light (at most 8: GL_LIGHT0 to GL_LIGHT7).
- * Default colors: ambient black, diffuse and specular white; spot cutoff 30 degrees.
+ * Default colors: ambient black, diffuse and specular white; spot cutoff 30 degrees; switched on.
  * @param name light name
  * @param type type of light
  */
 ENG_API Eng::Light::Light(const std::string &name, Type type) : Node(name), type{ type }, lightNumber{ -1 },
-   ambient{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) }, diffuse{ glm::vec4(1.0f) }, specular{ glm::vec4(1.0f) }, cutoff{ 30.0f }
+   ambient{ glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) }, diffuse{ glm::vec4(1.0f) }, specular{ glm::vec4(1.0f) }, cutoff{ 30.0f },
+   enabled{ true }
 {
    if (nextLightNumber >= 8)
    {
@@ -106,8 +107,31 @@ bool ENG_API Eng::Light::setCutoff(float cutoff)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
+ * Switches the light on or off. The change is applied by render(), at the next frame.
+ * @param enabled true to switch the light on, false to switch it off
+ */
+void ENG_API Eng::Light::setEnabled(bool enabled)
+{
+   this->enabled = enabled;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Tells if the light is switched on.
+ * @return TF (true if the light is on)
+ */
+bool ENG_API Eng::Light::isEnabled() const
+{
+   return enabled;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
  * Loads the modelview matrix and passes the light settings to OpenGL, then switches the light on.
  * Directional: position with w = 0. Omni: position with w = 1 and cutoff 180 (special value). Spot: w = 1 and its cutoff.
+ * If the light is switched off, the OpenGL light is only disabled (glDisable) and nothing else is passed.
  * @param modelViewMatrix matrix that brings the light coordinates into eye coordinates
  */
 void ENG_API Eng::Light::render(const glm::mat4 &modelViewMatrix) const
@@ -115,9 +139,15 @@ void ENG_API Eng::Light::render(const glm::mat4 &modelViewMatrix) const
    if (lightNumber < 0)
       return;
 
+   GLenum light = GL_LIGHT0 + lightNumber;
+   if (!enabled)
+   {
+      glDisable(light);
+      return;
+   }
+
    Node::render(modelViewMatrix);
 
-   GLenum light = GL_LIGHT0 + lightNumber;
    glm::vec4 position = type == Type::DIRECTIONAL ? glm::vec4(0.0f, 0.0f, 1.0f, 0.0f) : glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
    glm::vec3 direction(0.0f, 0.0f, -1.0f);
    float lightCutoff = type == Type::SPOT ? cutoff : 180.0f;
